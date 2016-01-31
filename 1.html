@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div style="position: absolute; left: 0px; top: 0px; background-color: aqua; width: 10px; height: 10px;"></div>
+<div>feage</div>
+<div>
+    <canvas id="1" width="500" height="500" style="background-color: red" onclick="clickCanvas();">
+    </canvas>
+</div>
+<script type="text/javascript">
+    var canvas = document.getElementById("1");
+    var context = canvas.getContext("2d");
+
+    function clickCanvas(){
+        var time1 = (new Date()).getTime();
+        for(var i=0;i<10000;++i){
+            context.save();
+            context.translate(i,i);
+//            context.rotate(Math.PI/2);
+            context.restore();
+        }
+        var time2 = (new Date()).getTime();
+        alert(time2-time1);
+    }
+</script>
+</body>
+</html>

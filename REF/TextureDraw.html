@@ -1,0 +1,334 @@
+
+<html>
+<head>
+    <title>wgld.org WebGL sample 014</title>
+    <script type="text/javascript" src="minMatrix.js"></script>
+    <script type="text/javascript">
+        // sample_014
+        //
+        // WebGL銇с儐銈偣銉併儯銈掑埄鐢ㄣ仚銈�
+
+        onload = function(){
+            // canvas銈ㄣ儸銉°兂銉堛倰鍙栧緱
+            var c = document.getElementById('canvas');
+            c.width = 500;
+            c.height = 300;
+
+            // webgl銈炽兂銉嗐偔銈广儓銈掑彇寰�
+            var gl = c.getContext('webgl') || c.getContext('experimental-webgl');
+
+            // 闋傜偣銈枫偋銉笺儉銇ㄣ儠銉┿偘銉°兂銉堛偡銈с兗銉€銇敓鎴�
+            var v_shader = create_shader('vs');
+            var f_shader = create_shader('fs');
+
+            // 銉椼儹銈般儵銉犮偑銉栥偢銈с偗銉堛伄鐢熸垚銇ㄣ儶銉炽偗
+            var prg = create_program(v_shader, f_shader);
+
+            // attributeLocation銈掗厤鍒椼伀鍙栧緱
+            var attLocation = new Array();
+            attLocation[0] = gl.getAttribLocation(prg, 'position');
+            attLocation[1] = gl.getAttribLocation(prg, 'color');
+            attLocation[2] = gl.getAttribLocation(prg, 'textureCoord');
+
+            // attribute銇绱犳暟銈掗厤鍒椼伀鏍肩磵
+            var attStride = new Array();
+            attStride[0] = 3;
+            attStride[1] = 4;
+            attStride[2] = 2;
+
+            // 闋傜偣銇綅缃�
+            var position = [
+                -1.0,  1.0,  0.0,
+                1.0,  1.0,  0.0,
+                -1.0, -1.0,  0.0,
+                1.0, -1.0,  0.0
+            ];
+
+            // 闋傜偣鑹�
+            var color = [
+                1.0, 1.0, 1.0, 1.0,
+                1.0, 1.0, 1.0, 1.0,
+                1.0, 1.0, 1.0, 1.0,
+                1.0, 1.0, 1.0, 1.0
+            ];
+
+            // 銉嗐偗銈广儊銉ｅ骇妯�
+            var textureCoord = [
+                0.0, 0.0,
+                1.0, 0.0,
+                0.0, 1.0,
+                1.0, 1.0
+            ];
+
+            // 闋傜偣銈ゃ兂銉囥儍銈偣
+            var index = [
+                0, 1, 2,
+                3, 2, 1
+            ];
+
+            // VBO銇↖BO銇敓鎴�
+            var vPosition     = create_vbo(position);
+            var vColor        = create_vbo(color);
+            var vTextureCoord = create_vbo(textureCoord);
+            var VBOList       = [vPosition, vColor, vTextureCoord];
+            var iIndex        = create_ibo(index);
+
+            // VBO銇↖BO銇櫥閷�
+            set_attribute(VBOList, attLocation, attStride);
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iIndex);
+
+            // uniformLocation銈掗厤鍒椼伀鍙栧緱
+            var uniLocation = new Array();
+            uniLocation[0]  = gl.getUniformLocation(prg, 'mvpMatrix');
+            uniLocation[1]  = gl.getUniformLocation(prg, 'texture');
+
+            // 鍚勭ó琛屽垪銇敓鎴愩仺鍒濇湡鍖�
+            var m = new matIV();
+            var mMatrix   = m.identity(m.create());
+            var vMatrix   = m.identity(m.create());
+            var pMatrix   = m.identity(m.create());
+            var tmpMatrix = m.identity(m.create());
+            var mvpMatrix = m.identity(m.create());
+
+            // 銉撱儱銉济椼儣銉偢銈с偗銈枫儳銉冲骇妯欏鎻涜鍒�
+            m.lookAt([0.0, 0, 5.0], [0, 0, 0], [0, 1, 0], vMatrix);
+            m.perspective(45, c.width / c.height, 0.1, 100, pMatrix);
+            m.multiply(pMatrix, vMatrix, tmpMatrix);
+
+            // 娣卞害銉嗐偣銉堛倰鏈夊姽銇仚銈�
+            gl.enable(gl.DEPTH_TEST);
+            gl.depthFunc(gl.LEQUAL);
+
+            // 鏈夊姽銇仚銈嬨儐銈偣銉併儯銉︺儖銉冦儓銈掓寚瀹�
+            gl.activeTexture(gl.TEXTURE0);
+
+            // 銉嗐偗銈广儊銉ｇ敤澶夋暟銇瑷€
+            var texture = null;
+
+            // 銉嗐偗銈广儊銉ｃ倰鐢熸垚
+            create_texture('texture.png');
+
+            // 銈偊銉炽偪銇瑷€
+            var count = 0;
+
+            // 鎭掑父銉兗銉�
+            (function(){
+                // canvas銈掑垵鏈熷寲
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clearDepth(1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+                // 銈偊銉炽偪銈掑厓銇儵銈搞偄銉炽倰绠楀嚭
+                count++;
+                var rad = (count % 360) * Math.PI / 180;
+
+                // 銉嗐偗銈广儊銉ｃ倰銉愩偆銉炽儔銇欍倠
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+
+                // uniform澶夋暟銇儐銈偣銉併儯銈掔櫥閷�
+                gl.uniform1i(uniLocation[1], 0);
+
+                // 銉儑銉骇妯欏鎻涜鍒椼伄鐢熸垚
+                for(var i=0;i<1;++i){
+                    m.identity(mMatrix);
+                    m.rotate(mMatrix,rad,[0,0,1],mMatrix);
+                    m.multiply(tmpMatrix, mMatrix, mvpMatrix);
+                    gl.uniformMatrix4fv(uniLocation[0], false, mvpMatrix);
+                    gl.drawElements(gl.TRIANGLES, index.length, gl.UNSIGNED_SHORT, 0);
+                }
+
+
+                // 銈炽兂銉嗐偔銈广儓銇啀鎻忕敾
+                gl.flush();
+
+                // 銉兗銉椼伄銇熴倎銇啀甯板懠銇冲嚭銇�
+                setTimeout(arguments.callee, 1000 / 60);
+            })();
+
+            // 銈枫偋銉笺儉銈掔敓鎴愩仚銈嬮枹鏁�
+            function create_shader(id){
+                // 銈枫偋銉笺儉銈掓牸绱嶃仚銈嬪鏁�
+                var shader;
+
+                // HTML銇嬨倝script銈裤偘銇搞伄鍙傜収銈掑彇寰�
+                var scriptElement = document.getElementById(id);
+
+                // script銈裤偘銇屽瓨鍦ㄣ仐銇亜鍫村悎銇姕銇戙倠
+                if(!scriptElement){return;}
+
+                // script銈裤偘銇畉ype灞炴€с倰銉併偋銉冦偗
+                switch(scriptElement.type){
+
+                    // 闋傜偣銈枫偋銉笺儉銇牬鍚�
+                    case 'x-shader/x-vertex':
+                        shader = gl.createShader(gl.VERTEX_SHADER);
+                        break;
+
+                    // 銉曘儵銈般儭銉炽儓銈枫偋銉笺儉銇牬鍚�
+                    case 'x-shader/x-fragment':
+                        shader = gl.createShader(gl.FRAGMENT_SHADER);
+                        break;
+                    default :
+                        return;
+                }
+
+                // 鐢熸垚銇曘倢銇熴偡銈с兗銉€銇偨銉笺偣銈掑壊銈婂綋銇︺倠
+                gl.shaderSource(shader, scriptElement.text);
+
+                // 銈枫偋銉笺儉銈掋偝銉炽儜銈ゃ儷銇欍倠
+                gl.compileShader(shader);
+
+                // 銈枫偋銉笺儉銇屾銇椼亸銈炽兂銉戙偆銉仌銈屻仧銇嬨儊銈с儍銈�
+                if(gl.getShaderParameter(shader, gl.COMPILE_STATUS)){
+
+                    // 鎴愬姛銇椼仸銇勩仧銈夈偡銈с兗銉€銈掕繑銇椼仸绲備簡
+                    return shader;
+                }else{
+
+                    // 澶辨晽銇椼仸銇勩仧銈夈偍銉┿兗銉偘銈掋偄銉┿兗銉堛仚銈�
+                    alert(gl.getShaderInfoLog(shader));
+                }
+            }
+
+            // 銉椼儹銈般儵銉犮偑銉栥偢銈с偗銉堛倰鐢熸垚銇椼偡銈с兗銉€銈掋儶銉炽偗銇欍倠闁㈡暟
+            function create_program(vs, fs){
+                // 銉椼儹銈般儵銉犮偑銉栥偢銈с偗銉堛伄鐢熸垚
+                var program = gl.createProgram();
+
+                // 銉椼儹銈般儵銉犮偑銉栥偢銈с偗銉堛伀銈枫偋銉笺儉銈掑壊銈婂綋銇︺倠
+                gl.attachShader(program, vs);
+                gl.attachShader(program, fs);
+
+                // 銈枫偋銉笺儉銈掋儶銉炽偗
+                gl.linkProgram(program);
+
+                // 銈枫偋銉笺儉銇儶銉炽偗銇屾銇椼亸琛屻仾銈忋倢銇熴亱銉併偋銉冦偗
+                if(gl.getProgramParameter(program, gl.LINK_STATUS)){
+
+                    // 鎴愬姛銇椼仸銇勩仧銈夈儣銉偘銉┿儬銈儢銈搞偋銈儓銈掓湁鍔广伀銇欍倠
+                    gl.useProgram(program);
+
+                    // 銉椼儹銈般儵銉犮偑銉栥偢銈с偗銉堛倰杩斻仐銇︾祩浜�
+                    return program;
+                }else{
+
+                    // 澶辨晽銇椼仸銇勩仧銈夈偍銉┿兗銉偘銈掋偄銉┿兗銉堛仚銈�
+                    alert(gl.getProgramInfoLog(program));
+                }
+            }
+
+            // VBO銈掔敓鎴愩仚銈嬮枹鏁�
+            function create_vbo(data){
+                // 銉愩儍銉曘偂銈儢銈搞偋銈儓銇敓鎴�
+                var vbo = gl.createBuffer();
+
+                // 銉愩儍銉曘偂銈掋儛銈ゃ兂銉夈仚銈�
+                gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+
+                // 銉愩儍銉曘偂銇儑銉笺偪銈掋偦銉冦儓
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
+
+                // 銉愩儍銉曘偂銇儛銈ゃ兂銉夈倰鐒″姽鍖�
+                gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+                // 鐢熸垚銇椼仧 VBO 銈掕繑銇椼仸绲備簡
+                return vbo;
+            }
+
+            // VBO銈掋儛銈ゃ兂銉夈仐鐧婚尣銇欍倠闁㈡暟
+            function set_attribute(vbo, attL, attS){
+                // 寮曟暟銇ㄣ仐銇﹀彈銇戝彇銇ｃ仧閰嶅垪銈掑嚘鐞嗐仚銈�
+                for(var i in vbo){
+                    // 銉愩儍銉曘偂銈掋儛銈ゃ兂銉夈仚銈�
+                    gl.bindBuffer(gl.ARRAY_BUFFER, vbo[i]);
+
+                    // attributeLocation銈掓湁鍔广伀銇欍倠
+                    gl.enableVertexAttribArray(attL[i]);
+
+                    // attributeLocation銈掗€氱煡銇楃櫥閷层仚銈�
+                    gl.vertexAttribPointer(attL[i], attS[i], gl.FLOAT, false, 0, 0);
+                }
+            }
+
+            // IBO銈掔敓鎴愩仚銈嬮枹鏁�
+            function create_ibo(data){
+                // 銉愩儍銉曘偂銈儢銈搞偋銈儓銇敓鎴�
+                var ibo = gl.createBuffer();
+
+                // 銉愩儍銉曘偂銈掋儛銈ゃ兂銉夈仚銈�
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
+
+                // 銉愩儍銉曘偂銇儑銉笺偪銈掋偦銉冦儓
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Int16Array(data), gl.STATIC_DRAW);
+
+                // 銉愩儍銉曘偂銇儛銈ゃ兂銉夈倰鐒″姽鍖�
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+
+                // 鐢熸垚銇椼仧IBO銈掕繑銇椼仸绲備簡
+                return ibo;
+            }
+
+            // 銉嗐偗銈广儊銉ｃ倰鐢熸垚銇欍倠闁㈡暟
+            function create_texture(source){
+                // 銈ゃ儭銉笺偢銈儢銈搞偋銈儓銇敓鎴�
+                var img = new Image();
+
+                // 銉囥兗銈裤伄銈兂銉兗銉夈倰銉堛儶銈兗銇仚銈�
+                img.onload = function(){
+                    // 銉嗐偗銈广儊銉ｃ偑銉栥偢銈с偗銉堛伄鐢熸垚
+                    var tex = gl.createTexture();
+
+                    // 銉嗐偗銈广儊銉ｃ倰銉愩偆銉炽儔銇欍倠
+                    gl.bindTexture(gl.TEXTURE_2D, tex);
+
+                    // 銉嗐偗銈广儊銉ｃ伕銈ゃ儭銉笺偢銈掗仼鐢�
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+
+                    // 銉熴儍銉椼優銉冦儣銈掔敓鎴�
+                    gl.generateMipmap(gl.TEXTURE_2D);
+
+                    // 銉嗐偗銈广儊銉ｃ伄銉愩偆銉炽儔銈掔劇鍔瑰寲
+                    gl.bindTexture(gl.TEXTURE_2D, null);
+
+                    // 鐢熸垚銇椼仧銉嗐偗銈广儊銉ｃ倰銈般儹銉笺儛銉鏁般伀浠ｅ叆
+                    texture = tex;
+                };
+
+                // 銈ゃ儭銉笺偢銈儢銈搞偋銈儓銇偨銉笺偣銈掓寚瀹�
+                img.src = source;
+            }
+
+        };
+    </script>
+    <script id="vs" type="x-shader/x-vertex">
+attribute vec3 position;
+attribute vec4 color;
+attribute vec2 textureCoord;
+uniform   mat4 mvpMatrix;
+varying   vec4 vColor;
+varying   vec2 vTextureCoord;
+
+void main(void){
+	vColor        = color;
+	vTextureCoord = textureCoord;
+	gl_Position   = mvpMatrix * vec4(position, 1.0);
+}
+		</script>
+
+    <script id="fs" type="x-shader/x-fragment">
+precision mediump float;
+
+uniform sampler2D texture;
+varying vec4      vColor;
+varying vec2      vTextureCoord;
+
+void main(void){
+	vec4 smpColor = texture2D(texture, vTextureCoord);
+	gl_FragColor  = vColor * smpColor;
+}
+		</script>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+</body>
+</html>

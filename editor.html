@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div id="1" style="position: absolute; text-align: right; z-index:999; top:0px; right: 50px; width:150px; height:30px; background-color:green"></div>
+<script type="text/javascript" src="core/HY.js"></script>
+<script type="text/javascript" src="core/Core.js"></script>
+<script type="text/javascript" src="core/Config.js"></script>
+<script type="text/javascript" src="core/Node.js"></script>
+<script type="text/javascript" src="core/RichNode.js"></script>
+<script type="text/javascript" src="core/Event.js"></script>
+<script type="text/javascript" src="core/TextLayouter.js"></script>
+<script type="text/javascript" src="core/RenderContext.js"></script>
+<script type="text/javascript" src="core/Application.js"></script>
+<script type="text/javascript" src="core/Resource.js"></script>
+<script type="text/javascript" src="core/Action.js"></script>
+<script type="text/javascript" src="core/Ajax.js"></script>
+<script type="text/javascript" src="core/AudioPlayer.js"></script>
+<script type="text/javascript" src="core/ImageData.js"></script>
+
+<script type="text/javascript" src="gui/Gui.js"></script>
+<script type="text/javascript" src="gui/View.js"></script>
+<script type="text/javascript" src="gui/Frame.js"></script>
+<script type="text/javascript" src="gui/Label.js"></script>
+<script type="text/javascript" src="gui/Button.js"></script>
+<script type="text/javascript" src="gui/CheckBox.js"></script>
+<script type="text/javascript" src="gui/TextBox.js"></script>
+<script type="text/javascript" src="gui/ImageView.js"></script>
+<script type="text/javascript" src="gui/TimeLine.js"></script>
+<script type="text/javascript" src="gui/TimeLineRule.js"></script>
+<script type="text/javascript" src="gui/Window.js"></script>
+<script type="text/javascript" src="gui/Panel.js"></script>
+<script type="text/javascript" src="gui/TabPanel.js"></script>
+<script type="text/javascript" src="gui/SplitView.js"></script>
+<script type="text/javascript" src="gui/DropDownButton.js"></script>
+<script type="text/javascript" src="gui/Menu.js"></script>
+
+<script type="text/javascript" src="gui/ScrollView.js"></script>
+<script type="text/javascript" src="gui/ScrollBar.js"></script>
+<script type="text/javascript" src="gui/ListCellView.js"></script>
+<script type="text/javascript" src="gui/ListSectionView.js"></script>
+<script type="text/javascript" src="gui/ListView.js"></script>
+<script type="text/javascript" src="gui/SimpleListView.js"></script>
+<script type="text/javascript" src="gui/TreeNodeView.js"></script>
+<script type="text/javascript" src="gui/TreeView.js"></script>
+<script type="text/javascript" src="gui/SimpleTreeView.js"></script>
+
+<!--<script type="text/javascript" src="gui/Mobile/MScrollContentView.js"></script>-->
+<!--<script type="text/javascript" src="gui/Mobile/MScrollView.js"></script>-->
+<!--<script type="text/javascript" src="gui/Mobile/MListSectionView.js"></script>-->
+<!--<script type="text/javascript" src="gui/Mobile/MListCellView.js"></script>-->
+<!--<script type="text/javascript" src="gui/Mobile/MListView.js"></script>-->
+<!--<script type="text/javascript" src="gui/Mobile/MGridSectionView.js"></script>-->
+<!--<script type="text/javascript" src="gui/Mobile/MGridCellView.js"></script>-->
+<!--<script type="text/javascript" src="gui/Mobile/MGridView.js"></script>-->
+
+<script type="text/javascript" src="game/Game.js"></script>
+<script type="text/javascript" src="game/Unit.js"></script>
+<script type="text/javascript" src="game/Model.js"></script>
+
+<script type="text/javascript" src="editor/ModeStructTree.js"></script>
+<script type="text/javascript" src="editor/ModeNameTree.js"></script>
+<script type="text/javascript" src="editor/ModeTimeTree.js"></script>
+<script type="text/javascript" src="editor/MapEditor.js"></script>
+<script type="text/javascript" src="editor/AniEditor.js"></script>
+<script type="text/javascript">
+    var app = new HY.Core.Application({
+        fullScreen:true,
+        autoScale:false,
+        refreshMode:0
+    });
+    var model1 = new HY.Game.Unit({
+        name:"装配体1",
+        x:200,
+        y:200,
+        width:100,
+        height:100,
+        backgroundColor:"#ff0000"
+    });
+    var unit1 = new HY.Game.Unit({
+        name:"零件1",
+        x:0,
+        y:0,
+        width:20,
+        height:20,
+        backgroundColor:"#00ff00"
+    });
+    var unit2 = new HY.Game.Unit({
+        name:"零件2",
+        x:10,
+        y:10,
+        width:20,
+        height:20,
+        backgroundColor:"#0000ff"
+    });
+    model1.addChildUnit(unit1);
+    model1.addChildUnit(unit2);
+
+    var modelStructTree = new HY.GUI.ModelStructTreeView({
+        x:0,
+        y:0,
+        width:150,
+        height:150,
+        root:model1
+    });
+
+    var modelNameTree = new HY.GUI.ModelNameTreeView({
+        x:160,
+        y:0,
+        width:150,
+        height:150,
+        root:model1
+    });
+
+    var modelTimeTree = new HY.GUI.ModelTimeTreeView({
+        x:320,
+        y:0,
+        width:150,
+        height:150,
+        root:model1
+    });
+
+    var view = new HY.GUI.View({
+        x:0,
+        y:0,
+        width:500,
+        height:500
+    });
+    view.addChildNodeAtLayer(modelStructTree,0);
+    view.addChildNodeAtLayer(modelNameTree,0);
+    view.addChildNodeAtLayer(modelTimeTree,0);
+    view.addChildNodeAtLayer(model1,0);
+//    app.run(view);
+//    app.run(MapEditor.UI.window);
+    app.run(AniEditor.UI.window);
+    app.show();
+</script>
+
+</body>
+</html>

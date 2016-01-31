@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/global.css" />
+    <link rel="stylesheet" type="text/css" href="css/theme.css" />
+    <style>
+        .private-container{
+            width: 800px;
+            height: 500px;
+            border: solid 5px #000000;
+            border-top-width: 0px;
+        }
+        .private-search-bar{
+            width: 100%;
+            height: 50px;
+            background: greenyellow
+        }
+    </style>
+    <script type="text/javascript">
+        function a(e){
+            var arg = event?event:e;
+            alert(arg.target.id);
+        }
+    </script>
+</head>
+<body>
+<div class="public-ver-abs-middle private-container">
+    <div class="public-table theme-title">
+        <div class="public-table-cell public-table-cell-ver-middle">
+            <span class="theme-small-logo"></span>
+            <span class="theme-title-text">图片资源</span>
+            <span class="theme-small-closebtn" style="float: right;"></span>
+        </div>
+    </div>
+    <div class="public-table private-search-bar">
+        <div class="public-table-cell public-table-cell-ver-middle" style="text-align: center;">
+            <input class="theme-search-text" type="text" placeholder="搜索图片"><input class="theme-search-btn" type="submit" value="搜索">
+        </div>
+    </div>
+    <div style="height: 420px;">
+        <div style="width: 20%; height: 100%; float: left; background-color: beige">
+            <div style="height: 370px; overflow-y: auto; overflow-x: hidden" onclick="a();">
+                <p id="1" name="hello1">helloworld</p>
+                <p id="2" name="hello2">helloworld</p>
+                <p id="3" name="hello3">helloworld</p>
+            </div>
+            <div style="height: 50px; overflow: hidden; background-color: #00FF00; background-image: url('image/web/upload_l_btn.png'); background-position: center;">
+                <input class="public-transparent" style="font-size: 100px; top: 0px; left: 0px;" type="file" value="浏览">
+            </div>
+        </div>
+        <div style="width: 80%; height: 100%; float: left; background-color: #ffffff"></div>
+    </div>
+</div>
+<script>
+    document.body.onclick = function(){
+        alert(window.location.href);
+    }
+</script>
+</body>
+</html>
