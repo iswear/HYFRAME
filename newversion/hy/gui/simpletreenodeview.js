@@ -46,9 +46,7 @@ hy.gui.SimpleTreeNodeView.prototype.getNodeEditDelay = function(){
     return this._nodeEditDelay;
 }
 hy.gui.SimpleTreeNodeView.prototype.setNodePath = function(nodePath){
-    if(nodePath){
-        this._nodePath = nodePath;
-    }
+    this._nodePath = nodePath;
 }
 hy.gui.SimpleTreeNodeView.prototype.getNodePath = function(){
     return this._nodePath;

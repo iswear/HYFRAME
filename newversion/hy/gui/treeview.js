@@ -1,7 +1,14 @@
 var hy = hy || {};
 hy.gui = hy.gui || {};
 hy.gui.TreeView = hy.extend(hy.gui.ScrollView);
-hy.gui.TreeView.prototype = new HY.GUI.View();
+hy.gui.TreeView.prototype.notifyTreeNodeMouseDown = "treenodemosuedown";
+hy.gui.TreeView.prototype.notifyTreeNodeMouseUp = "treenodemouseup";
+hy.gui.TreeView.prototype.notifyTreeNodeMouseOver = "treenodemouseover";
+hy.gui.TreeView.prototype.notifyTreeNodeMouseOut = "treenodemouseout";
+hy.gui.TreeView.prototype.notifyTreeNodeMouseMove = "treenodemousemove";
+hy.gui.TreeView.prototype.notifyTreeNodeClick = "treenodeclick";
+hy.gui.TreeView.prototype.notifyTreeNodeDblclick = "treenodedblclick";
+hy.gui.TreeView.prototype.notifyTreeNodeContextMenu = "treenodecontextmenu";
 hy.gui.TreeView.prototype.defaultWidthFit = true;
 hy.gui.TreeView.prototype.defaultHeightFit = true;
 hy.gui.TreeView.prototype.defaultHeaderViewFloat = false;
@@ -139,6 +146,14 @@ hy.gui.TreeView.prototype._mallocTreeNodeViews = function(dataSource, nodeInfo ,
                 nodeView.setWidth(this.getContentWidth());
                 nodeView.setHeight(nodeInfo.height);
                 nodeView.setNodePath(nodeInfo.nodePath);
+                nodeView.addObserver(this.notifyMouseDown, this, this._mouseDownTreeNode);
+                nodeView.addObserver(this.notifyMouseUp, this, this._mouseUpTreeNode);
+                nodeView.addObserver(this.notifyMouseOver, this, this._mouseOverTreeNode);
+                nodeView.addObserver(this.notifyMouseOut, this, this._mouseOutTreeNode);
+                nodeView.addObserver(this.notifyMouseMove, this, this._mouseMoveTreeNode);
+                nodeView.addObserver(this.notifyClick, this, this._clickTreeNode);
+                nodeView.addObserver(this.notifyDblClick, this, this._dblclickTreeNode);
+                nodeView.addObserver(this.notifyContextMenu, this, this._contextMenuTreeNode);
                 this._nodeViews.push(nodeView);
                 this.getContentView().addChildNodeAtLayer(cellView, 0);
                 nodeInfo.view = nodeView;
@@ -171,6 +186,30 @@ hy.gui.TreeView.prototype._recycleAllNodeView = function(){
         nodeView.setSelected(false);
         this._nodeViews.splice(i,1);
     }
+}
+hy.gui.TreeView.prototype._mouseDownTreeNode = function(sender, e){
+    this.postNotification(this.notifyTreeNodeMouseDown, [sender, e]);
+}
+hy.gui.TreeView.prototype._mouseUpTreeNode = function(sender, e){
+    this.postNotification(this.notifyTreeNodeMouseUp, [sender, e]);
+}
+hy.gui.TreeView.prototype._mouseOverTreeNode = function(sender, e){
+    this.postNotification(this.notifyTreeNodeMouseOver, [sender ,e]);
+}
+hy.gui.TreeView.prototype._mouseOutTreeNode = function(sender, e){
+    this.postNotification(this.notifyTreeNodeMouseOut, [sender, e]);
+}
+hy.gui.TreeView.prototype._mouseMoveTreeNode = function(sender, e){
+    this.postNotification(this.notifyTreeNodeMouseMove, [sender, e]);
+}
+hy.gui.TreeView.prototype._clickTreeNode = function(sender, e){
+    this.postNotification(this.notifyTreeNodeClick, [sender, e]);
+}
+hy.gui.TreeView.prototype._dblclickTreeNode = function(sender, e){
+    this.postNotification(this.notifyTreeNodeDblclick, [sender, e]);
+}
+hy.gui.TreeView.prototype._contextMenuTreeNode = function(sender, e){
+    this.postNotification(this.notifyTreeNodeContextMenu, [sender, e]);
 }
 
 hy.gui.TreeView.prototype.numberOfNodeInPath = function(treeView,nodePath){

@@ -402,5 +402,3 @@ HY.GUI.ListView.prototype.viewOfListSection = function(listView, sectionIndex){
 HY.GUI.ListView.prototype.viewOfListCellInSection = function(listView, sectionIndex, cellIndex){
     return null;
 }
-
-

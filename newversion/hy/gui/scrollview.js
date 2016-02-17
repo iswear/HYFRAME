@@ -47,9 +47,6 @@ hy.gui.ScrollView.prototype.setHeightFit = function(heightFit){
 hy.gui.ScrollView.prototype.getHeightFit = function(){
     return this._heightFit;
 }
-//hy.gui.ScrollView.prototype.getContentView = function(){
-//    return this._contentView;
-//}
 hy.gui.ScrollView.prototype.setContentOffsetX = function(offsetX){
     if(this._contentView.getX() != -offsetX){
         this._contentView.setX(-offsetX);
@@ -85,6 +82,9 @@ hy.gui.ScrollView.prototype.setContentHeight = function(height){
 }
 hy.gui.ScrollView.prototype.getContentHeight = function(){
     return this._contentView.getHeight();
+}
+hy.gui.ScrollView.prototype.getContentView = function(){
+    return this._contentView;
 }
 hy.gui.ScrollView.prototype._layoutScrollView = function(sender){
     this._horScrollBar.setX(0);

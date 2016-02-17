@@ -15,7 +15,7 @@ hy.gui.Label.prototype.defaultTextColor = "#000000";
 hy.gui.Label.prototype.defaultTextHorAlign = hy.gui.TEXT_VERALIGN_CENTER;
 hy.gui.Label.prototype.defaultTextVerAlign = hy.gui.TEXT_VERALIGN_CENTER;
 hy.gui.Label.prototype.defaultLineHeight = 0;
-hy.gui.Label.prototype.defaultTextFont = "12px sans-serif italic bold";
+hy.gui.Label.prototype.defaultTextFont = "14px sans-serif";
 hy.gui.Label.prototype.defaultMouseEnable = false;
 hy.gui.Label.prototype.defaultTextPaddingLeft = 0;
 hy.gui.Label.prototype.defaultTextPaddingRight = 0;
@@ -69,7 +69,8 @@ hy.gui.Label.prototype.init = function(config){
     this.addObserver(this.notifySyncTextLineNum,this,this.refresh);
     this.addObserver(this.notifySyncTextPadding,this,this.refresh);
     this.__textCacheRenderContext.getCanvas().style.zIndex = 100;
-    this.__textCacheRenderContext.getCanvas().style.backgroundColor = "green";
+    this.__textCacheRenderContext.getCanvas().style.backgroundColor = "blue";
+    document.body.appendChild(this.__textCacheRenderContext.getCanvas());
 }
 hy.gui.Label.prototype.sync = function(){
     this.superCall("sync",null);
@@ -81,7 +82,6 @@ hy.gui.Label.prototype.sync = function(){
 hy.gui.Label.prototype.setText = function(text){
     if(this._text != text){
         this._text = text;
-        this._
         this.postNotification(this.notifySyncText,null);
     }
 }
@@ -258,6 +258,7 @@ hy.gui.Label.prototype._paintLabelTextCache = function(){
                 break;
             }
         }
+        this.__textCacheRenderContext.setFont(this._textFont);
         this.__textCacheRenderContext.setFillStyle(this._textColor);
         for(var i = 0 ; i < lineNum ; ++i){
             this.__textCacheRenderContext.fillText(this.__textMutliLines[i],textx,texty);
@@ -298,7 +299,7 @@ hy.gui.Label.prototype._paintLabelText = function(sender, dc, rect){
                     break;
                 }
                 default :{
-                    desx += (labelwidth - srcwidth)/2;
+                    desx += Math.round((labelwidth - srcwidth)/2);
                     break;
                 }
             }
@@ -311,7 +312,7 @@ hy.gui.Label.prototype._paintLabelText = function(sender, dc, rect){
                     break;
                 }
                 default :{
-                    desy += (labelheight-srcheight)/2;
+                    desy += Math.round((labelheight-srcheight)/2);
                     break;
                 }
             }

@@ -1,6 +1,14 @@
 var hy = hy || {};
 hy.gui = hy.gui || {};
 hy.gui.ListView = hy.extend(hy.gui.ScrollView);
+hy.gui.ListView.prototype.notifyListCellMouseDown = "listcellmousedown";
+hy.gui.ListView.prototype.notifyListCellMouseUp = "listcellmouseup";
+hy.gui.ListView.prototype.notifyListCellMouseOver = "listcellmouseover";
+hy.gui.ListView.prototype.notifyListCellMouseOut = "listcellmouseout";
+hy.gui.ListView.prototype.notifyListCellMouseMove = "listcellmousemove";
+hy.gui.ListView.prototype.notifyListCellClick = "listcellclick";
+hy.gui.ListView.prototype.notifyListCellDblClick = "listcelldblclick";
+hy.gui.ListView.prototype.notifyListCellContextMenu = "listcellcontextmenu";
 hy.gui.ListView.prototype.defaultWidthFit = true;
 hy.gui.ListView.prototype.defaultHeightFit = true;
 hy.gui.ListView.prototype.defaultHeaderViewFloat = false;
@@ -132,6 +140,14 @@ hy.gui.ListView.prototype._mallocListCellViews = function(){
                         cellView.setWidth(cellWidth);
                         cellView.setHeight(cellInfo.height);
                         cellView.setCellIndex(i);
+                        cellView.addObserver(this.notifyMouseDown, this, this._mouseDownListCell);
+                        cellView.addObserver(this.notifyMouseUp, this, this._mouseUpListCell);
+                        cellView.addObserver(this.notifyMouseOver, this, this._mouseOverListCell);
+                        cellView.addObserver(this.notifyMouseOut, this, this._mouseOutListCell);
+                        cellView.addObserver(this.notifyMouseMove, this, this._mouseMoveListCell);
+                        cellView.addObserver(this.notifyClick, this, this._clickListCell);
+                        cellView.addObserver(this.notifyDblClick, this, this._dblclickListCell);
+                        cellView.addObserver(this.notifyContextMenu, this, this._contextMenuListCell);
                         this._cellViews.push(cellView);
                         this.getContentView().addChildNodeAtLayer(cellView, 0);
                         cellInfo.view = cellView;
@@ -158,6 +174,31 @@ hy.gui.ListView.prototype._recycleAllCellViews = function(){
         this._cellViews.splice(i, 1);
     }
 }
+hy.gui.ListView.prototype._mouseDownListCell = function(sender, e){
+    this.postNotification(this.notifyListCellMouseDown, [sender, e]);
+}
+hy.gui.ListView.prototype._mouseUpListCell = function(sender, e){
+    this.postNotification(this.notifyListCellMouseUp, [sender, e]);
+}
+hy.gui.ListView.prototype._mouseOverListCell = function(sender, e){
+    this.postNotification(this.notifyListCellMouseOver, [sender, e]);
+}
+hy.gui.ListView.prototype._mouseOutListCell = function(sender, e){
+    this.postNotification(this.notifyListCellMouseOut, [sender, e]);
+}
+hy.gui.ListView.prototype._mouseMoveListCell = function(sender, e){
+    this.postNotification(this.notifyListCellMouseMove, [sender, e]);
+}
+hy.gui.ListView.prototype._clickListCell = function(sender, e){
+    this.postNotification(this.notifyListCellClick, [sender, e]);
+}
+hy.gui.ListView.prototype._dblclickListCell = function(sender, e){
+    this.postNotification(this.notifyListCellDblClick, [sender, e]);
+}
+hy.gui.ListView.prototype._contextMenuListCell = function(sender, e){
+    this.postNotification(this.notifyListCellContextMenu, [sender, e]);
+}
+
 
 hy.gui.ListView.prototype.numberOfListCell = function(listView, cellIndex){
     return 0;

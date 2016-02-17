@@ -18,6 +18,7 @@ hy.TextLayouter.prototype.getCharWidthDic = function(font){
         return this._charWidthDics[font];
     }else{
         var charswidth = {};
+        this._measureContext.font = font;
         charswidth[" "] = this._measureContext.measureText(" ").width;
         charswidth["!"] = this._measureContext.measureText("!").width;
         charswidth["\""] = this._measureContext.measureText("\"").width;
@@ -130,7 +131,7 @@ hy.TextLayouter.prototype.getTextLayoutWidth = function(text,font){
             textWidth += charWidthDic[text[i]] ? charWidthDic[text[i]] : charWidthDic[" "];
         }
     }
-    return textWidth;
+    return Math.ceil(textWidth);
 }
 hy.TextLayouter.prototype.getTextLayoutArray = function(text,font,maxWidth){
     if(!text){ text = ""; }
