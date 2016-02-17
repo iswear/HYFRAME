@@ -10,7 +10,7 @@ hy.gui.TreeView.prototype.notifyTreeNodeClick = "treenodeclick";
 hy.gui.TreeView.prototype.notifyTreeNodeDblclick = "treenodedblclick";
 hy.gui.TreeView.prototype.notifyTreeNodeContextMenu = "treenodecontextmenu";
 hy.gui.TreeView.prototype.defaultWidthFit = true;
-hy.gui.TreeView.prototype.defaultHeightFit = true;
+hy.gui.TreeView.prototype.defaultHeightFit = false;
 hy.gui.TreeView.prototype.defaultHeaderViewFloat = false;
 hy.gui.TreeView.prototype.defaultFooterViewFloat = false;
 hy.gui.TreeView.prototype.init = function(config){
@@ -20,9 +20,20 @@ hy.gui.TreeView.prototype.init = function(config){
     this._headerViewFloat = this.isUndefined(config.headerViewFloat) ? this.defaultHeaderViewFloat : config.headerViewFloat;
     this._footerView = this.isUndefined(config.footerView) ? null : config.footerView;
     this._footerViewFloat = this.isUndefined(config.footerViewFloat) ? this.defaultFooterViewFloat : config.footerViewFloat;
+    this._root = this.isUndefined(config.root) ? null : config.root;
     this._reuseNodeViews = {};
     this._nodeViews = [];
     this._nodeInfos = {};/*{y:,height:,view:,childNodes:}*/
+    this.__needReloadTree = false;
+    this.addObserver(this.notifyLayoutSubNodes, this, this._layoutTreeNodeViews);
+    this.addObserver(this.notifyEnterFrame, this, this._reloadTree);
+    this.needReloadTree();
+}
+hy.gui.TreeView.prototype.setRoot = function(root){
+    this._root = root;
+}
+hy.gui.TreeView.prototype.getRoot = function(){
+    return this._root;
 }
 hy.gui.TreeView.prototype.setDataSource = function(dataSource){
     this._dataSource = dataSource;
@@ -47,7 +58,7 @@ hy.gui.TreeView.prototype.getNodeViewOfNodePath = function(nodePath,nodeDeepth){
         return null;
     }
 }
-hy.gui.TreeView.prototype.getReuseNodeOfIdentity = function(reuseIdentity){
+hy.gui.TreeView.prototype.getReuseNodeViewOfIdentity = function(reuseIdentity){
     if(this._reuseNodeViews[reuseIdentity] && this._reuseNodeViews[reuseIdentity].length > 0){
         return this._reuseNodeViews[reuseIdentity].pop();
     }else{
@@ -55,17 +66,24 @@ hy.gui.TreeView.prototype.getReuseNodeOfIdentity = function(reuseIdentity){
     }
 }
 
-hy.gui.TreeView.prototype.reloadTree = function(){
-    var dataSource = this._dataSource;
-    if(dataSource == null){
-        dataSource = this;
+hy.gui.TreeView.prototype.needReloadTree = function(){
+    this.__needReloadTree = true;
+}
+hy.gui.TreeView.prototype._reloadTree = function(){
+    if(this.__needReloadTree){
+        this.__needReloadTree = false;
+        if(this._root){
+            var dataSource = this._dataSource;
+            if(dataSource == null){
+                dataSource = this;
+            }
+            this._recycleAllNodeView();
+            this._nodeInfos = {y:0,height:0,nodePath:null,view:null,childNodes:[]};
+            var layoutY = this._reloadTreeNode(dataSource, this._nodeInfos, "", 0);
+            this.setContentHeight(layoutY);
+            this._mallocTreeView();
+        }
     }
-    this._recycleAllNodeView();
-    this._nodeInfos = {y:0,height:0,nodePath:null,view:null,childNodes:[]};
-    var layoutY = this._reloadTreeNode(dataSource, this._nodeRoot, "", 0);
-    //this.getContentView().setMinLayoutHeight(layoutY);
-    //this.getContentView().setHeight(layoutY);
-    //this._mallocTreeView();
 }
 hy.gui.TreeView.prototype._reloadTreeNode = function(dataSource , nodeInfo, nodePathStr, layoutY){
     var nodePath = [];
@@ -123,18 +141,10 @@ hy.gui.TreeView.prototype._mallocTreeView = function(){
             this._nodeViews.splice(i, 1);
         }
     }
-    this._ergodicNode(dataSource,this._nodeRoot,contentOffsetY,contentMaxY);
-    var minLayoutWidth = 0;
-    for(var i=this._nodeViews.length-1;i>=0;--i){
-        var nodeView = this._nodeViews[i];
-        if(minLayoutWidth < nodeView.getMinLayoutWidth()){
-            minLayoutWidth = nodeView.getMinLayoutWidth();
-        }
-    }
-    this.getContentView().setMinLayoutWidth(minLayoutWidth);
-    this.getContentView().setWidth(minLayoutWidth);
+    var maxContentWidth =this._mallocTreeNodeViews(dataSource,this._nodeInfos,contentOffsetY,contentMaxY,0);
+    this.setContentWidth(maxContentWidth);
 }
-hy.gui.TreeView.prototype._mallocTreeNodeViews = function(dataSource, nodeInfo ,offsetY , maxY){
+hy.gui.TreeView.prototype._mallocTreeNodeViews = function(dataSource, nodeInfo ,offsetY , maxY, maxContentWidth){
     if(nodeInfo.y < maxY){
         if(nodeInfo.y + nodeInfo.height > offsetY && nodeInfo.height > 0){
             if(!nodeInfo.view){
@@ -155,17 +165,22 @@ hy.gui.TreeView.prototype._mallocTreeNodeViews = function(dataSource, nodeInfo ,
                 nodeView.addObserver(this.notifyDblClick, this, this._dblclickTreeNode);
                 nodeView.addObserver(this.notifyContextMenu, this, this._contextMenuTreeNode);
                 this._nodeViews.push(nodeView);
-                this.getContentView().addChildNodeAtLayer(cellView, 0);
+                this.getContentView().addChildNodeAtLayer(nodeView, 0);
                 nodeInfo.view = nodeView;
+                var nodeWidth = this.widthOfNodeInPath(this, nodeInfo.nodePath);
+                if(nodeWidth > maxContentWidth){
+                    maxContentWidth = nodeWidth;
+                }
             }
         }
         if(nodeInfo.childNodes){
             var childNodeLength = nodeInfo.childNodes.length;
             for(var i=0;i<childNodeLength;++i){
-                this._mallocTreeNodeViews(dataSource,nodeInfo.childNodes[i],offsetY,maxY);
+                maxContentWidth = this._mallocTreeNodeViews(dataSource,nodeInfo.childNodes[i],offsetY,maxY,maxContentWidth);
             }
         }
     }
+    return maxContentWidth;
 }
 hy.gui.TreeView.prototype._recycleAllNodeView = function(){
     for(var i=this._nodeViews.length-1;i>=0;--i){
@@ -176,7 +191,7 @@ hy.gui.TreeView.prototype._recycleAllNodeView = function(){
         }
         this._reuseNodeViews[reuseIdentity].push(nodeView);
         var nodePath = nodeView.getNodePath();
-        var node = this._nodeRoot;
+        var node = this._nodeInfos;
         for(var i= 0,nodeDeepth=nodePath.length ; i < nodeDeepth ; ++i){
             node = node.childNodes[nodePath[i]];
         }
@@ -185,6 +200,12 @@ hy.gui.TreeView.prototype._recycleAllNodeView = function(){
         nodeView.removeFromParent(false);
         nodeView.setSelected(false);
         this._nodeViews.splice(i,1);
+    }
+}
+hy.gui.TreeView.prototype._layoutTreeNodeViews = function(){
+    var contentWidth = this.getContentWidth();
+    for(var i= 0, len = this._nodeViews.length ; i < len ; ++i){
+        this._nodeViews[i].setWidth(contentWidth);
     }
 }
 hy.gui.TreeView.prototype._mouseDownTreeNode = function(sender, e){

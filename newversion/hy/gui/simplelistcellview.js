@@ -10,7 +10,7 @@ hy.gui.SimpleListCellView.prototype.init = function(config){
     this._cellEditBox = new hy.gui.TextBox({editEnable:false, mouseEnable:false, lineNum:1 });
     this.__initEditStartTime = 0;
     this.__initEditValid = true;
-    this.addChildNodeAtLayer(this._textBox, 0);
+    this.addChildNodeAtLayer(this._cellEditBox, 0);
     this.addObserver(this.notifyLayoutSubNodes, this, this._layoutSimpleListCellView);
     this.addObserver(this.notifyMouseDown, this, this._cellEditBoxReady);
     this.addObserver(this.notifyMouseMove,this,this._cellEditBoxInvalid);
@@ -35,7 +35,7 @@ hy.gui.SimpleListCellView.prototype.getCellEditDelay = function(){
     return this._cellEditDelay;
 }
 hy.gui.SimpleListCellView.prototype.getCellTextMeasuredLength = function(){
-    this._cellEditBox.getTextMeasuredLength();
+    return this._cellEditBox.getTextMeasuredLength();
 }
 hy.gui.SimpleListCellView.prototype._layoutSimpleListCellView = function(sender){
     this._cellEditBox.setX(0);

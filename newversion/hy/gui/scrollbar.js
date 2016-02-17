@@ -75,6 +75,7 @@ hy.gui.ScrollBar.prototype.setScrollRate = function(scrolledLen,visibleLen,overa
     if(this.__scrolledRate != scrolledRate || this.__visibleRate != visibleRate){
         this.__scrolledRate = scrolledLen / overallLen;
         this.__visibleRate = visibleLen / overallLen;
+
         this.postNotification(this.notifySyncScrollRate, null);
     }
 }
@@ -103,6 +104,7 @@ hy.gui.ScrollBar.prototype._layoutScrollBar = function(sender){
             if(this._scrollDirection == 0){
                 var scrolledLen = this.__scrolledRate * width;
                 var visibleLen = this.__visibleRate * width;
+                this._scrollBar.setVisible(true);
                 this._scrollBar.setX(scrolledLen + this._paddingLeft);
                 this._scrollBar.setY(this._paddingTop);
                 this._scrollBar.setWidth(visibleLen);
@@ -114,6 +116,7 @@ hy.gui.ScrollBar.prototype._layoutScrollBar = function(sender){
             }else{
                 var scrolledLen = this.__scrolledRate * height;
                 var visibleLen = this.__visibleRate * height;
+                this._scrollBar.setVisible(true);
                 this._scrollBar.setX(this._paddingLeft);
                 this._scrollBar.setY(scrolledLen + this._paddingTop);
                 this._scrollBar.setWidth(width);

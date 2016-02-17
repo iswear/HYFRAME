@@ -39,19 +39,6 @@ HY.GUI.SimpleTreeNodeView.prototype.initConstraint = function(){
 }
 HY.GUI.SimpleTreeNodeView.prototype.layoutSubNodes = function(){
     this.superCall("layoutSubNodes");
-    var nodeDeepth = this._nodePath.length;
-    this._nodeExpandIcon.setX(nodeDeepth*this.getHeight());
-    this._nodeExpandIcon.setY(0);
-    this._nodeExpandIcon.setWidth(this.getHeight());
-    this._nodeExpandIcon.setHeight(this.getHeight());
-    this._nodeIcon.setX(nodeDeepth*this.getHeight()+this.getHeight());
-    this._nodeIcon.setY(0);
-    this._nodeIcon.setWidth(this.getHeight());
-    this._nodeIcon.setHeight(this.getHeight());
-    this._nodeTextBox.setX(nodeDeepth*this.getHeight()+this.getHeight()+this.getHeight());
-    this._nodeTextBox.setY(0);
-    this._nodeTextBox.setWidth(this.getWidth()-this._nodeIcon.getWidth()-this._nodeIcon.getX());
-    this._nodeTextBox.setHeight(this.getHeight());
 }
 HY.GUI.SimpleTreeNodeView.prototype.getNodeIcon = function(){
     return this._nodeIcon;

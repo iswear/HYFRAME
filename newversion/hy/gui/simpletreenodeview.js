@@ -10,7 +10,6 @@
 var hy = hy || {};
 hy.gui = hy.gui || {};
 hy.gui.SimpleTreeNodeView = hy.extend(hy.gui.TreeNodeView);
-hy.gui.SimpleTreeNodeView.prototype = new HY.GUI.View();
 hy.gui.SimpleTreeNodeView.prototype.defaultNodeEditEnable = false;
 hy.gui.SimpleTreeNodeView.prototype.defaultReuseIdentity = "simpletreenode";
 hy.gui.SimpleTreeNodeView.prototype.init = function(config){
@@ -23,6 +22,11 @@ hy.gui.SimpleTreeNodeView.prototype.init = function(config){
     this._nodeData = null;
     this._nodePath = null;
     this._nodeInsertMode = 0;
+    this.addChildNodeAtLayer(this._nodeIcon, 0);
+    this.addChildNodeAtLayer(this._nodeEditBox, 0);
+    this.addChildNodeAtLayer(this._nodeExpandIcon, 0);
+    this._nodeExpandIcon.addObserver(this._nodeExpandIcon.notifyPaint, this, this._paintNodeExpandIcon);
+    this.addObserver(this.notifyLayoutSubNodes, this, this._layoutTreeNodeView);
 }
 hy.gui.SimpleTreeNodeView.prototype.getNodeIcon = function(){
     return this._nodeIcon;
@@ -75,7 +79,22 @@ hy.gui.SimpleTreeNodeView.prototype.setNodeInsertMode = function(mode){
 hy.gui.SimpleTreeNodeView.prototype.getNodeInsertMode = function(){
     return this._nodeInsertMode;
 }
-hy.gui.SimpleTreeNodeView.prototype._nodeInsertModePaint = function(sender, dc, rect){
+hy.gui.SimpleTreeNodeView.prototype._layoutTreeNodeView = function(sender){
+    var nodeDeepth = this._nodePath.length;
+    this._nodeIcon.setX(nodeDeepth*this.getHeight()+this.getHeight());
+    this._nodeIcon.setY(0);
+    this._nodeIcon.setWidth(this.getHeight());
+    this._nodeIcon.setHeight(this.getHeight());
+    this._nodeEditBox.setX(nodeDeepth*this.getHeight()+this.getHeight()+this.getHeight());
+    this._nodeEditBox.setY(0);
+    this._nodeEditBox.setWidth(this.getWidth()-this._nodeIcon.getWidth()-this._nodeIcon.getX());
+    this._nodeEditBox.setHeight(this.getHeight());
+    this._nodeExpandIcon.setX(nodeDeepth*this.getHeight());
+    this._nodeExpandIcon.setY(0);
+    this._nodeExpandIcon.setWidth(this.getHeight());
+    this._nodeExpandIcon.setHeight(this.getHeight());
+}
+hy.gui.SimpleTreeNodeView.prototype._paintNodeInsertMode = function(sender, dc, rect){
     switch(this._nodeInsertMode){
         case  1:{//作为子节点
             if(this.getNodePath()){
@@ -118,7 +137,7 @@ hy.gui.SimpleTreeNodeView.prototype._nodeInsertModePaint = function(sender, dc, 
             break;
     }
 }
-hy.gui.SimpleTreeNodeView.prototype._nodeExpandIconPaint = function(sender,dc,rect){
+hy.gui.SimpleTreeNodeView.prototype._paintNodeExpandIcon = function(sender,dc,rect){
     var width = sender.getWidth();
     var height = sender.getHeight();
     dc.beginPath();

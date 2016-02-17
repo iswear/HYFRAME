@@ -68,9 +68,6 @@ hy.gui.Label.prototype.init = function(config){
     this.addObserver(this.notifySyncTextLineHeight,this,this.refresh);
     this.addObserver(this.notifySyncTextLineNum,this,this.refresh);
     this.addObserver(this.notifySyncTextPadding,this,this.refresh);
-    this.__textCacheRenderContext.getCanvas().style.zIndex = 100;
-    this.__textCacheRenderContext.getCanvas().style.backgroundColor = "blue";
-    document.body.appendChild(this.__textCacheRenderContext.getCanvas());
 }
 hy.gui.Label.prototype.sync = function(){
     this.superCall("sync",null);

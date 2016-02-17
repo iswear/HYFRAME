@@ -1,10 +1,6 @@
 var hy = hy || {};
 hy.gui = hy.gui || {};
 hy.gui.ScrollView = hy.extend(hy.gui.View);
-hy.gui.ScrollView.prototype.notifySyncContentOffsetX = "synccontentoffsetx";
-hy.gui.ScrollView.prototype.notifySyncContentOffsetY = "synccontentoffsety";
-hy.gui.ScrollView.prototype.notifySyncContentWidth = "synccontentwidth";
-hy.gui.ScrollView.prototype.notifySyncContentHeight = "synccontentheight";
 hy.gui.ScrollView.prototype.defaultWheelEnable = true;
 hy.gui.ScrollView.prototype.defaultWheelStep = 20;
 hy.gui.ScrollView.prototype.defaultWidthFit = false;
@@ -17,7 +13,7 @@ hy.gui.ScrollView.prototype.init = function(config){
     this._heightFit = this.isUndefined(config.heightFit) ? this.defaultHeightFit : config.heightFit;
     this._wheelStep = this.isUndefined(config.wheelStep) ? this.defaultWheelStep : config.wheelStep;
     this._scrollBarVisible = this.isUndefined(config.scrollBarVisible) ? this.defaultScrollBarVisible : config.scrollBarVisible;
-    this._contentView = this.isUndefined(config.contentView) ? (new hy.gui.View({normalColor:null,activeColor:null})) : config.contentView;
+    this._contentView = this.isUndefined(config.contentView) ? (new hy.gui.View({normalColor:"#0f0",activeColor:null})) : config.contentView;
     this._horScrollBar = new hy.gui.ScrollBar({paddingLeft:0, paddingRight:0,paddingTop:1,paddingBottom:1,height:10,scrollDirection:0});
     this._verScrollBar = new hy.gui.ScrollBar({paddingLeft:1, paddingRight:1,paddingTop:0,paddingBottom:0,width:10,scrollDirection:1});
     this.addChildNodeAtLayer(this._contentView, 0);
@@ -26,10 +22,10 @@ hy.gui.ScrollView.prototype.init = function(config){
 
     this._horScrollBar.addObserver(this._horScrollBar.notifyScrollBarDrag,this,this._syncLocalScrollFromHorBar);
     this._verScrollBar.addObserver(this._verScrollBar.notifyScrollBarDrag,this,this._syncLocalScrollFromVerBar);
-    this.addObserver(this.notifySyncContentOffsetX, this, this._syncLocalScrollToHorBar);
-    this.addObserver(this.notifySyncContentOffsetY, this, this._syncLocalScrollToVerBar);
-    this.addObserver(this.notifySyncContentWidth, this, this.needLayoutSubNodes);
-    this.addObserver(this.notifySyncContentHeight, this, this.needLayoutSubNodes);
+    this._contentView.addObserver(this._contentView.notifySyncX, this, this._syncLocalScrollToHorBar);
+    this._contentView.addObserver(this._contentView.notifySyncY, this, this._syncLocalScrollToVerBar);
+    this._contentView.addObserver(this._contentView.notifySyncWidth, this, this.needLayoutSubNodes);
+    this._contentView.addObserver(this._contentView.notifySyncHeight, this, this.needLayoutSubNodes);
     this.addObserver(this.notifyLayoutSubNodes, this, this._layoutScrollView);
     this.addObserver(this.notifyMouseWheel, this, this._wheelScrollView);
 }
@@ -48,37 +44,25 @@ hy.gui.ScrollView.prototype.getHeightFit = function(){
     return this._heightFit;
 }
 hy.gui.ScrollView.prototype.setContentOffsetX = function(offsetX){
-    if(this._contentView.getX() != -offsetX){
-        this._contentView.setX(-offsetX);
-        this.postNotification(this.notifySyncContentOffsetX, null);
-    }
+    this._contentView.setX(-offsetX);
 }
 hy.gui.ScrollView.prototype.getContentOffsetX = function(){
     return -this._contentView.getX();
 }
 hy.gui.ScrollView.prototype.setContentOffsetY = function(offsetY){
-    if(this._contentView.getY() != -offsetY){
-        this._contentView.setY(-offsetY);
-        this.postNotification(this.notifySyncContentOffsetY, null);
-    }
+    this._contentView.setY(-offsetY);
 }
 hy.gui.ScrollView.prototype.getContentOffsetY = function(){
     return -this._contentView.getY();
 }
 hy.gui.ScrollView.prototype.setContentWidth = function(width){
-    if(this._contentView.getWidth() != width){
-        this._contentView.setWidth(width);
-        this.postNotification(this.notifySyncContentWidth, null);
-    }
+    this._contentView.setWidth(width);
 }
 hy.gui.ScrollView.prototype.getContentWidth = function(){
     return this._contentView.getWidth();
 }
 hy.gui.ScrollView.prototype.setContentHeight = function(height){
-    if(this._contentView.getHeight() != height){
-        this._contentView.setHeight(height);
-        this.postNotification(this.notifySyncContentHeight, null);
-    }
+    this._contentView.setHeight(height);
 }
 hy.gui.ScrollView.prototype.getContentHeight = function(){
     return this._contentView.getHeight();
@@ -100,26 +84,26 @@ hy.gui.ScrollView.prototype._layoutScrollView = function(sender){
         var height = this.getHeight();
         var minContentWidth = this._contentView.getWidth();
         var minContentHeight = this._contentView.getHeight();
-        if(this.getWidthFit()){
-            minContentWidth = this._contentView.getMinWidth();
-        }
-        if(this.getHeightFit()){
-            minContentHeight = this._contentView.getMinHeight();
-        }
+        //if(this.getWidthFit()){
+        //    minContentWidth = this._contentView.getMinWidth();
+        //}
+        //if(this.getHeightFit()){
+        //    minContentHeight = this._contentView.getMinHeight();
+        //}
         if(minContentWidth <= width && minContentHeight <= height){
             /*两者都不显示*/
             this._horScrollBar.setPaddingRight(0);
             this._verScrollBar.setPaddingBottom(0);
         }else if(minContentWidth > width && minContentHeight <= height - this._horScrollBar.getHeight()){
             /*只显示横向*/
-            this._horScrollBar.setPaddingRight(this._verScrollBar.getWidth());
+            this._horScrollBar.setPaddingRight(0);
             this._verScrollBar.setPaddingBottom(0);
             horBarVisible = true;
             height = height - this._horScrollBar.getHeight();
         }else if(minContentHeight > height && minContentWidth <= width - this._verScrollBar.getWidth()){
             /*只显示纵向*/
             this._horScrollBar.setPaddingRight(0);
-            this._verScrollBar.setPaddingBottom(this._horScrollBar.getHeight());
+            this._verScrollBar.setPaddingBottom(0);
             verBarVisible = true;
             width = width - this._verScrollBar.getWidth();
         }else{

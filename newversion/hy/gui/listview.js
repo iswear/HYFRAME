@@ -10,7 +10,7 @@ hy.gui.ListView.prototype.notifyListCellClick = "listcellclick";
 hy.gui.ListView.prototype.notifyListCellDblClick = "listcelldblclick";
 hy.gui.ListView.prototype.notifyListCellContextMenu = "listcellcontextmenu";
 hy.gui.ListView.prototype.defaultWidthFit = true;
-hy.gui.ListView.prototype.defaultHeightFit = true;
+hy.gui.ListView.prototype.defaultHeightFit = false;
 hy.gui.ListView.prototype.defaultHeaderViewFloat = false;
 hy.gui.ListView.prototype.defaultFooterViewFloat = false;
 hy.gui.ListView.prototype.init = function(config) {
@@ -23,6 +23,10 @@ hy.gui.ListView.prototype.init = function(config) {
     this._reuseCellViews = {};
     this._cellViews = [];
     this._cellInfos = [];/*{y:(Number),height:(Number),view:(view)}*/
+    this.__needReloadList = false;
+    this.addObserver(this.notifyEnterFrame, this, this._reloadList);
+    this.addObserver(this.notifyLayoutSubNodes, this, this._layoutListCellViews);
+    this.needReloadList();
 }
 hy.gui.ListView.prototype.setDataSource = function(dataSource){
     this._dataSource = dataSource;
@@ -69,39 +73,45 @@ hy.gui.ListView.prototype.getReuseCellViewOfIdentity = function(reuseIdentity){
     }
 }
 
-hy.gui.ListView.prototype.reloadList = function(){
-    var dataSource = this;
-    if(this._dataSource != null) {
-        dataSource = this._dataSource;
-    }
-    this._recycleAllCellViews();
-    this._cellInfos = [];
-    var cellsNum = dataSource.numberOfListCell(this);
-    var cursorY=0;
-    if(this._headerView){
-        if(this._headerView.getParent() != this){
-            this._headerView.removeFromParent(false);
-            this.getContentView().addChildNodeAtLayer(this._headerView, 0);
+hy.gui.ListView.prototype.needReloadList = function(){
+    this.__needReloadList = true;
+}
+hy.gui.ListView.prototype._reloadList = function(){
+    if(this.__needReloadList){
+        this.__needReloadList = false;
+        var dataSource = this;
+        if(this._dataSource != null) {
+            dataSource = this._dataSource;
         }
-        cursorY += this._headerView.getHeight();
-    }
-    for(var i=0;i<cellsNum;++i){
-        /*cell layout info*/
-        var cellInfo = {y:0,height:0,view:null};
-        cellInfo.y = cursorY;
-        cellInfo.height = dataSource.heightOfListCell(this);
-        cursorY += cellInfo.height;
-        this._cellInfos.push(cellInfo);
-    }
-    if(this._footerView){
-        if(this._footerView.getParent() != this){
-            this._footerView.removeFromParent(false);
-            this.getContentView().addChildNodeAtLayer(this._footerView, 0);
+        this._recycleAllCellViews();
+        this._cellInfos = [];
+        var cellsNum = dataSource.numberOfListCell(this);
+        var cursorY=0;
+        if(this._headerView){
+            if(this._headerView.getParent() != this){
+                this._headerView.removeFromParent(false);
+                this.getContentView().addChildNodeAtLayer(this._headerView, 0);
+            }
+            cursorY += this._headerView.getHeight();
         }
-        cursorY += this._footerView.getHeight();
+        for(var i=0;i<cellsNum;++i){
+            /*cell layout info*/
+            var cellInfo = {y:0,height:0,view:null};
+            cellInfo.y = cursorY;
+            cellInfo.height = dataSource.heightOfListCell(this);
+            cursorY += cellInfo.height;
+            this._cellInfos.push(cellInfo);
+        }
+        if(this._footerView){
+            if(this._footerView.getParent() != this){
+                this._footerView.removeFromParent(false);
+                this.getContentView().addChildNodeAtLayer(this._footerView, 0);
+            }
+            cursorY += this._footerView.getHeight();
+        }
+        this.setContentHeight(cursorY);
+        this._mallocListCellViews();
     }
-    this.setContentHeight(cursorY);
-    this._mallocListCellViews();
 }
 hy.gui.ListView.prototype._mallocListCellViews = function(){
     var dataSource = this;
@@ -126,6 +136,7 @@ hy.gui.ListView.prototype._mallocListCellViews = function(){
         }
     }
     var cellWidth = this.getContentWidth();
+    var cellMaxWidth = 0;
     for(var i= 0, cellNum = this._cellInfos.length ; i < cellNum ; ++i){
         var cellInfo = this._cellInfos[i];
         if(cellInfo.y < contentMaxY){
@@ -133,7 +144,7 @@ hy.gui.ListView.prototype._mallocListCellViews = function(){
                 if(!cellInfo.view){
                     var cellView = dataSource.viewOfListCell(this,i);
                     if(cellView != null){
-                        var contextMenu = dataSource.contextMenuOfListCell(this,i,j);
+                        var contextMenu = dataSource.contextMenuOfListCell(this,i);
                         cellView.setContextMenu(contextMenu);
                         cellView.setX(0);
                         cellView.setY(cellInfo.y);
@@ -151,6 +162,10 @@ hy.gui.ListView.prototype._mallocListCellViews = function(){
                         this._cellViews.push(cellView);
                         this.getContentView().addChildNodeAtLayer(cellView, 0);
                         cellInfo.view = cellView;
+                        var cellViewWidth = dataSource.widthOfListCell(this, i);
+                        if(cellViewWidth > cellMaxWidth){
+                            cellMaxWidth = cellViewWidth;
+                        }
                     }
                 }
             }
@@ -158,6 +173,7 @@ hy.gui.ListView.prototype._mallocListCellViews = function(){
             break;
         }
     }
+    this.setContentWidth(cellMaxWidth);
 }
 hy.gui.ListView.prototype._recycleAllCellViews = function(){
     for(var i=this._cellViews.length-1;i>=0;--i){
@@ -172,6 +188,12 @@ hy.gui.ListView.prototype._recycleAllCellViews = function(){
         cellView.removeFromParent(false);
         cellView.setSelected(false);
         this._cellViews.splice(i, 1);
+    }
+}
+hy.gui.ListView.prototype._layoutListCellViews = function(){
+    var contentwidth = this.getContentWidth();
+    for(var i = 0,len = this._cellViews.length ; i < len ; ++i){
+        this._cellViews[i].setWidth(contentwidth);
     }
 }
 hy.gui.ListView.prototype._mouseDownListCell = function(sender, e){

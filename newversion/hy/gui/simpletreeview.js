@@ -4,8 +4,8 @@ hy.gui.SimpleTreeView = hy.extend(hy.gui.TreeView);
 hy.gui.SimpleTreeView.prototype.defaultNodeHeight = 20;
 hy.gui.SimpleTreeView.prototype.defaultNodeMoveEnable = true;
 hy.gui.SimpleTreeView.prototype.defaultNodeEditEnable = false;
-hy.gui.SimpleTreeView.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
+hy.gui.SimpleTreeView.prototype.init = function(config){
+    this.superCall("init",[config]);
     this._nodeHeight = this.isUndefined(config.nodeHeight) ? this.defaultNodeHeight : config.nodeHeight;
     this._nodeEditEnable = this.isUndefined(config.nodeEditEnable) ? this.defaultNodeEditEnable : config.nodeEditEnable;
     this._nodeMoveEnable = this.isUndefined(config.nodeMoveEnable) ? this.defaultNodeMoveEnable : config.nodeEditEnable;
@@ -140,6 +140,9 @@ hy.gui.SimpleTreeView.prototype.numberOfNodeInPath = function(treeView, nodePath
 hy.gui.SimpleTreeView.prototype.heightOfNodeInPath = function(treeView, nodePath){
     return this._nodeHeight;
 }
+hy.gui.SimpleTreeView.prototype.widthOfNodeInPath = function(treeView, nodePath){
+    return 300;
+}
 hy.gui.SimpleTreeView.prototype.contextMenuOfNodeInPath = function(treeView, nodePath){
     return null;
 }
@@ -150,20 +153,16 @@ hy.gui.SimpleTreeView.prototype.viewOfNodeInPath = function(treeView,nodePath) {
         for (var i = 0; i < nodeDeepth; ++i) {
             node = node.childNodes[nodePath[i]];
         }
-        var nodeView = treeView.getReuseNodeOfIdentity("nodeview");
+        var nodeView = treeView.getReuseNodeViewOfIdentity("nodeview");
         if (nodeView == null) {
-            nodeView = new HY.GUI.SimpleTreeNodeView({reuseIdentity: "nodeview"});
-            nodeView.setNormalColor(this._nodeNormalColor);
-            nodeView.setHoverColor(this._nodeHoverColor);
-            nodeView.setActiveColor(this._nodeActiveColor);
-            nodeView.getNodeExpandIcon().addEventListener("mouseup", this._nodeExpand, this);
+            nodeView = new hy.gui.SimpleTreeNodeView({reuseIdentity: "nodeview"});
         }
         if (this._selNodePath && this._compareNodePath(nodePath, nodePath.length, this._selNodePath, this._selNodePath.length)) {
             nodeView.setSelected(true);
         } else {
             nodeView.setSelected(false);
         }
-        nodeView.setEditEnable(this._nodeEditEnable);
+        nodeView.setNodeEditEnable(this._nodeEditEnable);
         nodeView.setNodeData(node);
         if (node.leaf) {
             nodeView.getNodeIcon().setImage(this._leafNodeIcon);

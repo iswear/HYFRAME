@@ -1,7 +1,6 @@
 var hy = hy || {};
 hy.gui = hy.gui || {};
 hy.gui.TreeNodeView = hy.extend(hy.gui.View);
-hy.gui.TreeNodeView.prototype = new HY.GUI.View();
 hy.gui.TreeNodeView.prototype.defaultReuseIdentity = "treenode";
 hy.gui.TreeNodeView.prototype.init = function(config){
     this.superCall("init",[config]);

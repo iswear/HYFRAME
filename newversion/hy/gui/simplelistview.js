@@ -2,7 +2,7 @@ var hy = hy || {};
 hy.gui = hy.gui || {};
 hy.gui.SimpleListView = hy.extend(hy.gui.ListView);
 hy.gui.SimpleListView.prototype.defaultCellHeight = 20;
-hy.gui.SimpleTreeView.prototype.defaultCellMoveEnable = true;
+hy.gui.SimpleListView.prototype.defaultCellMoveEnable = true;
 hy.gui.SimpleListView.prototype.defaultCellEditEnable = false;
 hy.gui.SimpleListView.prototype.init = function(config){
     this.superCall("init",[config]);
@@ -64,7 +64,7 @@ hy.gui.SimpleListView.prototype.numberOfListCell = function(listView){
 hy.gui.SimpleListView.prototype.widthOfListCell = function(listView, cellIndex){
     var cellView = listView.getCellViewOfCellIndex(cellIndex);
     if(cellView){
-        return cellView.getTextMeasuredLength();
+        return cellView.getCellTextMeasuredLength();
     }else{
         return 0;
     }
@@ -76,12 +76,12 @@ hy.gui.SimpleListView.prototype.contextMenuOfListCell = function(listView, cellI
     return null;
 }
 hy.gui.SimpleListView.prototype.viewOfListCell = function(listView, cellIndex){
-    var cellView = listView.getReuseCellOfIdentity("listcell");
+    var cellView = listView.getReuseCellViewOfIdentity("listcell");
     if(cellView == null) {
-        cellView = new HY.GUI.SimpleListCellView({reuseIdentity: "listcell"});
+        cellView = new hy.gui.SimpleListCellView({reuseIdentity: "listcell"});
     }
-    cellView.setText(this._items[cellIndex]);
-    cellView.setEditEnable(this._cellEditEnable);
+    cellView.setCellText(this._items[cellIndex]);
+    cellView.setCellEditEnable(this._cellEditEnable);
     if(cellIndex == this._selCellIndex){
         cellView.setSelected(true);
     }else{
