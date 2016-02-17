@@ -5,6 +5,8 @@ HY.Game.Unit.prototype = new HY.Core.Node();
 HY.Game.Unit.prototype.defaultName = "新零件";
 HY.Game.Unit.prototype.defaultWidth = 50;
 HY.Game.Unit.prototype.defaultHeight = 50;
+HY.Game.Unit.prototype.defaultAnchorX = 0.5;
+HY.Game.Unit.prototype.defaultAnchorY = 0.5;
 HY.Game.Unit.prototype.initMember = function(config){
     this.superCall("initMember",[config]);
     if(config.name != undefined){ this._name = config.name; } else { this._name = this.defaultName; }
@@ -15,7 +17,7 @@ HY.Game.Unit.prototype.initMember = function(config){
 }
 HY.Game.Unit.prototype.initConstraint = function(){
     this.superCall("initConstraint");
-    this.addEventListener("paint",this._selfPaint,this);
+    this.addEventListener("paint",this._paintTexture,this);
 }
 HY.Game.Unit.prototype.removeClearUp = function(node, notClearUp){
     this.superCall("removeClearUp",[node, notClearUp]);
@@ -62,7 +64,6 @@ HY.Game.Unit.prototype.addChildUnitAtIndex = function(unit,index){
     }
 }
 HY.Game.Unit.prototype.removeChildUnit = function(unit,notClearUp){
-    var len = this._childUnits.length;
     for(var i = this._childUnits.length-1;i>=0;--i){
         if(this._childUnits[i] == unit){
             this._childUnits.splice(i,1);
@@ -279,6 +280,6 @@ HY.Game.Unit.prototype._runActionScheduler = function(frame){
     this.setRotateZ(frame[HY.Game.Frame.Param.rotateZ]);
     this.setAlpha(frame[HY.Game.Frame.Param.alpha]);
 }
-HY.Game.Unit.prototype._selfPaint = function(dc,rect){
+HY.Game.Unit.prototype._paintTexture = function(dc,rect){
 }
 

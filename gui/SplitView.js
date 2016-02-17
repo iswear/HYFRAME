@@ -17,8 +17,8 @@ HY.GUI.SplitView.prototype.initMember = function(config){
 }
 HY.GUI.SplitView.prototype.initConstraint = function(){
     this.superCall("initConstraint");
-    this.addEventListener("widthchanged",this._selfWidthChanged,this);
-    this.addEventListener("heightchanged",this._selfHeightChanged,this);
+    this.addEventListener("widthchanged",this._splitViewWidthChanged,this);
+    this.addEventListener("heightchanged",this._splitViewHeightChanged,this);
     this.setSplitViews(this._splitViews,this._splitInitLayout);
 }
 HY.GUI.SplitView.prototype.getAutoAdjustViewIndex = function(){
@@ -229,7 +229,7 @@ HY.GUI.SplitView.prototype.layoutSubNodes = function(){
 HY.GUI.SplitView.prototype._spaceViewDrag = function(){
     this.needLayoutSubNodes();
 }
-HY.GUI.SplitView.prototype._selfWidthChanged = function(sender){
+HY.GUI.SplitView.prototype._splitViewWidthChanged = function(sender){
     if(this._splitDirection == 0){
         var viewCount = this._splitViews.length;
         var widthNoAdjust = 0;
@@ -247,7 +247,7 @@ HY.GUI.SplitView.prototype._selfWidthChanged = function(sender){
     }
     this.layoutSplitViews();
 }
-HY.GUI.SplitView.prototype._selfHeightChanged = function(sender){
+HY.GUI.SplitView.prototype._splitViewHeightChanged = function(sender){
     if(this._splitDirection != 0){
         var viewCount = this._splitViews.length;
         var heightNoAdjust = 0;

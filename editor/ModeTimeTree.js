@@ -6,18 +6,15 @@ HY.GUI.ModelTimeTreeNodeView.prototype.defaultReuseIdentity = "modelnamenode";
 HY.GUI.ModelTimeTreeNodeView.prototype.defaultEditEnable = false;
 HY.GUI.ModelTimeTreeNodeView.prototype.defaultSelected = false;
 HY.GUI.ModelTimeTreeNodeView.prototype.defaultBackgroundColor = "#0000ff";
-HY.GUI.ModelTimeTreeNodeView.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-    if(config.selected != undefined){ this._selected = config.selected; } else { this._selected = this.defaultSelected; }
-    if(config.editEnable != undefined){ this._editEnable = config.editEnable; } else { this._editEnable = this.defaultEditEnable; }
-
-    this._nodeTimeLine = new HY.GUI.TimeLine({mouseEnable:false});
+HY.GUI.ModelTimeTreeNodeView.prototype.init = function(config){
+    this._nodeTimeLine = new HY.GUI.TimeLine({mouseEnable:true,contextMenu:["添加关键帧","删除关键帧","添加补间动画","删除补间动画"]});
     this._nodeUnit = null;
     this._nodePath = null;
-}
-HY.GUI.ModelTimeTreeNodeView.prototype.initConstraint = function(){
-    this.superCall("initConstraint");
     this.addChildNodeAtLayer(this._nodeTimeLine,0);
+    this.superCall("init",[config]);
+    if(config.selected != undefined){ this._selected = config.selected; } else { this._selected = this.defaultSelected; }
+    if(config.editEnable != undefined){ this._editEnable = config.editEnable; } else { this._editEnable = this.defaultEditEnable; }
+    this._nodeTimeLine.addEventListener("contextmenu", this._timelineContextMenu, this);
 }
 HY.GUI.ModelTimeTreeNodeView.prototype.layoutSubNodes = function(){
     this.superCall("layoutSubNodes");
@@ -43,6 +40,29 @@ HY.GUI.ModelTimeTreeNodeView.prototype.setNodeUnit = function(nodeUnit){
         this._nodeUnit = nodeUnit;
     }
 }
+HY.GUI.ModelTimeTreeNodeView.prototype.setSelected = function(selected){
+    this.superCall("setSelected",[selected]);
+    this._nodeTimeLine.setMouseEnable(selected);
+    this._nodeTimeLine.setSelectedFrameIndex(-1);
+}
+HY.GUI.ModelTimeTreeNodeView.prototype._timelineContextMenu = function(sender, e , menuCellView){
+    switch (menuCellView.getCellIndex()){
+        case 0:
+            this._nodeTimeLine.addKeyFrameAt(this._nodeTimeLine.getSelectedFrameIndex());
+            break;
+        case 1:
+            this._nodeTimeLine.removeKeyFrameAt(this._nodeTimeLine.getSelectedFrameIndex());
+            break;
+        case 2:
+            this._nodeTimeLine.addTweenAniAt(this._nodeTimeLine.getSelectedFrameIndex());
+            break;
+        case 3:
+            this._nodeTimeLine.removeTweenAniAt(this._nodeTimeLine.getSelectedFrameIndex());
+            break;
+        default :
+            break;
+    }
+}
 
 
 HY.GUI.ModelTimeTreeView = function(config){
@@ -61,18 +81,13 @@ HY.GUI.ModelTimeTreeView.prototype.defaultNodeIcon = {
     srcWidth:20,
     srcHeight:20
 };
-HY.GUI.ModelTimeTreeView.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-    if(config.nodeHeight != undefined){ this._nodeHeight = config.nodeHeight; } else { this._nodeHeight = this.defaultNodeHeight; }
-
-    if(config.nodeNormalColor != undefined){ this._nodeNormalColor = config.nodeNormalColor; } else { this._nodeNormalColor = this.defaultNodeNormalColor; }
-    if(config.nodeHoverColor != undefined){ this._nodeHoverColor = config.nodeHoverColor; } else { this._nodeHoverColor = this.defaultNodeHoverColor; }
-    if(config.nodeActiveColor != undefined){ this._nodeActiveColor = config.nodeActiveColor; } else { this._nodeActiveColor = this.defaultNodeActiveColor; }
-
+HY.GUI.ModelTimeTreeView.prototype.init = function(config){
     this._selectedNodePath = null;
-}
-HY.GUI.ModelTimeTreeView.prototype.initConstraint = function(){
-    this.superCall("initConstraint");
+    this.superCall("init",[config]);
+    if(config.nodeHeight != undefined){ this.setNodeHeight(config.nodeHeight); } else { this.setNodeHeight(this.defaultNodeHeight); }
+    if(config.nodeNormalColor != undefined){ this.setNodeNormalColor(config.nodeNormalColor); } else { this.setNodeNormalColor(this.defaultNodeNormalColor); }
+    if(config.nodeHoverColor != undefined){ this.setNodeHoverColor(config.nodeHoverColor); } else { this.setNodeHoverColor(this.defaultNodeHoverColor); }
+    if(config.nodeActiveColor != undefined){ this.setNodeActiveColor(config.nodeActiveColor); } else { this.setNodeActiveColor(this.defaultNodeActiveColor); }
     this.addEventListener("nodemousedown", this._nodeSelected, this);
 }
 HY.GUI.ModelTimeTreeView.prototype.getSelectedNodePath = function(){
@@ -128,16 +143,16 @@ HY.GUI.ModelTimeTreeView.prototype.getNodeNormalColor = function(){
 HY.GUI.ModelTimeTreeView.prototype.setNodeNormalColor = function(normalColor){
     this._nodeNormalColor = normalColor;
 }
-HY.GUI.ModelTimeTreeView.prototype.getHoverColor = function(){
+HY.GUI.ModelTimeTreeView.prototype.getNodeHoverColor = function(){
     return this._nodeHoverColor;
 }
-HY.GUI.ModelTimeTreeView.prototype.setHoverColor = function(hoverColor){
+HY.GUI.ModelTimeTreeView.prototype.setNodeHoverColor = function(hoverColor){
     this._nodeHoverColor = hoverColor;
 }
-HY.GUI.ModelTimeTreeView.prototype.getActiveColor = function(){
+HY.GUI.ModelTimeTreeView.prototype.getNodeActiveColor = function(){
     return this._nodeActiveColor;
 }
-HY.GUI.ModelTimeTreeView.prototype.setActiveColor = function(activeColor){
+HY.GUI.ModelTimeTreeView.prototype.setNodeActiveColor = function(activeColor){
     this._nodeActiveColor = activeColor;
 }
 HY.GUI.ModelTimeTreeView.prototype.getNodeUnitOfNodePath = function(nodePath,nodeDeepth){

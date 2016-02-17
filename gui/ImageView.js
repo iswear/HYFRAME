@@ -7,14 +7,11 @@ HY.GUI.ImageView = function(config){
 HY.GUI.ImageView.prototype = new HY.GUI.View();
 HY.GUI.ImageView.prototype.defaultReverse = HY.GUI.REVERSENONE;
 HY.GUI.ImageView.prototype.defaultCacheEnable = true;
-HY.GUI.ImageView.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-    if(config.image != undefined){ this._image = config.image; } else { this._image = null; }
-    if(config.reverse != undefined){ this._reverse = config.reverse; } else { this._reverse = this.defaultReverse; }
-}
-HY.GUI.ImageView.prototype.initConstraint = function(){
-    this.superCall("initConstraint");
-    this.addEventListener("paint",this._selfPaint,this);
+HY.GUI.ImageView.prototype.init = function(config){
+    this.superCall("init",[config]);
+    if(config.image != undefined){ this.setImage(config.image); } else { this.setImage(null); }
+    if(config.reserve != undefined){ this.setReverse(config.reverse); } else { this.setReverse(this.defaultReverse); }
+    this.addEventListener("paint",this._paintImage,this);
 }
 HY.GUI.ImageView.prototype.getImage = function(){
     return this._image;
@@ -23,7 +20,14 @@ HY.GUI.ImageView.prototype.setImage = function(pImage){
     this._image = pImage;
     this.reRender();
 }
-HY.GUI.ImageView.prototype._selfPaint = function(sender, dc, rect) {
+HY.GUI.ImageView.prototype.getReverse = function(){
+    return this._reverse;
+}
+HY.GUI.ImageView.prototype.setReverse = function(reverse){
+    this._reverse = reverse;
+    this.reRender();
+}
+HY.GUI.ImageView.prototype._paintImage = function(sender, dc, rect) {
     if (this._image != null) {
         var app = this.getApplication();
         if (typeof(this._image) == "string") {

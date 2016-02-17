@@ -55,21 +55,19 @@ HY.Object.prototype.superCall = function(funName,args){
 HY.Object.prototype.init = function(config){
     this._super = HY.Object.prototype.init.caller.prototype;
     if(config){
-        this.initMember(config);
-        this.initConstraint();
+        this.init(config);
         config = null;
     }
 }
-HY.Object.prototype.initMember = function(config){}
-HY.Object.prototype.initConstraint = function(){}
+HY.Object.prototype.init = function(config){}
 HY.Object.prototype.destory = function(){}
 
 HY.Vect2D = function(config){
     this.init(config);
 }
 HY.Vect2D.prototype = new HY.Object();
-HY.Vect2D.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
+HY.Vect2D.prototype.init = function(config){
+    this.superCall("init",[config]);
     if(config.x != undefined){ this.x = config.x; } else { this.x = 0; }
     if(config.y != undefined){ this.y = config.y; } else { this.y = 0; }
 }
@@ -97,8 +95,8 @@ HY.Size2D = function(config){
     this.init(config);
 }
 HY.Size2D.prototype = new HY.Object();
-HY.Size2D.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
+HY.Size2D.prototype.init = function(config){
+    this.superCall("init",[config]);
     if(config.width != undefined){ this.width = config.width; } else { this.width = 0; }
     if(config.height != undefined){ this.height = config.height; } else { this.height = 0; }
 }
@@ -107,8 +105,8 @@ HY.Rect2D = function(config){
     this.init(config);
 }
 HY.Rect2D.prototype = new HY.Object();
-HY.Rect2D.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
+HY.Rect2D.prototype.init = function(config){
+    this.superCall("init",[config]);
     if(config.x != undefined){ this.x = config.x; } else { this.x = 0; }
     if(config.y != undefined){ this.y = config.y; } else { this.y = 0; }
     if(config.width != undefined){ this.width = config.width; } else { this.width = 0; }
@@ -119,8 +117,8 @@ HY.Circle = function(config){
     this.init(config);
 }
 HY.Circle.prototype = new HY.Object();
-HY.Circle.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
+HY.Circle.prototype.init = function(config){
+    this.superCall("init",[config]);
     if(config.x != undefined){ this.x = config.x; } else { this.x = 0; }
     if(config.y != undefined){ this.y = config.y; } else { this.y = 0; }
     if(config.radius != undefined){ this.radius = config.radius; } else { this.radius = 0; }
@@ -130,8 +128,8 @@ HY.Edge = function(config){
     this.init(config);
 }
 HY.Edge.prototype = new HY.Object();
-HY.Edge.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
+HY.Edge.prototype.init = function(config){
+    this.superCall("init",[config]);
     if(config.point1){ this.point1 = new HY.Vect2D(config.point1); } else { this.point1 = new HY.Vect2D({}); }
     if(config.point2){ this.point2 = new HY.Vect2D(config.point2); } else { this.point2 = new HY.Vect2D({}); }
 }
@@ -140,12 +138,11 @@ HY.Polygon = function(config){
     this.init(config);
 }
 HY.Polygon.prototype = new HY.Object();
-HY.Polygon.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
+HY.Polygon.prototype.init = function(config){
+    this.superCall("init",[config]);
     this._points = [];
     if(config.points){
-        var len = config.points.length;
-        for(var i=0;i<len;++i){
+        for(var i= 0, len=config.points.length ; i<len ; ++i){
             this._points.push(new HY.Vect2D(config.points[i]));
         }
     }
@@ -208,7 +205,7 @@ HY.clone = function(obj){
     if(obj instanceof Array){
         var ret = [];
         var size = obj.length;
-        for(var i=0;i<size;++i){
+        for(var i= 0,size=obj.length ; i<size ; ++i){
             ret.push(HY.clone(obj[i]));
         }
         return ret;

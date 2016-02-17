@@ -5,25 +5,23 @@ HY.GUI.ModelStructTreeNodeView.prototype = new HY.GUI.TreeNodeView();
 HY.GUI.ModelStructTreeNodeView.prototype.defaultReuseIdentity = "modelstructnode";
 HY.GUI.ModelStructTreeNodeView.prototype.defaultEditEnable = false;
 HY.GUI.ModelStructTreeNodeView.prototype.defaultSelected = false;
-HY.GUI.ModelStructTreeNodeView.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-    if(config.selected != undefined){ this._selected = config.selected; } else { this._selected = this.defaultSelected; }
-    if(config.editEnable != undefined){ this._editEnable = config.editEnable; } else { this._editEnable = this.defaultEditEnable; }
-
+HY.GUI.ModelStructTreeNodeView.prototype.init = function(config){
     this._nodeIcon = new HY.GUI.ImageView({mouseEnable:false});
     this._nodeTextBox = new HY.GUI.TextBox({mouseEnable:false,editDelay:300,cursor:'default'});
     this._nodeExpandIcon = new HY.GUI.View({mouseEnable:true,cacheEnable:false});
     this._nodeUnit = null;
     this._nodePath = null;
     this._nodeInsertMode = 0;
-}
-HY.GUI.ModelStructTreeNodeView.prototype.initConstraint = function(){
-    this.superCall("initConstraint");
-    this._nodeExpandIcon.addEventListener("paint",this._nodeExpandIconPaint,this);
-    this.addEventListener("paint", this._nodeInsertModePaint, this);
     this.addChildNodeAtLayer(this._nodeIcon,0);
     this.addChildNodeAtLayer(this._nodeTextBox,0);
     this.addChildNodeAtLayer(this._nodeExpandIcon,0);
+
+    this.superCall("init",[config]);
+    if(config.selected != undefined){ this.setSelected(config.selected); } else { this.setSelected(this.defaultSelected); }
+    if(config.editEnable != undefined){ this.setEditEnable(config.editEnable); } else { this.setEditEnable(this.defaultEditEnable); }
+
+    this._nodeExpandIcon.addEventListener("paint",this._nodeExpandIconPaint,this);
+    this.addEventListener("paint", this._nodeInsertModePaint, this);
 }
 HY.GUI.ModelStructTreeNodeView.prototype.layoutSubNodes = function(){
     this.superCall("layoutSubNodes");
@@ -168,22 +166,19 @@ HY.GUI.ModelStructTreeView.prototype.defaultNodeIcon = {
     srcWidth:20,
     srcHeight:20
 };
-HY.GUI.ModelStructTreeView.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-    if(config.nodeHeight != undefined){ this._nodeHeight = config.nodeHeight; } else { this._nodeHeight = this.defaultNodeHeight; }
-    if(config.nodeNormalColor != undefined){ this._nodeNormalColor = config.nodeNormalColor; } else { this._nodeNormalColor = this.defaultNodeNormalColor; }
-    if(config.nodeHoverColor != undefined){ this._nodeHoverColor = config.nodeHoverColor; } else { this._nodeHoverColor = this.defaultNodeHoverColor; }
-    if(config.nodeActiveColor != undefined){ this._nodeActiveColor = config.nodeActiveColor; } else { this._nodeActiveColor = this.defaultNodeActiveColor; }
-    if(config.nodeEditEnable != undefined){ this._nodeEditEnable = config.nodeEditEnable; } else { this._nodeEditEnable = this.defaultNodeEditEnable; }
-    if(config.nodeMoveEnable != undefined){ this._nodeMoveEnable = config.nodeMoveEnable; } else { this._nodeMoveEnable = this.defaultNodeMoveEnable; }
-    if(config.nodeIcon != undefined){ this._nodeIcon = config.nodeIcon; } else { this._nodeIcon = this.defaultNodeIcon; }
-
+HY.GUI.ModelStructTreeView.prototype.init = function(config){
     this._selectedNodePath = null;
     this._mouseOverNodePath = null;
     this.__prepareNodeMove = false;
-}
-HY.GUI.ModelStructTreeView.prototype.initConstraint = function(){
-    this.superCall("initConstraint");
+    this.superCall("init",[config]);
+    if(config.nodeHeight != undefined){ this.setNodeHeight(config.nodeHeight); } else { this.setNodeHeight(this.defaultNodeHeight); }
+    if(config.nodeIcon != undefined){ this.setNodeIcon( config.nodeIcon); } else { this.setNodeIcon(this.defaultNodeIcon); }
+    if(config.nodeNormalColor != undefined){ this.setNodeNormalColor(config.nodeNormalColor); } else { this.setNodeNormalColor(this.defaultNodeNormalColor); }
+    if(config.nodeHoverColor != undefined){ this.setNodeHoverColor(config.nodeHoverColor); } else { this.setNodeHoverColor(this.defaultNodeHoverColor); }
+    if(config.nodeActiveColor != undefined){ this.setNodeActiveColor(config.nodeActiveColor); } else { this.setNodeActiveColor(this.defaultNodeActiveColor); }
+    if(config.nodeEditEnable != undefined){ this.setNodeEditEnable(config.nodeEditEnable); } else { this.setNodeEditEnable(this.defaultNodeEditEnable); }
+    if(config.nodeMoveEnable != undefined){ this.setNodeMoveEnable(config.nodeMoveEnable); } else { this.setNodeMoveEnable(this.defaultNodeMoveEnable); }
+
     this.addEventListener("nodemousedown", this._nodeSelected, this);
     this.addEventListener("nodemouseover", this._nodeMovingSel, this);
     this.addEventListener("nodemousemove", this._nodeMoving, this);
@@ -237,22 +232,29 @@ HY.GUI.ModelStructTreeView.prototype.setNodeHeight = function(nodeHeight){
     this._nodeHeight = nodeHeight;
     this.reloadData();
 }
+HY.GUI.ModelStructTreeView.prototype.getNodeIcon = function(){
+    return this._nodeIcon;
+}
+HY.GUI.ModelStructTreeView.prototype.setNodeIcon = function(nodeIcon){
+    this._nodeIcon = nodeIcon;
+}
+
 HY.GUI.ModelStructTreeView.prototype.getNodeNormalColor = function(){
     return this._nodeNormalColor;
 }
 HY.GUI.ModelStructTreeView.prototype.setNodeNormalColor = function(normalColor){
     this._nodeNormalColor = normalColor;
 }
-HY.GUI.ModelStructTreeView.prototype.getHoverColor = function(){
+HY.GUI.ModelStructTreeView.prototype.getNodeHoverColor = function(){
     return this._nodeHoverColor;
 }
-HY.GUI.ModelStructTreeView.prototype.setHoverColor = function(hoverColor){
+HY.GUI.ModelStructTreeView.prototype.setNodeHoverColor = function(hoverColor){
     this._nodeHoverColor = hoverColor;
 }
-HY.GUI.ModelStructTreeView.prototype.getActiveColor = function(){
+HY.GUI.ModelStructTreeView.prototype.getNodeActiveColor = function(){
     return this._nodeActiveColor;
 }
-HY.GUI.ModelStructTreeView.prototype.setActiveColor = function(activeColor){
+HY.GUI.ModelStructTreeView.prototype.setNodeActiveColor = function(activeColor){
     this._nodeActiveColor = activeColor;
 }
 HY.GUI.ModelStructTreeView.prototype.getNodeEditEnable = function(){
@@ -441,8 +443,7 @@ HY.GUI.ModelStructTreeView.prototype.onNodeUnSelected = function(sender, nodePat
 
 HY.GUI.ModelStructTreeView.prototype.numberOfNodeInPath = function(treeView, nodePath){
     var node = this.getRoot();
-    var nodeDeepth = nodePath.length;
-    for(var i=0;i<nodeDeepth;++i){
+    for(var i= 0,nodeDeepth = nodePath.length;i<nodeDeepth;++i){
         var childUnits = node.getChildUnits();
         node = childUnits[nodePath[i]];
     }
@@ -462,15 +463,14 @@ HY.GUI.ModelStructTreeView.prototype.heightOfNodeInPath = function(treeView, nod
 }
 HY.GUI.ModelStructTreeView.prototype.contextMenuOfNodeInPath = function(treeView, nodePath){
     if(nodePath != null && nodePath.length > 0){
-        return ["添加子部件","删除此部件"];
+        return ["添加结点","删除结点","隐藏/显示"];
     }else{
-        return ["添加子部件"];
+        return ["添加结点"];
     }
 }
 HY.GUI.ModelStructTreeView.prototype.viewOfNodeInPath = function(treeView,nodePath){
     var node = this.getRoot();
-    var nodeDeepth = nodePath.length;
-    for(var i=0;i<nodeDeepth;++i){
+    for(var i= 0,nodeDeepth = nodePath.length;i<nodeDeepth;++i){
         var childUnits = node.getChildUnits();
         node = childUnits[nodePath[i]];
     }

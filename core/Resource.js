@@ -12,16 +12,16 @@ HY.Core.Resource.Manager = function(config){
     this.init(config);
 }
 HY.Core.Resource.Manager.prototype = new HY.Object();
-HY.Core.Resource.Manager.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
+HY.Core.Resource.Manager.prototype.init = function(config){
     this._loadingImageItems = {};
     this._loadedImageItems = {};
     this._loadingAudioItems = {};
     this._loadedAudioItems = {};
     this._loadingVedioItems = {};
     this._loadedVedioItems = {};
+    this.superCall("init",[config]);
 }
-HY.Core.Resource.Manager.prototype.addImageAsync = function(key,url,selector,target){
+HY.Core.Resource.Manager.prototype.addImageAsync = function(key,url,callBack,target){
     if(!this._loadingImageItems[key] && !this._loadedImageItems[key]){
         var $this = this;
         var image = new Image();
@@ -33,21 +33,21 @@ HY.Core.Resource.Manager.prototype.addImageAsync = function(key,url,selector,tar
             this.removeEventListener("error",loaderror,false);
             delete $this._loadingImageItems[key];
             $this._loadedImageItems[key] = image;
-            $this._loadCallBack(selector,target,url,true);
+            $this._loadCallBack(callBack,target,url,true);
         }
 
         function loaderror(){
             this.removeEventListener("load",loadsuccess,false);
             this.removeEventListener("error",loaderror,false);
             delete $this._loadingImageItems[key];
-            $this._loadCallBack(selector,target,url,false);
+            $this._loadCallBack(callBack,target,url,false);
         }
 
         image.addEventListener("load",loadsuccess,false);
         image.addEventListener("error",loaderror,false);
     }
 }
-HY.Core.Resource.Manager.prototype.addAudioAsync = function(key,url,selector,target){
+HY.Core.Resource.Manager.prototype.addAudioAsync = function(key,url,callBack,target){
     if(!this._loadingAudioItems[key] && !this._loadedAudioItems[key]){
         var $this = this;
         var audio = new Audio();
@@ -59,19 +59,19 @@ HY.Core.Resource.Manager.prototype.addAudioAsync = function(key,url,selector,tar
             this.removeEventListener("error",loaderror,false);
             delete $this._loadingAudioItems[key];
             $this._loadingAudioItems[key] = audio;
-            $this._loadCallBack(selector,target,url,true);
+            $this._loadCallBack(callBack,target,url,true);
         }
         function loaderror(){
             this.removeEventListener("canplaythrough",loadsuccess,false);
             this.removeEventListener("error",loaderror,false);
             delete $this._loadingAudioItems[key];
-            $this._loadCallBack(selector,target,url,false);
+            $this._loadCallBack(callBack,target,url,false);
         }
         audio.addEventListener("canplaythrough",loadsuccess,false);
         audio.addEventListener("error",loaderror,false);
     }
 }
-HY.Core.Resource.Manager.prototype.addVedioAsync = function(key,url,selector,target){
+HY.Core.Resource.Manager.prototype.addVedioAsync = function(key,url,callBack,target){
     if(!this._loadingVedioItems[key] && !this._loadedVedioItems[key]) {
         var $this = this;
         var vedio = new Video();
@@ -83,19 +83,19 @@ HY.Core.Resource.Manager.prototype.addVedioAsync = function(key,url,selector,tar
             this.removeEventListener("error",loaderror,false);
             delete this._loadingVedioItems[key];
             this._loadedVedioItems[key] = vedio;
-            $this._loadCallBack(selector,target,url,true);
+            $this._loadCallBack(callBack,target,url,true);
         }
         function loaderror(){
             this.removeEventListener("canplaythrough",loadsuccess,false);
             this.removeEventListener("error",loaderror,false);
             delete $this._loadingVedioItems[key];
-            $this._loadCallBack(selector,target,url,false);
+            $this._loadCallBack(callBack,target,url,false);
         }
         vedio.addEventListener("canplaythrough",loadsuccess,false);
         vedio.addEventListener("error",loaderror,false);
     }
 }
-HY.Core.Resource.Manager.prototype.getImage = function(key,url,replaceUrl,selector,target){
+HY.Core.Resource.Manager.prototype.getImage = function(key,url,replaceUrl,callBack,target){
     var image = this._loadedImageItems[key];
     if(!image){
         if(url.indexOf("data") == 0){
@@ -103,7 +103,7 @@ HY.Core.Resource.Manager.prototype.getImage = function(key,url,replaceUrl,select
             image.src = url;
             this._loadedImageItems[key] = image;
         }else{
-            this.addImageAsync(key,url,selector,target);
+            this.addImageAsync(key,url,callBack,target);
         }
     }
     if(!image && replaceUrl){
@@ -111,7 +111,7 @@ HY.Core.Resource.Manager.prototype.getImage = function(key,url,replaceUrl,select
     }
     return image;
 }
-HY.Core.Resource.Manager.prototype.getAudio = function(key,url,replaceUrl,selector,target){
+HY.Core.Resource.Manager.prototype.getAudio = function(key,url,replaceUrl,callBack,target){
     var audio = this._loadedAudioItems[key];
     if(!audio){
         if(url.indexOf("data") == 0){
@@ -119,7 +119,7 @@ HY.Core.Resource.Manager.prototype.getAudio = function(key,url,replaceUrl,select
             audio.src = url;
             this._loadedAudioItems[key] = audio;
         }else{
-            this.addAudioAsync(url,selector,target);
+            this.addAudioAsync(url,callBack,target);
         }
     }
     if(!audio && replaceUrl){
@@ -127,7 +127,7 @@ HY.Core.Resource.Manager.prototype.getAudio = function(key,url,replaceUrl,select
     }
     return audio;
 }
-HY.Core.Resource.Manager.prototype.getVedio = function(key,url,replaceUrl,selector,target){
+HY.Core.Resource.Manager.prototype.getVedio = function(key,url,replaceUrl,callBack,target){
     var vedio = this._loadedVedioItems[key];
     if(!vedio){
         if(url.indexOf("data") == 0){
@@ -135,7 +135,7 @@ HY.Core.Resource.Manager.prototype.getVedio = function(key,url,replaceUrl,select
             vedio.src = url;
             this._loadedVedioItems[key] = vedio;
         }else{
-            this.addVedioAsync(url,selector,target);
+            this.addVedioAsync(url,callBack,target);
         }
     }
     if(!vedio && replaceUrl){
@@ -191,12 +191,12 @@ HY.Core.Resource.Manager.prototype.removeAllVedio = function(){
         delete this._loadedVedioItems[itemname];
     }
 }
-HY.Core.Resource.Manager.prototype._loadCallBack = function(selector,target,url,success){
-    if(selector){
+HY.Core.Resource.Manager.prototype._loadCallBack = function(callBack,target,url,success){
+    if(callBack){
         if(target){
-            selector.call(target,url,success);
+            callBack.call(target,url,success);
         }else{
-            selector.call(this,url,success);
+            callBack.call(this,url,success);
         }
     }
 }

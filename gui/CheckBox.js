@@ -6,15 +6,14 @@ HY.GUI.CheckBox.prototype.defaultCacheEnable = true;
 HY.GUI.CheckBox.prototype.defaultChecked = false;
 HY.GUI.CheckBox.prototype.defaultWidth = 15.0;
 HY.GUI.CheckBox.prototype.defaultHeight = 15.0;
-HY.GUI.CheckBox.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-    if(config.checked){ this._checked = config.checked; } else { this._checked = this.defaultChecked; }
-    if(config.checkedChangedEvent){ this.addEventListener("checkedchanged",config.checkedChangedEvent.selector,config.checkedChangedEvent.target); }
+HY.GUI.CheckBox.prototype.init = function(config) {
+    this.superCall("init", [config]);
+    if (config.checked) { this.setChecked(config.checked); } else { this.setChecked(this.defaultChecked); }
+    this.addEventListener("paint", this._paintCheckBox, this);
+    this.addEventListener("mouseup", this._checkBoxMouseUp, this);
 }
 HY.GUI.CheckBox.prototype.initConstraint = function(){
     this.superCall("initConstraint");
-    this.addEventListener("paint",this._selfPaint,this);
-    this.addEventListener("mouseup",this._selfMouseUp,this);
 }
 HY.GUI.CheckBox.prototype.setWidth = function (pWidth) { }
 HY.GUI.CheckBox.prototype.setHeight = function (pHeight) { }
@@ -31,7 +30,7 @@ HY.GUI.CheckBox.prototype.getChecked = function(){
 HY.GUI.CheckBox.prototype.onCheckedChanged = function(sender,checked){
     this.launchEvent("checkedchanged",[this,checked]);
 }
-HY.GUI.CheckBox.prototype._selfPaint = function(sender,dc,rect){
+HY.GUI.CheckBox.prototype._paintCheckBox = function(sender,dc,rect){
     var lineWidth = 2.0/15.0*this.getWidth();
     var lefttop = new HY.Vect2D({});
     lefttop.x = -this.getAnchorX()*this.getWidth();
@@ -48,6 +47,6 @@ HY.GUI.CheckBox.prototype._selfPaint = function(sender,dc,rect){
         dc.stroke();
     }
 }
-HY.GUI.CheckBox.prototype._selfMouseUp = function(sender,e){
+HY.GUI.CheckBox.prototype._checkBoxMouseUp = function(sender,e){
     this.setChecked(!this._checked);
 }

@@ -7,23 +7,15 @@ HY.Core.RenderContext = function(config){
 HY.Core.RenderContext.prototype = new HY.Object();
 HY.Core.RenderContext.prototype.defaultWidth = 300;
 HY.Core.RenderContext.prototype.defaultHeight = 200;
-HY.Core.RenderContext.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-    if(config.canvas != undefined){ this._canvas = config.canvas; } else { this._canvas = document.createElement("canvas"); }
-    if(config.width != undefined){ this._width = config.width; } else { this._width = this.defaultWidth; }
-    if(config.height != undefined){ this._height = config.height; } else { this._height = this.defaultHeight; }
-
+HY.Core.RenderContext.prototype.init = function(config){
     this._context = null;
     this._statusStack = [];
     this._curStatus = {};
-}
-HY.Core.RenderContext.prototype.initConstraint = function(){
-    this.superCall("initConstraint");
-    if(this._canvas) {
-        this._canvas.width = this._width;
-        this._canvas.height = this._height;
-        this._context = this._canvas.getContext("2d");
-    }
+
+    this.superCall("init",[config]);
+    if(config.canvas != undefined){ this.setCanvas(config.canvas); } else { this.setCanvas(document.createElement("canvas")); }
+    if(config.width != undefined){ this.setWidth(config.width); } else { this.setWidth(this.defaultWidth); }
+    if(config.height != undefined){ this.setHeight(config.height); } else { this.setHeight(this.defaultHeight); }
     this.syncStatusFromContext();
 }
 HY.Core.RenderContext.prototype.syncStatusFromContext = function(){
@@ -106,8 +98,8 @@ HY.Core.RenderContext.prototype.setCanvas = function(pCanvas){
         this.addApiCount("f_canvas");
         this._canvas = pCanvas;
         if(this._canvas) {
-            this._canvas.width = this._width;
-            this._canvas.height = this._height;
+            this._canvas.width = this._width?this._width:0;
+            this._canvas.height = this._height?this._height:0;
             this._context = this._canvas.getContext("2d");
         }
         this._statusStack = [];
@@ -123,8 +115,10 @@ HY.Core.RenderContext.prototype.setWidth = function(pWidth){
     if(this._width != pWidth){
         this.addApiCount("f_width");
         this._width = pWidth;
-        this._canvas.width = pWidth;
         this.syncStatusToContext();
+        if(this._canvas){
+            this._canvas.width = pWidth;
+        }
     }
 }
 HY.Core.RenderContext.prototype.getHeight = function(){
@@ -135,8 +129,10 @@ HY.Core.RenderContext.prototype.setHeight = function(pHeight){
     if(this._height != pHeight){
         this.addApiCount("f_height");
         this._height = pHeight;
-        this._canvas.height = pHeight;
         this.syncStatusToContext();
+        if(this._canvas){
+            this._canvas.height = pHeight;
+        }
     }
 }
 HY.Core.RenderContext.prototype.getFillStyle = function(){

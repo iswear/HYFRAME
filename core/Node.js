@@ -21,70 +21,8 @@ HY.Core.Node.prototype.defaultCursor = null;
 HY.Core.Node.prototype.defaultMouseEnable = true;
 HY.Core.Node.prototype.defaultDragEnable = true;
 HY.Core.Node.prototype.defaultScrollEnable = false;
-HY.Core.Node.prototype.defaultRender = true;
 HY.Core.Node.prototype.defaultDragZone = {x:-1000000,y:-1000000,width:2000000,height:2000000};
-HY.Core.Node.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-    if(config.x != undefined){ this._x = config.x; } else { this._x = this.defaultX; }
-    if(config.y != undefined){ this._y = config.y; } else { this._y = this.defaultY; }
-    if(config.width != undefined){ this._width = config.width; } else{ this._width = this.defaultWidth; }
-    if(config.height != undefined){ this._height = config.height; } else { this._height = this.defaultHeight; }
-    if(config.scaleX != undefined){ this._scaleX = config.scaleX; } else { this._scaleX = 1; }
-    if(config.scaleY != undefined){ this._scaleY = config.scaleY; } else { this._scaleY = 1; }
-    if(config.anchorX != undefined){ this._anchorX = config.anchorX; } else { this._anchorX = this.defaultAnchorX; }
-    if(config.anchorY != undefined){ this._anchorY = config.anchorY; } else { this._anchorY = this.defaultAnchorY; }
-    if(config.alpha != undefined){ this._alpha = config.alpha; } else { this._alpha = this.defaultAlpha; }
-    if(config.rotateZ != undefined){ this._rotateZ = config.rotateZ; } else { this._rotateZ = this.defaultRotateZ; }
-
-    if(config.borderWidth != undefined){ this._borderWidth = config.borderWidth; } else { this._borderWidth = this.defaultBorderWidth; }
-    if(config.borderColor != undefined){ this._borderColor = config.borderColor; } else { this._borderColor = this.defaultBorderColor; }
-    if(config.cornorRadius != undefined){ this._cornorRadius = config.cornorRadius; } else { this._cornorRadius = this.defaultCornorRadius; }
-    if(config.backgroundColor != undefined){ this._backgroundColor = config.backgroundColor; } else { this._backgroundColor = this.defaultBackgroundColor; }
-    if(config.visible != undefined){ this._visible = config.visible; } else { this._visible = this.defaultVisible; }
-    if(config.clipBound != undefined){ this._clipBound = config.clipBound; } else { this._clipBound = this.defaultClipBound; }
-    if(config.cacheEnable != undefined){ this._cacheEnable = config.cacheEnable; } else { this._cacheEnable = this.defaultCacheEnable; }
-    if(config.dragZone != undefined){ this._dragZone = new HY.Rect2D(config.dragZone); } else { this._dragZone = new HY.Rect2D(this.defaultDragZone); }
-
-    if(config.cursor != undefined){ this._cursor = config.cursor; } else { this._cursor = this.defaultCursor; }
-    if(config.mouseEnable != undefined){ this._mouseEnable = config.mouseEnable; } else { this._mouseEnable = this.defaultMouseEnable; }
-    if(config.dragEnable != undefined){ this._dragEnable = config.dragEnable; } else { this._dragEnable = this.defaultDragEnable; }
-    if(config.scrollEnable != undefined){ this._scrollEnable = config.scrollEnable; } else { this._scrollEnable = this.defaultScrollEnable; }
-    if(config.contextMenu != undefined){ this._contextMenu = config.contextMenu; } else { this._contextMenu = null; }
-
-    if(config.finishLaunchEvent != undefined){ this.addEventListener("finishlaunch",config.finishLaunchEvent.selector,config.finishLaunchEvent.target); }
-    if(config.canvasSizeChangeEvent != undefined){ this.addEventListener("canvassizechanged",config.canvasSizeChangeEvent.selector,config.canvasSizeChangeEvent.target); }
-    if(config.firstShowEvent != undefined){ this.addEventListener("firstshow",config.firstShowEvent.selector,config.firstShowEvent.target); }
-    if(config.enterFrameEvent != undefined){ this.addEventListener("enterframe",config.enterFrameEvent.selector,config.enterFrameEvent.target); }
-    if(config.endFrameEvent != undefined){ this.addEventListener("endframe",config.endFrameEvent.selector,config.endFrameEvent.target); }
-
-    if(config.clickEvent != undefined){ this.addEventListener("click",config.clickEvent.selector,config.clickEvent.target); }
-    if(config.dblClickEvent != undefined){ this.addEventListener("dblclick",config.dblClickEvent.selector,config.dblClickEvent.target); }
-    if(config.mouseDownEvent != undefined){ this.addEventListener("mousedown",config.mouseDownEvent.selector,config.mouseDownEvent.target); }
-    if(config.mouseMoveEvent != undefined){ this.addEventListener("mousemove",config.mouseMoveEvent.selector,config.mouseMoveEvent.target); }
-    if(config.mouseUpEvent != undefined){ this.addEventListener("mouseup",config.mouseUpEvent.selector,config.mouseUpEvent.target); }
-    if(config.mouseWheelEvent != undefined){ this.addEventListener("mousewheel",config.mouseWheelEvent.selector,config.mouseWheelEvent.target); }
-    if(config.mouseOverEvent != undefined){ this.addEventListener("mouseover",config.mouseOverEvent.selector,config.mouseOverEvent.target); }
-    if(config.mouseOutEvent != undefined){ this.addEventListener("mouseout",config.mouseOutEvent.selector,config.mouseOutEvent.target); }
-    if(config.keyDownEvent != undefined){ this.addEventListener("keydown",config.keyDownEvent.selector,config.keyDownEvent.target); }
-    if(config.keyPressEvent != undefined){ this.addEventListener("keypress",config.keyPressEvent.selector,config.keyPressEvent.target); }
-    if(config.keyUpEvent != undefined){ this.addEventListener("keyup",config.keyUpEvent.selector,config.keyUpEvent.target); }
-    if(config.contextMenuEvent != undefined){ this.addEventListener("contextmenu",config.contextMenuEvent.selector,config.contextMenuEvent.target); }
-    if(config.focusEvent != undefined){ this.addEventListener("focus",config.focusEvent.selector,config.focusEvent.target); }
-    if(config.blurEvent != undefined){ this.addEventListener("blue",config.blurEvent.selector,config.blurEvent.target); }
-    if(config.paintEvent != undefined){ this.addEventListener("paint",config.paintEvent.selector,config.paintEvent.target); }
-    if(config.startDragEvent != undefined){ this.addEventListener("startdrag",config.startDragEvent.selector,config.startDragEvent.target); }
-    if(config.dragEvent != undefined){ this.addEventListener("drag",config.dragEvent.selector,config.dragEvent.target); }
-    if(config.endDragEvent != undefined){ this.addEventListener("enddrag",config.endDragEvent.selector,config.endDragEvent.target); }
-
-    if(config.xChangedEvent != undefined){ this.addEventListener("xchanged",config.xChangedEvent.selector,config.xChangedEvent.target); }
-    if(config.yChangedEvent != undefined){ this.addEventListener("ychanged",config.yChangedEvent.selector,config.yChangedEvent.target); }
-    if(config.widthChangedEvent != undefined){ this.addEventListener("widthchanged",config.widthChangedEvent.selector,config.widthChangedEvent.target); }
-    if(config.heightChangedEvent != undefined){ this.addEventListener("heightchanged",config.heightChangedEvent.selector,config.heightChangedEvent.target); }
-    if(config.anchorXChangedEvent != undefined){ this.addEventListener("anchorxchanged",config.anchorXChangedEvent.selector,config.anchorXChangedEvent.target); }
-    if(config.anchorYChangedEvent != undefined){ this.addEventListener("anchorychanged",config.anchorYChangedEvent.selector,config.anchorYChangedEvent.target); }
-    if(config.angleChangedEvent != undefined){ this.addEventListener("anglechanged",config.angleChangedEvent.selector,config.angleChangedEvent.target); }
-    if(config.alphaChangedEvent != undefined){ this.addEventListener("alphachanged",config.alphaChangedEvent.selector,config.alphaChangedEvent.target); }
-
+HY.Core.Node.prototype.init = function(config){
     this._minLayoutWidth = 0;
     this._minLayoutHeight = 0;
     this._parent = null;
@@ -108,25 +46,44 @@ HY.Core.Node.prototype.initMember = function(config){
     this.__dragStartCanvasPoint = null;//in this parent location
     this.__dragStartPosition = null;
     this.__isDraging  = false;
-}
-HY.Core.Node.prototype.initConstraint = function(){
-    this.superCall("initConstraint");
+
+    this.superCall("init",[config]);
+
+    if(config.x != undefined){ this.setX(config.x); } else { this.setX(this.defaultX); }
+    if(config.y != undefined){ this.setY(config.y); } else { this.setY(this.defaultY); }
+    if(config.width != undefined){ this.setWidth(config.width); } else{ this.setWidth(this.defaultWidth); }
+    if(config.height != undefined){ this.setHeight(config.height); } else { this.setHeight(this.defaultHeight); }
+    if(config.scaleX != undefined){ this.setScaleX(config.scaleX); } else { this.setScaleX(1); }
+    if(config.scaleY != undefined){ this.setScaleY(config.scaleY); } else { this.setScaleY(1); }
+    if(config.anchorX != undefined){ this.setAnchorX(config.anchorX); } else { this.setAnchorY(this.defaultAnchorX); }
+    if(config.anchorY != undefined){ this.setAnchorY(config.anchorY); } else { this.setAnchorY(this.defaultAnchorY); }
+    if(config.alpha != undefined){ this.setAlpha(config.alpha); } else { this.setAlpha(this.defaultAlpha); }
+    if(config.rotateZ != undefined){ this.setRotateZ(config.rotateZ); } else { this.setRotateZ(this.defaultRotateZ); }
+
+    if(config.borderWidth != undefined){ this.setBorderWidth(config.borderWidth); } else { this.setBorderWidth(this.defaultBorderWidth); }
+    if(config.borderColor != undefined){ this.setBorderColor(config.borderColor); } else { this.setBorderColor(this.defaultBorderColor); }
+    if(config.cornorRadius != undefined){ this.setCornorRadius(config.cornorRadius); } else { this.setCornorRadius(this.defaultCornorRadius); }
+    if(config.backgroundColor != undefined){ this.setBackgroundColor(config.backgroundColor); } else { this.setBackgroundColor(this.defaultBackgroundColor); }
+    if(config.visible != undefined){ this.setVisible(config.visible); } else { this.setVisible(this.defaultVisible); }
+    if(config.clipBound != undefined){ this.setClipBound(config.clipBound); } else { this.setClipBound(this.defaultClipBound); }
+    if(config.cacheEnable != undefined){ this.setCacheEnable(config.cacheEnable); } else { this.setCacheEnable(this.defaultCacheEnable); }
+    if(config.dragZone != undefined){ this.setDragZone(new HY.Vect2D(config.dragZone)); } else { this.setDragZone(new HY.Rect2D(this.defaultDragZone)); }
+
+    if(config.cursor != undefined){ this.setCursor(config.cursor); } else { this.setCursor(this.defaultCursor); }
+    if(config.mouseEnable != undefined){ this.setMouseEnable(config.mouseEnable); } else { this.setMouseEnable(this.defaultMouseEnable); }
+    if(config.dragEnable != undefined){ this.setDragEnable(config.dragEnable); } else { this.setDragEnable(this.defaultDragEnable); }
+    if(config.scrollEnable != undefined){ this.setScrollEnable(config.scrollEnable); } else { this.setScrollEnable(this.defaultScrollEnable); }
+    if(config.contextMenu != undefined){ this.setContextMenu(config.contextMenu); } else { this.setContextMeuu(null); }
+
     this.needLayoutSubNodes();
-    this._sinAngleZ = Math.sin(this._rotateZ);
-    this._cosAngleZ = Math.cos(this._rotateZ);
-    this._anchorPixelX = -Math.round(this._width * this._anchorX);
-    this._anchorPixelY = -Math.round(this._height * this._anchorY);
-    if(this._cacheEnable){
-        this._cached = false;
-        this._cacheContext = new HY.Core.RenderContext({width:this._width,height:this._height});
-    }
 }
+
 HY.Core.Node.prototype.getX = function(){
     return this._x;
 }
-HY.Core.Node.prototype.setX = function(pX){
-    if(pX != this._x){
-        this._x = pX;
+HY.Core.Node.prototype.setX = function(x){
+    if(x != this._x){
+        this._x = x;
         this.onXChanged(this);
         this.reRender();
     }
@@ -134,9 +91,9 @@ HY.Core.Node.prototype.setX = function(pX){
 HY.Core.Node.prototype.getY = function(){
     return this._y;
 }
-HY.Core.Node.prototype.setY = function(pY){
-    if(pY != this._y){
-        this._y = pY;
+HY.Core.Node.prototype.setY = function(y){
+    if(y != this._y){
+        this._y = y;
         this.onYChanged(this);
         this.reRender();
     }
@@ -144,15 +101,12 @@ HY.Core.Node.prototype.setY = function(pY){
 HY.Core.Node.prototype.getWidth = function(){
     return this._width;
 }
-HY.Core.Node.prototype.setWidth = function(pWidth) {
-    if(pWidth != this._width){
-        if(this._cacheEnable){
-            this._cacheContext.setWidth(pWidth);
-        }
-        this._width = pWidth;
-        this._anchorPixelX = -Math.round(pWidth * this._anchorX);
-        this.needLayoutSubNodes();
+HY.Core.Node.prototype.setWidth = function(width) {
+    if(width != this._width){
+        this._width = width;
+        this._anchorPixelX = -Math.round(width * this._anchorX);
         this.onWidthChanged(this);
+        this.needLayoutSubNodes();
         this.updateCache();
         this.reRender();
     }
@@ -160,15 +114,12 @@ HY.Core.Node.prototype.setWidth = function(pWidth) {
 HY.Core.Node.prototype.getHeight = function(){
     return this._height;
 }
-HY.Core.Node.prototype.setHeight = function(pHeight){
-    if(pHeight != this._height){
-        if(this._cacheEnable){
-            this._cacheContext.setHeight(pHeight);
-        }
-        this._height = pHeight;
-        this._anchorPixelY = -Math.round(pHeight * this._anchorY);
-        this.needLayoutSubNodes();
+HY.Core.Node.prototype.setHeight = function(height){
+    if(height != this._height){
+        this._height = height;
+        this._anchorPixelY = -Math.round(height * this._anchorY);
         this.onHeightChanged(this);
+        this.needLayoutSubNodes();
         this.updateCache();
         this.reRender();
     }
@@ -176,28 +127,28 @@ HY.Core.Node.prototype.setHeight = function(pHeight){
 HY.Core.Node.prototype.getScaleX = function(){
     return this._scaleX;
 }
-HY.Core.Node.prototype.setScaleX = function(pScaleX){
-    if(this._scaleX != pScaleX){
-        this._scaleX = pScaleX;
+HY.Core.Node.prototype.setScaleX = function(scaleX){
+    if(this._scaleX != scaleX){
+        this._scaleX = scaleX;
         this.reRender();
     }
 }
 HY.Core.Node.prototype.getScaleY = function(){
     return this._scaleY;
 }
-HY.Core.Node.prototype.setScaleY = function(pScaleY){
-    if(this._scaleY != pScaleY){
-        this._scaleX = pScaleY;
+HY.Core.Node.prototype.setScaleY = function(scaleY){
+    if(this._scaleY != scaleY){
+        this._scaleY = scaleY;
         this.reRender();
     }
 }
 HY.Core.Node.prototype.getAnchorX = function () {
     return this._anchorX;
 }
-HY.Core.Node.prototype.setAnchorX = function(pX){
-    if(this._anchorX != pX){
-        this._anchorX = pX;
-        this._anchorPixelX = -Math.round(pX * this._width);
+HY.Core.Node.prototype.setAnchorX = function(x){
+    if(this._anchorX != x){
+        this._anchorX = x;
+        this._anchorPixelX = -Math.round(x * this._width);
         this.onAnchorXChanged(this);
         this.reRender();
     }
@@ -205,10 +156,10 @@ HY.Core.Node.prototype.setAnchorX = function(pX){
 HY.Core.Node.prototype.getAnchorY = function () {
     return this._anchorY;
 }
-HY.Core.Node.prototype.setAnchorY = function(pY){
-    if(this._anchorY != pY){
-        this._anchorY = pY;
-        this._anchorPixelY = -Math.round(pY * this._height);
+HY.Core.Node.prototype.setAnchorY = function(y){
+    if(this._anchorY != y){
+        this._anchorY = y;
+        this._anchorPixelY = -Math.round(y * this._height);
         this.onAnchorYChanged(this);
         this.reRender();
     }
@@ -222,25 +173,25 @@ HY.Core.Node.prototype.getRightBottomCoor = function(){
 HY.Core.Node.prototype.getAlpha = function(){
     return this._alpha;
 }
-HY.Core.Node.prototype.setAlpha = function(pAlpha){
-    if(pAlpha > 1){ pAlpha = 1; }else if(pAlpha < 0){ pAlpha = 0; }
-    if(this._alpha != pAlpha){
-        this._alpha = pAlpha;
+HY.Core.Node.prototype.setAlpha = function(alpha){
+    if(alpha > 1){ alpha = 1; }else if(alpha < 0){ alpha = 0; }
+    if(this._alpha != alpha){
+        this._alpha = alpha;
         this.onAlphaChanged(this);
         this.reRender();
     }
 }
-HY.Core.Node.prototype.rotateZ = function(pAngle){
-    this.setRotateZ(this.getRotateZ()+pAngle);
+HY.Core.Node.prototype.rotateZ = function(angle){
+    this.setRotateZ(this.getRotateZ()+angle);
 }
 HY.Core.Node.prototype.getRotateZ = function(){
     return this._rotateZ;
 }
-HY.Core.Node.prototype.setRotateZ = function(pAngle){
-    if(pAngle != this._rotateZ){
-        this._rotateZ = pAngle;
-        this._sinAngleZ = Math.sin(pAngle);
-        this._cosAngleZ = Math.cos(pAngle);
+HY.Core.Node.prototype.setRotateZ = function(angle){
+    if(angle != this._rotateZ){
+        this._rotateZ = angle;
+        this._sinAngleZ = Math.sin(angle);
+        this._cosAngleZ = Math.cos(angle);
         this.onAngleChanged(this);
         this.reRender();
     }
@@ -248,36 +199,36 @@ HY.Core.Node.prototype.setRotateZ = function(pAngle){
 HY.Core.Node.prototype.getBorderWidth = function(){
     return this._borderWidth;
 }
-HY.Core.Node.prototype.setBorderWidth = function(pWidth){
-    if(this._borderWidth != pWidth){
-        this._borderWidth = pWidth;
+HY.Core.Node.prototype.setBorderWidth = function(width){
+    if(this._borderWidth != width){
+        this._borderWidth = width;
         this.reRender();
     }
 }
 HY.Core.Node.prototype.getBorderColor = function(){
     return this._borderColor;
 }
-HY.Core.Node.prototype.setBorderColor = function(pColor){
-    if(this._borderColor != pColor){
-        this._borderColor = pColor;
+HY.Core.Node.prototype.setBorderColor = function(color){
+    if(this._borderColor != color){
+        this._borderColor = color;
         this.reRender();
     }
 }
 HY.Core.Node.prototype.getCornorRadius = function(){
     return this._cornorRadius;
 }
-HY.Core.Node.prototype.setCornorRadius = function(pRadius){
-    if(this._cornorRadius != pRadius){
-        this._cornorRadius = pRadius;
+HY.Core.Node.prototype.setCornorRadius = function(radius){
+    if(this._cornorRadius != radius){
+        this._cornorRadius = radius;
         this.reRender();
     }
 }
 HY.Core.Node.prototype.getBackgroundColor = function(){
     return this._backgroundColor;
 }
-HY.Core.Node.prototype.setBackgroundColor = function(pColor){
-    if(this._backgroundColor != pColor){
-        this._backgroundColor = pColor;
+HY.Core.Node.prototype.setBackgroundColor = function(color){
+    if(this._backgroundColor != color){
+        this._backgroundColor = color;
         this.reRender();
     }
 }
@@ -293,9 +244,9 @@ HY.Core.Node.prototype.setVisible = function(visible){
 HY.Core.Node.prototype.getClipBound = function(){
     return this._clipBound;
 }
-HY.Core.Node.prototype.setClipBound = function(pClip){
-    if(this._clipBound != pClip){
-        this._clipBound = pClip;
+HY.Core.Node.prototype.setClipBound = function(clip){
+    if(this._clipBound != clip){
+        this._clipBound = clip;
         this.reRender();
     }
 }
@@ -317,8 +268,8 @@ HY.Core.Node.prototype.setCacheEnable = function(cacheEnable){
 HY.Core.Node.prototype.getCursor = function(){
     return this._cursor;
 }
-HY.Core.Node.prototype.setCursor = function(pCursor){
-    this._cursor = pCursor;
+HY.Core.Node.prototype.setCursor = function(cursor){
+    this._cursor = cursor;
 }
 HY.Core.Node.prototype.getMouseEnable = function(){
     return this._mouseEnable;
@@ -329,14 +280,14 @@ HY.Core.Node.prototype.setMouseEnable = function(mouseEnable){
 HY.Core.Node.prototype.getDragEnable = function(){
     return this._dragEnable;
 }
-HY.Core.Node.prototype.setDragEnable = function(pDrag){
-    this._dragEnable = pDrag;
+HY.Core.Node.prototype.setDragEnable = function(dragEnable){
+    this._dragEnable = dragEnable;
 }
 HY.Core.Node.prototype.getDragZone = function(){
     return this._dragZone;
 }
-HY.Core.Node.prototype.setDragZone = function(pZone){
-    this._dragZone = pZone;
+HY.Core.Node.prototype.setDragZone = function(zone){
+    this._dragZone = zone;
 }
 HY.Core.Node.prototype.getScrollEnable = function(){
     return this._scrollEnable;
@@ -347,11 +298,8 @@ HY.Core.Node.prototype.setScrollEnable = function(scrollEnable){
 HY.Core.Node.prototype.getContextMenu = function(){
     return this._contextMenu;
 }
-HY.Core.Node.prototype.setContextMenu = function(pContextmenu){
-    this._contextMenu = pContextmenu;
-}
-HY.Core.Node.prototype.setApplication = function(pApp){
-    this._application = pApp;
+HY.Core.Node.prototype.setContextMenu = function(contextMenu){
+    this._contextMenu = contextMenu;
 }
 HY.Core.Node.prototype.getApplication = function(){
     if(this._application == null){
@@ -365,50 +313,53 @@ HY.Core.Node.prototype.getApplication = function(){
         return this._application;
     }
 }
+HY.Core.Node.prototype.setApplication = function(app){
+    this._application = app;
+}
 HY.Core.Node.prototype.getParent = function(){
     return this._parent;
 }
-HY.Core.Node.prototype.setParent = function(pNode){
-    this._parent = pNode;
+HY.Core.Node.prototype.setParent = function(node){
+    this._parent = node;
 }
 HY.Core.Node.prototype.getLayers = function(){
     return this._childNodeLayers;
 }
-HY.Core.Node.prototype.getLayerAtIndex = function(pIndex){
-    if(pIndex < this._childNodeLayers.length){
-        return this._childNodeLayers[pIndex];
+HY.Core.Node.prototype.getLayerAtIndex = function(index){
+    if(index < this._childNodeLayers.length){
+        return this._childNodeLayers[index];
     }else{
         return null;
     }
 }
-HY.Core.Node.prototype.getChildNodesAtLayer = function(pLayer){
-    if(pLayer < this._childNodeLayers.length){
-        return this._childNodeLayers[pLayer];
+HY.Core.Node.prototype.getChildNodesAtLayer = function(layerIndex){
+    if(layerIndex < this._childNodeLayers.length){
+        return this._childNodeLayers[layerIndex];
     }else{
         return null;
     }
 }
-HY.Core.Node.prototype.getChildNodeLocation = function(pNode){
+HY.Core.Node.prototype.getChildNodeLocation = function(node){
     for(var i=this._childNodeLayers.length-1;i>=0;--i){
         var curlayer = this._childNodeLayers[i];
         if(curlayer){
             for(var j=curlayer.length-1;j>=0;--j){
                 var curnode = curlayer[j];
-                if(curnode == pNode){
-                    return {layer:i-1,index:j-1};
+                if(curnode == node){
+                    return {layerIndex:i-1,nodeIndex:j-1};
                 }
             }
         }
     }
-    return {layer:-1,index:-1};
+    return {layerIndex:-1,nodeIndex:-1};
 }
-HY.Core.Node.prototype.getChildNodeIndexAtLayer = function(pNode,pLayer){
+HY.Core.Node.prototype.getChildNodeIndexAtLayer = function(node,layerIndex){
     if(this._childNodeLayers){
-        if(pLayer < this._childNodeLayers.length){
-            if(this._childNodeLayers[pLayer]){
+        if(layerIndex < this._childNodeLayers.length){
+            if(this._childNodeLayers[layerIndex]){
                 var curlayer = this._childNodeLayers.length;
                 for(var i = curlayer.length-1;i>=0;--i){
-                    if(curlayer[i] == pNode){
+                    if(curlayer[i] == node){
                         return i;
                     }
                 }
@@ -417,33 +368,33 @@ HY.Core.Node.prototype.getChildNodeIndexAtLayer = function(pNode,pLayer){
     }
     return -1;
 }
-HY.Core.Node.prototype.addChildNode = function(pNode){
-    this.addChildNodeAtLayer(pNode,0);
+HY.Core.Node.prototype.addChildNode = function(node){
+    this.addChildNodeAtLayer(node,0);
 }
-HY.Core.Node.prototype.addChildNodeAtLayer = function(pNode,pLayer){
-    if(pNode){
-        if(!this._childNodeLayers[pLayer]){
-            this._childNodeLayers[pLayer] = [];
+HY.Core.Node.prototype.addChildNodeAtLayer = function(node,layerIndex){
+    if(node){
+        if(!this._childNodeLayers[layerIndex]){
+            this._childNodeLayers[layerIndex] = [];
         }
-        pNode.setParent(this);
-        this._childNodeLayers[pLayer].push(pNode);
+        node.setParent(this);
+        this._childNodeLayers[layerIndex].push(node);
         this.reRender();
     }
 
 }
-HY.Core.Node.prototype.addChildNodeAtLayersIndex = function(pNode,pLayer,pIndex){
-    if(pNode){
-        if(!this._childNodeLayers[pLayer]){
-            this._childNodeLayers[pLayer] = [];
+HY.Core.Node.prototype.addChildNodeAtLayersIndex = function(node,layerIndex,nodeIndex){
+    if(node){
+        if(!this._childNodeLayers[layerIndex]){
+            this._childNodeLayers[layerIndex] = [];
         }
-        var i = this._childNodeLayers[pLayer].length;
-        pNode.setParent(this);
-        if(i < pIndex){
-            this._childNodeLayers[pLayer].push(pNode);
+        var i = this._childNodeLayers[layerIndex].length;
+        node.setParent(this);
+        if(i < nodeIndex){
+            this._childNodeLayers[layerIndex].push(node);
             return i;
         }else {
-            this._childNodeLayers[pLayer].splice(pIndex,0,pNode);
-            return pIndex;
+            this._childNodeLayers[layerIndex].splice(nodeIndex,0,node);
+            return nodeIndex;
         }
         this.reRender();
     }
@@ -588,37 +539,37 @@ HY.Core.Node.prototype.downIdentityOnThis = function(){
 		return -1;
 	}
 }
-HY.Core.Node.prototype.transPointToAncestorNode = function(pPoint,pAncestorNode) {
+HY.Core.Node.prototype.transPointToAncestorNode = function(point,ancestorNode) {
     var parentNode = this.getParent();
-    var newPoint = new HY.Vect2D({x:pPoint.x,y:pPoint.y});
+    var newPoint = new HY.Vect2D({x:point.x,y:point.y});
     var anglesin = this.getSinRotateZ();
     var anglecos = this.getCosRotateZ();
-    newPoint.x = this.getX() + (pPoint.x*this.getScaleX()*anglecos-pPoint.y*this.getScaleY()*anglesin);
-    newPoint.y = this.getY() + (pPoint.x*this.getScaleX()*anglesin+pPoint.y*this.getScaleY()*anglecos);
+    newPoint.x = this.getX() + (point.x*this.getScaleX()*anglecos-point.y*this.getScaleY()*anglesin);
+    newPoint.y = this.getY() + (point.x*this.getScaleX()*anglesin+point.y*this.getScaleY()*anglecos);
     if(parentNode == null || parentNode == pAncestorNode){
         return newPoint;
     }else{
-        return parentNode.transPointToAncestorNode(newPoint,pAncestorNode);
+        return parentNode.transPointToAncestorNode(newPoint,ancestorNode);
     }
 }
-HY.Core.Node.prototype.transVectorToAncestorNode = function(pVector,pAncestorNode){
+HY.Core.Node.prototype.transVectorToAncestorNode = function(vector,ancestorNode){
     var parentNode = this.getParent();
-    var newVector = new HY.Vect2D({x:pVector.x, y:pVector.y});
+    var newVector = new HY.Vect2D({x:vector.x, y:vector.y});
     var angleSin = this.getSinRotateZ();
     var angleCos = this.getCosRotateZ();
-    newVector.x = (pVector.x * this.getScaleX() * angleCos - pVector.y * this.getScaleY() * angleSin);
-    newVector.y = (pVector.x * this.getScaleX() * angleSin + pVector.y * this.getScaleY() * angleCos);
-    if(parentNode == null || parentNode == pAncestorNode){
+    newVector.x = (vector.x * this.getScaleX() * angleCos - vector.y * this.getScaleY() * angleSin);
+    newVector.y = (vector.x * this.getScaleX() * angleSin + vector.y * this.getScaleY() * angleCos);
+    if(parentNode == null || parentNode == ancestorNode){
         return newVector;
     }else{
-        return parentNode.transVectorToAncestorNode(newVector, pAncestorNode);
+        return parentNode.transVectorToAncestorNode(newVector, ancestorNode);
     }
 }
-HY.Core.Node.prototype.transPointFromAncestorNode = function(pPoint,pAncestorNode){
-    var newPoint = new HY.Vect2D({x:pPoint.x, y:pPoint.y});
+HY.Core.Node.prototype.transPointFromAncestorNode = function(point,ancestorNode){
+    var newPoint = new HY.Vect2D({x:point.x, y:point.y});
     var parentNode = this.getParent();
-    if(parentNode != null && parentNode != pAncestorNode){
-        newPoint = parentNode.transPointFromAncestorNode(pPoint,pAncestorNode);
+    if(parentNode != null && parentNode != ancestorNode){
+        newPoint = parentNode.transPointFromAncestorNode(point,ancestorNode);
     }
     var offsetX = newPoint.x - this.getX();
     var offsetY = newPoint.y - this.getY();
@@ -628,47 +579,47 @@ HY.Core.Node.prototype.transPointFromAncestorNode = function(pPoint,pAncestorNod
     newPoint.y = (offsetY * angleCos - offsetX * angleSin)/this.getScaleY();
     return newPoint;
 }
-HY.Core.Node.prototype.transVectorFromAncestorNode = function(pVector,pAncestorNode){
-    var newVector = new HY.Vect2D({x:pVector.x, y:pVector.y});
+HY.Core.Node.prototype.transVectorFromAncestorNode = function(vector,ancestorNode){
+    var newVector = new HY.Vect2D({x:vector.x, y:vector.y});
     var parentNode = this.getParent();
-    if(parentNode != null && parentNode != pAncestorNode){
-        newVector = parentNode.transVectorFromAncestorNode(pVector,pAncestorNode);
+    if(parentNode != null && parentNode != ancestorNode){
+        newVector = parentNode.transVectorFromAncestorNode(vector,ancestorNode);
     }
     var angleSin = this.getSinRotateZ();
     var angleCos = this.getCosRotateZ();
-    newVector.x = (pVector.x * angleCos + pVector.y * angleSin) / this.getScaleX();
-    newVector.y = (pVector.y * angleCos - pVector.x * angleSin) / this.getScaleY();
+    newVector.x = (vector.x * angleCos + vector.y * angleSin) / this.getScaleX();
+    newVector.y = (vector.y * angleCos - vector.x * angleSin) / this.getScaleY();
     return newVector;
 }
-HY.Core.Node.prototype.transPointFromCanvas = function(pPoint){
-    return this.transPointFromAncestorNode(pPoint, null);
+HY.Core.Node.prototype.transPointFromCanvas = function(point){
+    return this.transPointFromAncestorNode(point, null);
 }
-HY.Core.Node.prototype.transPointToCanvas = function(pPoint){
-    return this.transPointToAncestorNode(pPoint,null);
+HY.Core.Node.prototype.transPointToCanvas = function(point){
+    return this.transPointToAncestorNode(point,null);
 }
-HY.Core.Node.prototype.transVectorFromCanvas = function(pVector){
-    return this.transVectorFromAncestorNode(pVector,null);
+HY.Core.Node.prototype.transVectorFromCanvas = function(vector){
+    return this.transVectorFromAncestorNode(vector,null);
 }
-HY.Core.Node.prototype.transVectorToCanvas = function(pVector){
-    return this.transVectorToAncestorNode(pVector,null);
+HY.Core.Node.prototype.transVectorToCanvas = function(vector){
+    return this.transVectorToAncestorNode(vector,null);
 }
-HY.Core.Node.prototype.transPointFromParent = function(pPoint){
-    return this.transPointFromAncestorNode(pPoint,this.getParent());
+HY.Core.Node.prototype.transPointFromParent = function(point){
+    return this.transPointFromAncestorNode(point,this.getParent());
 }
-HY.Core.Node.prototype.transPointToParent = function(pPoint){
-    return this.transPointToAncestorNode(pPoint,this.getParent());
+HY.Core.Node.prototype.transPointToParent = function(point){
+    return this.transPointToAncestorNode(point,this.getParent());
 }
-HY.Core.Node.prototype.transVectorFromParent = function(pVector){
-    return this.transVectorFromAncestorNode(pVector,this.getParent());
+HY.Core.Node.prototype.transVectorFromParent = function(vector){
+    return this.transVectorFromAncestorNode(vector,this.getParent());
 }
-HY.Core.Node.prototype.transVectorToParent = function(pVector){
-    return this.transVectorToAncestorNode(pVector,this.getParent());
+HY.Core.Node.prototype.transVectorToParent = function(vector){
+    return this.transVectorToAncestorNode(vector,this.getParent());
 }
 
-HY.Core.Node.prototype.runAction = function(action,loop,target,selector){
+HY.Core.Node.prototype.runAction = function(action,loop,target,callBack){
     var app = this.getApplication();
     if(app && app.getActionManager()){
-        app.getActionManager().addActionLink(this,action,loop,target,selector);
+        app.getActionManager().addActionLink(this,action,loop,target,callBack);
     }
 }
 HY.Core.Node.prototype.stopAction = function(action){
@@ -703,47 +654,47 @@ HY.Core.Node.prototype.reRender = function(){
     }
 }
 
-HY.Core.Node.prototype.addEventListener = function(pType,pSelector,pTarget){
-	if(!this._events[pType]){
-		this._events[pType] = [];
+HY.Core.Node.prototype.addEventListener = function(type,callBack,target){
+	if(!this._events[type]){
+		this._events[type] = [];
 	}
-	this._events[pType].push({selector:pSelector,target:pTarget});
+	this._events[type].push({callBack:callBack,target:target});
 }
-HY.Core.Node.prototype.checkEventListener = function(pType,pSelector,pTarget){
-    if(this._events[pType]){
-        for(var i=this._events[pType].length-1;i>=0;--i){
-            if(this._events[pType][i].selector == pSelector && this._events[pType][i].target == pTarget){
+HY.Core.Node.prototype.checkEventListener = function(type,callBack,target){
+    if(this._events[type]){
+        for(var i=this._events[type].length-1;i>=0;--i){
+            if(this._events[type][i].callBack == callBack && this._events[type][i].target == target){
                 return true;
             }
         }
     }
     return false;
 }
-HY.Core.Node.prototype.removeEventListenerOfType = function(pType,pSelector,pTarget){
-    if(this._events[pType]){
-        for(var i = this._events[pType].length-1; i>=0;--i){
-            if(this._events[pType][i].selector == pSelector && this._events[pType][i].target == pTarget){
-                this._events[pType].splice(i,1);
+HY.Core.Node.prototype.removeEventListenerOfType = function(type,callBack,target){
+    if(this._events[type]){
+        for(var i = this._events[type].length-1; i>=0;--i){
+            if(this._events[type][i].callBack == callBack && this._events[type][i].target == target){
+                this._events[type].splice(i,1);
             }
         }
     }
 }
-HY.Core.Node.prototype.removeAllEventListenerOfType = function(pType){
-    if(this._events[pType]){
-        this._events[pType] = [];
+HY.Core.Node.prototype.removeAllEventListenerOfType = function(type){
+    if(this._events[type]){
+        this._events[type] = [];
     }
 }
 HY.Core.Node.prototype.removeAllEventListener = function(){
     this._events = {};
 }
 
-HY.Core.Node.prototype.launchEvent = function(pType,eParamarray){
-	var events = this._events[pType];
+HY.Core.Node.prototype.launchEvent = function(type,params){
+	var events = this._events[type];
 	if(events){
 		var len = events.length;
 		for(var i=0;i<len;++i){
 			var eListener = events[i];
-            eListener.selector.apply(eListener.target,eParamarray);
+            eListener.callBack.apply(eListener.target,params);
 		}
 	}
 }
@@ -774,8 +725,8 @@ HY.Core.Node.prototype.onAlphaChanged = function(sender){
 HY.Core.Node.prototype.onFinishLaunch = function(sender){
     this.launchEvent("finishlaunch",[this]);
 }
-HY.Core.Node.prototype.onCanvasSizeChanged = function(sender,pNewSize){
-    this.launchEvent("canvassizechanged",[this,pNewSize]);
+HY.Core.Node.prototype.onCanvasSizeChanged = function(sender,newSize){
+    this.launchEvent("canvassizechanged",[this,newSize]);
 }
 HY.Core.Node.prototype.onFirstShow = function(sender){
 	this.launchEvent("firstshow",[this]);
@@ -836,24 +787,24 @@ HY.Core.Node.prototype.onEnterFrame = function(sender,pDeltaTime){
 HY.Core.Node.prototype.onEndFrame = function(sender,pDeltaTime){
     this.launchEvent("endframe",[this,pDeltaTime]);
 }
-HY.Core.Node.prototype.onPaint = function(sender,pRc,pRect){
-    var lmaxx = pRect.x + pRect.width;
-    var lmaxy = pRect.y + pRect.height;
-    var lmaxx1 = pRect.x + pRect.width;
-    var lmaxy1 = pRect.y + pRect.height;
+HY.Core.Node.prototype.onPaint = function(sender,dc,rect){
+    var lmaxx = rect.x + rect.width;
+    var lmaxy = rect.y + rect.height;
+    var lmaxx1 = rect.x + rect.width;
+    var lmaxy1 = rect.y + rect.height;
     ///*绘制背景色*/
     if(this._backgroundColor){
-        pRc.setFillStyle(this._backgroundColor);
-        this._createEdgePath(pRc, pRect.x, pRect.y, lmaxx, lmaxy, this._borderWidth);
-        pRc.fill();
+        dc.setFillStyle(this._backgroundColor);
+        this._createEdgePath(dc, rect.x, rect.y, lmaxx, lmaxy, this._borderWidth);
+        dc.fill();
     }
-    this.launchEvent("paint",[this,pRc,pRect]);
+    this.launchEvent("paint",[this,dc,rect]);
     /*绘制边框*/
     if(this._borderColor != null && this._borderWidth > 0) {
-        pRc.setLineWidth(this._borderWidth);
-        pRc.setStrokeStyle(this._borderColor);
-        this._createEdgePath(pRc, pRect.x, pRect.y, lmaxx, lmaxy, this._borderWidth);
-        pRc.stroke();
+        dc.setLineWidth(this._borderWidth);
+        dc.setStrokeStyle(this._borderColor);
+        this._createEdgePath(dc, rect.x, rect.y, lmaxx, lmaxy, this._borderWidth);
+        dc.stroke();
     }
 }
 HY.Core.Node.prototype.onStartDrag = function(sender,e){
@@ -911,8 +862,8 @@ HY.Core.Node.prototype._dispatchCanvasSizeChanged = function(pNewSize){
     }
     this.onCanvasSizeChanged(this,pNewSize);
 }
-HY.Core.Node.prototype._createEdgePath = function(pRc,minx,miny,maxx,maxy,offset){
-    pRc.beginPath();
+HY.Core.Node.prototype._createEdgePath = function(dc,minx,miny,maxx,maxy,offset){
+    dc.beginPath();
     if(offset != 0){
         var hoffset = offset/2;
         minx += hoffset;
@@ -921,21 +872,21 @@ HY.Core.Node.prototype._createEdgePath = function(pRc,minx,miny,maxx,maxy,offset
         maxy -= hoffset;
     }
     if(this._cornorRadius && this._cornorRadius!=0){
-        pRc.moveTo(minx,this._cornorRadius+miny);
-        pRc.arcTo(minx,miny,minx+this._cornorRadius,miny,this._cornorRadius);
-        pRc.lineTo(maxx-this._cornorRadius,miny);
-        pRc.arcTo(maxx,miny,maxx,miny+this._cornorRadius,this._cornorRadius);
-        pRc.lineTo(maxx,maxy-this._cornorRadius);
-        pRc.arcTo(maxx,maxy,maxx-this._cornorRadius,maxy,this._cornorRadius);
-        pRc.lineTo(minx+this._cornorRadius,maxy);
-        pRc.arcTo(minx,maxy,minx,miny-this._cornorRadius,this._cornorRadius);
+        dc.moveTo(minx,this._cornorRadius+miny);
+        dc.arcTo(minx,miny,minx+this._cornorRadius,miny,this._cornorRadius);
+        dc.lineTo(maxx-this._cornorRadius,miny);
+        dc.arcTo(maxx,miny,maxx,miny+this._cornorRadius,this._cornorRadius);
+        dc.lineTo(maxx,maxy-this._cornorRadius);
+        dc.arcTo(maxx,maxy,maxx-this._cornorRadius,maxy,this._cornorRadius);
+        dc.lineTo(minx+this._cornorRadius,maxy);
+        dc.arcTo(minx,maxy,minx,miny-this._cornorRadius,this._cornorRadius);
     }else{
-        pRc.moveTo(minx,miny);
-        pRc.lineTo(maxx,miny);
-        pRc.lineTo(maxx,maxy);
-        pRc.lineTo(minx,maxy);
+        dc.moveTo(minx,miny);
+        dc.lineTo(maxx,miny);
+        dc.lineTo(maxx,maxy);
+        dc.lineTo(minx,maxy);
     }
-    pRc.closePath();
+    dc.closePath();
 }
 HY.Core.Node.prototype._dispatchEnterFrame = function(pDeltaTime){
     this.onEnterFrame(this,pDeltaTime);
@@ -949,7 +900,7 @@ HY.Core.Node.prototype._dispatchEnterFrame = function(pDeltaTime){
     }
     this.onEndFrame(this,pDeltaTime);
 }
-HY.Core.Node.prototype._dispatchPaintEvent = function (pRc,pDeltaTime) {
+HY.Core.Node.prototype._dispatchPaintEvent = function (dc,pDeltaTime) {
     this.onEnterFrame(this,pDeltaTime);
 	if(this._layoutflag){
 		this.layoutSubNodes();
@@ -960,38 +911,38 @@ HY.Core.Node.prototype._dispatchPaintEvent = function (pRc,pDeltaTime) {
             this.onFirstShow(this);
             this._isFirstShow = false;
         }
-        pRc.pushTransform(this._x,this._y,this._scaleX,this._scaleY,this._rotateZ,this._clipBound);
+        dc.pushTransform(this._x,this._y,this._scaleX,this._scaleY,this._rotateZ,this._clipBound);
         var lminx = this._anchorPixelX;
         var lminy = this._anchorPixelY;
         ///*开启裁剪*/
         if(this._clipBound){
-            this._createEdgePath(pRc,lminx,lminy,lminx+this.getWidth(),lminy+this.getHeight(),0);
-            pRc.clip();
+            this._createEdgePath(dc,lminx,lminy,lminx+this.getWidth(),lminy+this.getHeight(),0);
+            dc.clip();
         }
         if(this._cacheEnable){
             if(!this._cached){
+                this._cacheContext.setWidth(this._width);
+                this._cacheContext.setHeight(this._height);
                 this._cacheContext.clearRect(0,0,this._width,this._height);
                 this._cacheContext.setGlobalAlpha(this._alpha);
                 this.onPaint(this,this._cacheContext,new HY.Rect2D({x:0,y:0,width:this._width,height:this._height}));
                 this._cached = true;
             }
-            pRc.drawImage(this._cacheContext.getCanvas(),lminx,lminy);
+            dc.drawImage(this._cacheContext.getCanvas(),lminx,lminy);
         }else{
-            pRc.setGlobalAlpha(this._alpha);
-            this.onPaint(this,pRc,new HY.Rect2D({x:lminx,y:lminy,width:this._width,height:this._height}));
+            dc.setGlobalAlpha(this._alpha);
+            this.onPaint(this,dc,new HY.Rect2D({x:lminx,y:lminy,width:this._width,height:this._height}));
         }
         /*绘制子控件*/
-        var layoutcount = this._childNodeLayers.length;
-        for( var i=0;i<layoutcount;++i){
+        for( var i= 0,layercount=this._childNodeLayers.length ; i<layercount ; ++i){
             var layer = this._childNodeLayers[i];
             if(layer){
-                var nodecount = layer.length;
-                for(var j=0;j<nodecount;++j){
-                    layer[j]._dispatchPaintEvent(pRc,pDeltaTime);
+                for(var j= 0,nodecount=layer.length ; j<nodecount ; ++j){
+                    layer[j]._dispatchPaintEvent(dc,pDeltaTime);
                 }
             }
         }
-        pRc.popTransform();
+        dc.popTransform();
     }
     this.onEndFrame(this,pDeltaTime);
 }

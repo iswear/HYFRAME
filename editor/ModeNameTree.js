@@ -5,20 +5,16 @@ HY.GUI.ModelNameTreeNodeView.prototype = new HY.GUI.TreeNodeView();
 HY.GUI.ModelNameTreeNodeView.prototype.defaultReuseIdentity = "modelnamenode";
 HY.GUI.ModelNameTreeNodeView.prototype.defaultEditEnable = false;
 HY.GUI.ModelNameTreeNodeView.prototype.defaultSelected = false;
-HY.GUI.ModelNameTreeNodeView.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-    if(config.selected != undefined){ this._selected = config.selected; } else { this._selected = this.defaultSelected; }
-    if(config.editEnable != undefined){ this._editEnable = config.editEnable; } else { this._editEnable = this.defaultEditEnable; }
-
+HY.GUI.ModelNameTreeNodeView.prototype.init = function(config){
     this._nodeIcon = new HY.GUI.ImageView({mouseEnable:false});
     this._nodeTextBox = new HY.GUI.TextBox({mouseEnable:false,editDelay:300,cursor:'default'});
     this._nodeUnit = null;
     this._nodePath = null;
-}
-HY.GUI.ModelNameTreeNodeView.prototype.initConstraint = function(){
-    this.superCall("initConstraint");
     this.addChildNodeAtLayer(this._nodeIcon,0);
     this.addChildNodeAtLayer(this._nodeTextBox,0);
+    this.superCall("initMember",[config]);
+    if(config.selected != undefined){ this._selected = config.selected; } else { this._selected = this.defaultSelected; }
+    if(config.editEnable != undefined){ this._editEnable = config.editEnable; } else { this._editEnable = this.defaultEditEnable; }
 }
 HY.GUI.ModelNameTreeNodeView.prototype.layoutSubNodes = function(){
     this.superCall("layoutSubNodes");
@@ -78,19 +74,15 @@ HY.GUI.ModelNameTreeView.prototype.defaultNodeIcon = {
     srcWidth:20,
     srcHeight:20
 };
-HY.GUI.ModelNameTreeView.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-    if(config.nodeHeight != undefined){ this._nodeHeight = config.nodeHeight; } else { this._nodeHeight = this.defaultNodeHeight; }
-    if(config.nodeIcon != undefined){ this._nodeIcon = config.nodeIcon; } else { this._nodeIcon = this.defaultNodeIcon; }
-    if(config.nodeNormalColor != undefined){ this._nodeNormalColor = config.nodeNormalColor; } else { this._nodeNormalColor = this.defaultNodeNormalColor; }
-    if(config.nodeHoverColor != undefined){ this._nodeHoverColor = config.nodeHoverColor; } else { this._nodeHoverColor = this.defaultNodeHoverColor; }
-    if(config.nodeActiveColor != undefined){ this._nodeActiveColor = config.nodeActiveColor; } else { this._nodeActiveColor = this.defaultNodeActiveColor; }
-
+HY.GUI.ModelNameTreeView.prototype.init = function(config){
     this._selectedNodePath = null;
-}
-HY.GUI.ModelNameTreeView.prototype.initConstraint = function(){
-    this.superCall("initConstraint");
-    this.addEventListener("nodemousedown", this._nodeSelected, this);
+    this.superCall("init",[config]);
+    if(config.nodeHeight != undefined){ this.setNodeHeight(config.nodeHeight); } else { this.setNodeHeight(this.defaultNodeHeight); }
+    if(config.nodeIcon != undefined){ this.setNodeIcon(config.nodeIcon); } else { this.setNodeIcon(this.defaultNodeIcon); }
+    if(config.nodeNormalColor != undefined){ this.setNodeNormalColor(config.nodeNormalColor); } else { this.setNodeNormalColor(this.defaultNodeNormalColor); }
+    if(config.nodeHoverColor != undefined){ this.setNodeHoverColor(config.nodeHoverColor); } else { this.setNodeHoverColor(this.defaultNodeHoverColor); }
+    if(config.nodeActiveColor != undefined){ this.setNodeActiveColor(config.nodeActiveColor); } else { this.setNodeActiveColor(this.defaultNodeActiveColor); }
+    this.addEventListener("nodemousedown",this._nodeSelected,this);
 }
 HY.GUI.ModelNameTreeView.prototype.getSelectedNodePath = function(){
     return this._selectedNodePath;
@@ -139,22 +131,28 @@ HY.GUI.ModelNameTreeView.prototype.setNodeHeight = function(nodeHeight){
     this._nodeHeight = nodeHeight;
     this.reloadData();
 }
+HY.GUI.ModelNameTreeView.prototype.getNodeIcon = function(){
+    return this._nodeIcon;
+}
+HY.GUI.ModelNameTreeView.prototype.setNodeIcon = function(nodeIcon){
+    this._nodeIcon = nodeIcon;
+}
 HY.GUI.ModelNameTreeView.prototype.getNodeNormalColor = function(){
     return this._nodeNormalColor;
 }
 HY.GUI.ModelNameTreeView.prototype.setNodeNormalColor = function(normalColor){
     this._nodeNormalColor = normalColor;
 }
-HY.GUI.ModelNameTreeView.prototype.getHoverColor = function(){
+HY.GUI.ModelNameTreeView.prototype.getNodeHoverColor = function(){
     return this._nodeHoverColor;
 }
-HY.GUI.ModelNameTreeView.prototype.setHoverColor = function(hoverColor){
+HY.GUI.ModelNameTreeView.prototype.setNodeHoverColor = function(hoverColor){
     this._nodeHoverColor = hoverColor;
 }
-HY.GUI.ModelNameTreeView.prototype.getActiveColor = function(){
+HY.GUI.ModelNameTreeView.prototype.getNodeActiveColor = function(){
     return this._nodeActiveColor;
 }
-HY.GUI.ModelNameTreeView.prototype.setActiveColor = function(activeColor){
+HY.GUI.ModelNameTreeView.prototype.setNodeActiveColor = function(activeColor){
     this._nodeActiveColor = activeColor;
 }
 HY.GUI.ModelNameTreeView.prototype.getNodeUnitOfNodePath = function(nodePath,nodeDeepth){
@@ -206,8 +204,7 @@ HY.GUI.ModelNameTreeView.prototype.onNodeUnSelected = function(sender, nodePath)
 
 HY.GUI.ModelNameTreeView.prototype.numberOfNodeInPath = function(treeView, nodePath){
     var node = this.getRoot();
-    var nodeDeepth = nodePath.length;
-    for(var i=0;i<nodeDeepth;++i){
+    for(var i= 0,nodeDeepth=nodePath.length;i<nodeDeepth;++i){
         var childUnits = node.getChildUnits();
         node = childUnits[nodePath[i]];
     }
@@ -226,16 +223,11 @@ HY.GUI.ModelNameTreeView.prototype.heightOfNodeInPath = function(treeView, nodeP
     return this._nodeHeight;
 }
 HY.GUI.ModelNameTreeView.prototype.contextMenuOfNodeInPath = function(treeView, nodePath){
-    if(nodePath.length == 0){
-        return ["添加子部件","删除所有子部件"];
-    }else{
-        return ["添加子部件","删除所有子部件","删除"];
-    }
+    return null;
 }
 HY.GUI.ModelNameTreeView.prototype.viewOfNodeInPath = function(treeView,nodePath){
     var node = this.getRoot();
-    var nodeDeepth = nodePath.length;
-    for(var i=0;i<nodeDeepth;++i){
+    for(var i= 0,nodeDeepth = nodePath.length;i<nodeDeepth;++i){
         var childUnits = node.getChildUnits();
         node = childUnits[nodePath[i]];
     }

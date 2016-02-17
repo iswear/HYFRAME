@@ -8,10 +8,10 @@ HY.Core.Action.Manager = function(config){
     this.init(config);
 }
 HY.Core.Action.Manager.prototype = new HY.Object();
-HY.Core.Action.Manager.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
+HY.Core.Action.Manager.prototype.init = function(config){
     this._actionLinkList = [];
     this._paused = false;
+    this.superCall("init",[config]);
 }
 HY.Core.Action.Manager.prototype.pause = function(){
     this._paused = true;
@@ -19,8 +19,8 @@ HY.Core.Action.Manager.prototype.pause = function(){
 HY.Core.Action.Manager.prototype.resume = function(){
     this._paused = false;
 }
-HY.Core.Action.Manager.prototype.addActionLink = function(sprite,action,loop,target,selector){
-    var actionLink = new HY.Core.Action.Link({sprite:sprite,action:action,loop:loop,target:target,selector:selector});
+HY.Core.Action.Manager.prototype.addActionLink = function(sprite,action,loop,target,callBack){
+    var actionLink = new HY.Core.Action.Link({sprite:sprite,action:action,loop:loop,target:target,callBack:callBack});
     this._actionLinkList.push(actionLink);
 }
 HY.Core.Action.Manager.prototype.removeAllActions =  function(){
@@ -63,27 +63,45 @@ HY.Core.Action.Link = function(config){
     this.init(config);
 }
 HY.Core.Action.Link.prototype = new HY.Object();
-HY.Core.Action.Link.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-    if(config.action != undefined){ this._action = config.action; } else { this._action = null; }
-    if(config.sprite != undefined){ this._sprite = config.sprite; } else { this._sprite = null; }
-    if(config.loop != undefined){ this._loop = config.loop; } else { this._loop = false; }
-    if(config.target != undefined){ this._target = config.target; } else { this._target = null; }
-    if(config.selector != undefined){ this._selector = config.selector; } else { this._selector = null; }
+HY.Core.Action.Link.prototype.init = function(config){
     this._removeFlag = false;
     this._runParams = {};
+    this.superCall("init",[config]);
+    if(config.action != undefined){ this.setAction(config.action); } else { this.setAction(null); }
+    if(config.sprite != undefined){ this.setSprite(config.sprite); } else { this.setSprite(null); }
+    if(config.loop != undefined){ this.setLoop(config.loop); } else { this.setLoop(false); }
+    if(config.target != undefined){ this.setTarget(config.target); } else { this.setTarget(null); }
+    if(config.callBack != undefined){ this.setCallBack(config.callBack); } else { this.setCallBack(null); }
 }
 HY.Core.Action.Link.prototype.getAction = function(){
     return this._action;
 }
+HY.Core.Action.Link.prototype.setAction = function(action){
+    this._action = action;
+}
 HY.Core.Action.Link.prototype.getSprite = function(){
     return this._sprite;
+}
+HY.Core.Action.Link.prototype.setSprite = function(sprite){
+    this._sprite = sprite;
 }
 HY.Core.Action.Link.prototype.getLoop = function(){
     return this._loop;
 }
 HY.Core.Action.Link.prototype.setLoop = function(loop){
     this._loop = loop;
+}
+HY.Core.Action.Link.prototype.getTarget = function(){
+    return this._target;
+}
+HY.Core.Action.Link.prototype.setTarget = function(target){
+    this._target = target;
+}
+HY.Core.Action.Link.prototype.getCallBack = function(){
+    return this._callBack;
+}
+HY.Core.Action.Link.prototype.setCallBack = function(callBack){
+    this._callBack = callBack;
 }
 HY.Core.Action.Link.prototype.getRunParams = function(key){
     return this._runParams[key];
@@ -102,8 +120,8 @@ HY.Core.Action.Link.prototype.setRemoveFlag = function(removeFlag){
 }
 HY.Core.Action.Link.prototype.execute = function(deltaTime){
     var result = this._action.execute(this,deltaTime);
-    if(this._selector != null){
-        this._selector.apply(this._target,[this._action,result]);
+    if(this._callBack != null){
+        this._callBack.apply(this._target,[this._action,result]);
     }
     return result;
 }
@@ -112,19 +130,43 @@ HY.Core.Action.Scheduler = function(config){
     this.init(config);
 }
 HY.Core.Action.Scheduler.prototype = new HY.Object();
-HY.Core.Action.Scheduler.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-    if(config.interval != undefined){ this._interval = config.interval; } else { this._interval = 0; }
-    if(config.repeats != undefined){ this._repeats = config.repeats; } else { this._repeats = 0; }
-    if(config.target != undefined){ this._target = config.target; } else { this._target = null; }
-    if(config.selector != undefined){ this._selector = config.selector; } else { this._selector = null; }
-    if(config.param != undefined){ this._param = config.param; } else { this._param = null; }
+HY.Core.Action.Scheduler.prototype.init = function(config){
+    this.superCall("init",[config]);
+    if(config.interval != undefined){ this.setInterval(config.interval); } else { this.setInterval(0); }
+    if(config.repeats != undefined){ this.setRepeats(config.repeats); } else { this.setRepeats(0); }
+    if(config.target != undefined){ this.setTarget(config.target); } else { this.setTarget(null); }
+    if(config.callBack != undefined){ this.setCallBack(config.callBack); } else { this.setCallBack(null); }
+    if(config.param != undefined){ this.setParam(config.param); } else { this.setParam(null); }
 }
 HY.Core.Action.Scheduler.prototype.getInterval = function(){
     return this._interval;
 }
+HY.Core.Action.Scheduler.prototype.setInterval = function(interval){
+    this._interval = interval;
+}
 HY.Core.Action.Scheduler.prototype.getRepeats = function(){
     return this._repeats;
+}
+HY.Core.Action.Scheduler.prototype.setRepeats = function(repeats){
+    this._repeats = repeats;
+}
+HY.Core.Action.Scheduler.prototype.getTarget = function(){
+    return this._target;
+}
+HY.Core.Action.Scheduler.prototype.setTarget = function(target){
+    this._target = target;
+}
+HY.Core.Action.Scheduler.prototype.getCallBack = function(){
+    return this._callBack;
+}
+HY.Core.Action.Scheduler.prototype.setCallBack = function(callBack){
+    this._callBack = callBack;
+}
+HY.Core.Action.Scheduler.prototype.getParam = function(){
+    return this._param;
+}
+HY.Core.Action.Scheduler.prototype.setParam = function(param){
+    this._param = param;
 }
 HY.Core.Action.Scheduler.prototype.execute = function(actionLink,deltaTime){
     if(this._repeats == 0){
@@ -143,7 +185,7 @@ HY.Core.Action.Scheduler.prototype.execute = function(actionLink,deltaTime){
         }
         sumTime += deltaTime;
         if(sumTime >= this._interval){
-            this._selector.apply(this._target,[this._param]);
+            this._callBack.apply(this._target,[this._param]);
             sumTime -= this._interval;
             repeats += 1;
         }
@@ -168,16 +210,22 @@ HY.Core.Action.Animation = function(config){
     this.init(config);
 }
 HY.Core.Action.Animation.prototype = new HY.Core.Action.Base();
-HY.Core.Action.Animation.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-    if(config.targetOffset != undefined){ this._targetOffset = config.targetOffset; } else { this._targetOffset = undefined; }
-    if(config.offsetFun != undefined){ this._offsetFun = eval("(function(t){ return "+config.offsetFun+"; })"); } else { this._offsetFun = function(t){ return 0; }; }
+HY.Core.Action.Animation.prototype.init = function(config){
+    this.superCall("init",[config]);
+    if(config.targetOffset != undefined){ this.setTargetOffset(config.targetOffset); } else { this.setTarget(undefined); }
+    if(config.offsetFun != undefined){ this.setOffsetFun(config.offsetFun); } else { this.setOffsetFun("0"); }
 }
 HY.Core.Action.Animation.prototype.getTargetOffset = function(){
     return this._targetOffset;
 }
+HY.Core.Action.Animation.prototype.setTargetOffset = function(targetOffset){
+    this._targetOffset = targetOffset;
+}
 HY.Core.Action.Animation.prototype.getOffsetFun = function(){
     return this._offsetFun;
+}
+HY.Core.Action.Animation.prototype.setOffsetFun = function(offsetFun){
+    this._offsetFun = eval("(function(t){ return "+offsetFun+"; })");
 }
 HY.Core.Action.Animation.prototype.execute = function(){}
 
@@ -506,21 +554,21 @@ HY.Core.Action.List = function(config){
     this.init(config);
 }
 HY.Core.Action.List.prototype = new HY.Core.Action.Base();
-HY.Core.Action.List.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-    if(config.actions != undefined){ this._actions = config.actions; } else { this._actions = []; }
+HY.Core.Action.List.prototype.init = function(config){
+    this.superCall("init",[config]);
+    if(config.actions != undefined){ this.setActions(config.actions); } else { this.setActions([]); }
 }
 HY.Core.Action.List.prototype.getActions = function(){
     return this._actions;
+}
+HY.Core.Action.List.prototype.setActions = function(actions){
+    this._actions = actions;
 }
 
 HY.Core.Action.SyncList = function(config){
     this.init(config);
 }
 HY.Core.Action.SyncList.prototype = new HY.Core.Action.List();
-HY.Core.Action.SyncList.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-}
 HY.Core.Action.SyncList.prototype.execute = function(actionLink, deltaTime){
     var initFlag = actionLink.getRunParams("inited");
     var actionLinks;
@@ -528,8 +576,7 @@ HY.Core.Action.SyncList.prototype.execute = function(actionLink, deltaTime){
         actionLinks = [];
         var sprite = actionLink.getSprite();
         var actions = this.getActions();
-        var actionNum = actions.length;
-        for(var i=0;i<actionNum;++i){
+        for(var i= 0, actionNum = actions.length;i<actionNum;++i){
             actionLinks.push(new HY.Core.Action.Link({sprite:sprite, action:actions[i]}));
         }
         actionLink.setRunParams("inited",true);
@@ -553,9 +600,6 @@ HY.Core.Action.AsyncList = function(config){
     this.init(config);
 }
 HY.Core.Action.AsyncList.prototype = new HY.Core.Action.List();
-HY.Core.Action.AsyncList.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-}
 HY.Core.Action.AsyncList.prototype.execute = function(actionLink, deltaTime){
     var initFlag = actionLink.getRunParams("inited");
     var actionLinks;
@@ -563,8 +607,7 @@ HY.Core.Action.AsyncList.prototype.execute = function(actionLink, deltaTime){
         actionLinks = [];
         var sprite = actionLink.getSprite();
         var actions = this.getActions();
-        var actionNum = actions.length;
-        for(var i=0;i<actionNum;++i){
+        for(var i= 0, actionNum = actions.length;i<actionNum;++i){
             actionLinks.push(new HY.Core.Action.Link({sprite:sprite, action:actions[i]}));
         }
         actionLink.setRunParams("inited",true);

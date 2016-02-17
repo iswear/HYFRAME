@@ -5,14 +5,7 @@ HY.Core.Application = function(config){
     this.init(config);
 }
 HY.Core.Application.prototype = new HY.Object();
-HY.Core.Application.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-    if(config.appWidth != undefined){ this._appWidth = config.appWidth; } else { this._appWidth = 400; }
-    if(config.appHeight != undefined){ this._appHeight = config.appHeight; } else { this._appHeight = 300; }
-    if(config.fullScreen != undefined){ this._fullScreen = config.fullScreen; } else { this._fullScreen = true; }
-    if(config.scaleMode != undefined){ this._scaleMode = config.scaleMode; } else { this._scaleMode = 0; }
-    if(config.refreshMode != undefined){ this._refreshMode = config.refreshMode; } else { this._refreshMode = 0; }
-
+HY.Core.Application.prototype.init = function(config){
     this._renderContext = null;
     this._scaleX = 1;
     this._scaleY = 1;
@@ -38,17 +31,7 @@ HY.Core.Application.prototype.initMember = function(config){
     this._actionManager =  new HY.Core.Action.Manager({});		//动作管理器
     this._resourceManager = new HY.Core.Resource.Manager({});	//资源管理器
 
-    /*临时调试*/
-    this._console = document.getElementById("1");
-}
-HY.Core.Application.prototype.initConstraint = function(config){
-    this.superCall("initConstraint");
-    if(this._renderContext){
-        this._renderContext.setWidth(this._appWidth);
-    }
-    if(this._renderContext){
-        this._renderContext.setHeight(this._appHeight);
-    }
+    /*输入框初始化*/
     this._inputCursor.type = "text";
     this._inputCursor.style.zIndex = "999";
     this._inputCursor.style.position = "absolute";
@@ -56,16 +39,16 @@ HY.Core.Application.prototype.initConstraint = function(config){
     this._inputCursor.style.backgroundColor = "transparent";
     this._inputCursor.style.display = "none";
     HY.Core.Event.addListener(this._inputCursor,this,"mousedown",function(e){
-        var pEvent = new HY.Core.Event.eArg(e,this);
-        pEvent.stopDispatch();
+        var lEvent = new HY.Core.Event.eArg(e,this);
+        lEvent.stopDispatch();
     });
     HY.Core.Event.addListener(this._inputCursor,this,"mouseup",function(e){
-        var pEvent = new HY.Core.Event.eArg(e,this);
-        pEvent.stopDispatch();
+        var lEvent = new HY.Core.Event.eArg(e,this);
+        lEvent.stopDispatch();
     });
     HY.Core.Event.addListener(this._inputCursor,this,"keypress",function(e){
-        var pEvent = new HY.Core.Event.eArg(e,this);
-        if(pEvent.keyCode == HY.Core.Event.KEYCODE.ENTER){
+        var lEvent = new HY.Core.Event.eArg(e,this);
+        if(lEvent.keyCode == HY.Core.Event.KEYCODE.ENTER){
             if(this._inputNode){
                 try{
                     this._inputNode.blur();
@@ -76,42 +59,52 @@ HY.Core.Application.prototype.initConstraint = function(config){
         }
     });
     document.body.appendChild(this._inputCursor);
+
+    /*右键菜单初始化*/
+    this._contextMenu = new HY.GUI.SimpleListView({
+        width:120,
+        rowHeight:25,
+        borderWidth:1,
+        borderColor:'#222222',
+        backgroundColor:'#ffffff',
+        autoSizeFit:true,
+        cellEditEnable:false
+    });
+    this._contextMenu.addEventListener("cellmousedown",function(sender,e,cellView){
+        this._contextMenu.setUserProperty("menushown",true);
+    },this);
+    this._contextMenu.addEventListener("cellmouseup",function(sender,e,cellView){
+        var menutype = this._contextMenu.getUserProperty("menutype");
+        var menunode = this._contextMenu.getUserProperty("menunode");
+        if(menutype == 0 && menunode.onContextMenu){
+            menunode.onContextMenu(sender,e,cellView);
+        }
+        if(menutype == 1 && menunode.onDropItem){
+            menunode.onDropItem(sender,e,cellView);
+        }
+        this._contextMenu.setUserProperty("menushown",false);
+        this.hideContextMenu();
+    },this);
+
+    this.superCall("init",[config]);
+
+    if(config.appWidth != undefined){ this.setAppWidth(config.appWidth); } else { this.setAppWidth(400); }
+    if(config.appHeight != undefined){ this.setAppHeight(config.appHeight); } else { this.setAppHeight(300); }
+    if(config.fullScreen != undefined){ this._fullScreen = config.fullScreen; } else { this._fullScreen = true; }
+    if(config.refreshMode != undefined){ this._refreshMode = config.refreshMode; } else { this._refreshMode = 0; }
+    if(config.scaleMode != undefined){ this._scaleMode = config.scaleMode; } else { this._scaleMode = 0; }
+
+    /*临时调试*/
+    this._console = document.getElementById("1");
 }
 HY.Core.Application.prototype.showContextMenu = function(e,node,menuItems,menuType){
     if(this._rootNode != null){
-        if(this._contextMenu == null){
-            this._contextMenu = new HY.GUI.SimpleListView({
-                width:150,
-                rowHeight:25,
-                borderWidth:1,
-                borderColor:'#222222',
-                backgroundColor:'#ffffff',
-                autoSizeFit:true
-            });
-            this._contextMenu.addEventListener("cellmousedown",function(sender,e,cellView){
-                this._contextMenu.setUserProperty("menushown",true);
-            },this);
-            this._contextMenu.addEventListener("cellmouseup",function(sender,e,cellView){
-                var menutype = this._contextMenu.getUserProperty("menutype");
-                var menunode = this._contextMenu.getUserProperty("menunode");
-                if(menutype == 0 && menunode.onContextMenu){
-                    menunode.onContextMenu(sender,e,cellView);
-                }
-                if(menutype == 1 && menunode.onDropItem){
-                    menunode.onDropItem(sender,e,cellView);
-                }
-                this._contextMenu.setUserProperty("menushown",false);
-                this.hideContextMenu();
-            },this);
-            this._rootNode.addChildNodeAtLayer(this._contextMenu,2);
-        }
         if(menuType == 0){
             this._contextMenu.setUserProperty("menunode",node);
             this._contextMenu.setUserProperty("menutype",0);
             this._contextMenu.setX(e.offsetX-this._rootNode.getX());
             this._contextMenu.setY(e.offsetY-this._rootNode.getY());
             this._contextMenu.setItems(menuItems);
-            this._contextMenu.setVisible(true);
         }else{
             var pos = node.transPointToCanvas(new HY.Vect2D({x:0,y:node.getHeight()}));
             this._contextMenu.setUserProperty("menunode",node);
@@ -119,14 +112,14 @@ HY.Core.Application.prototype.showContextMenu = function(e,node,menuItems,menuTy
             this._contextMenu.setX(pos.x-this._rootNode.getX());
             this._contextMenu.setY(pos.y-this._rootNode.getY());
             this._contextMenu.setItems(menuItems);
-            this._contextMenu.setVisible(true);
         }
+        this._rootNode.addChildNodeAtLayer(this._contextMenu, 2);
     }
 }
 HY.Core.Application.prototype.hideContextMenu = function(){
     if(this._contextMenu != null){
         if(!this._contextMenu.getUserProperty("menushown")){
-            this._contextMenu.setVisible(false);
+            this._contextMenu.removeFromParent(true);
         }
         var menutype = this._contextMenu.getUserProperty("menutype");
         var menunode = this._contextMenu.getUserProperty("menunode");
@@ -149,24 +142,24 @@ HY.Core.Application.prototype.getDragClipBoard = function(identifier){
 		return null;
 	}
 }
-HY.Core.Application.prototype.setDragClipBoard = function(pData,pEvent){
-    var eid = pEvent.identifier;
+HY.Core.Application.prototype.setDragClipBoard = function(data,e){
+    var eid = e.identifier;
 	if(eid == undefined){ eid = 0; }
-	this._dragClipBoard[eid] = pData;
+	this._dragClipBoard[eid] = data;
 }
 HY.Core.Application.prototype.getFocusNode = function(){
     return this._focusNode;
 }
-HY.Core.Application.prototype.setFocusNode = function(pNode, e){
-    if(pNode){
+HY.Core.Application.prototype.setFocusNode = function(node, e){
+    if(node){
         if(this._focusNode){
-            if(this._focusNode != pNode){
+            if(this._focusNode != node){
                 this._focusNode.blur(this._focusNode);
-                this._focusNode = pNode;
+                this._focusNode = node;
                 this._focusNode.onFocus(this._focusNode, e);
             }
         }else{
-            this._focusNode = pNode;
+            this._focusNode = node;
             this._focusNode.onFocus(this._focusNode, e);
         }
     }
@@ -179,12 +172,12 @@ HY.Core.Application.prototype.getMouseDownNode = function(identifier){
 		return null;
 	}
 }
-HY.Core.Application.prototype.setMouseDownNode = function(pNode,e){
+HY.Core.Application.prototype.setMouseDownNode = function(node,e){
     var eid = e.identifier;
 	if(eid == undefined){ eid = 0; }
-    this._mouseDownNode[eid] = pNode;
-    if(pNode){
-        pNode.onMouseDown(pNode, e);
+    this._mouseDownNode[eid] = node;
+    if(node){
+        node.onMouseDown(node, e);
     }
 }
 HY.Core.Application.prototype.getMouseDownNodes = function(){
@@ -198,22 +191,22 @@ HY.Core.Application.prototype.getWaitDragNode = function(identifier){
         return null;
     }
 }
-HY.Core.Application.prototype.setWaitDragNode = function(pNode,pEvent){
-    var eid = pEvent.identifier;
+HY.Core.Application.prototype.setWaitDragNode = function(node,e){
+    var eid = e.identifier;
     if(eid == undefined){ eid = 0; }
     if(this._waitDragNode[eid]){
-        if(this._waitDragNode[eid] != pNode){
+        if(this._waitDragNode[eid] != node){
             var tempDragNode = this._waitDragNode[eid];
-            this._waitDragNode[eid] = pNode;
-            tempDragNode.onEndDrag(tempDragNode,pEvent);
-            if(pNode){
-                pNode.onStartDrag(pNode,pEvent);
+            this._waitDragNode[eid] = node;
+            tempDragNode.onEndDrag(tempDragNode,e);
+            if(node){
+                node.onStartDrag(node,e);
             }
         }
     }else{
-        this._waitDragNode[eid] = pNode;
-        if(pNode){
-            pNode.onStartDrag(pNode,pEvent);
+        this._waitDragNode[eid] = node;
+        if(node){
+            node.onStartDrag(node,e);
         }
     }
 }
@@ -228,10 +221,10 @@ HY.Core.Application.prototype.getWaitScrollNode = function(identifier){
         return null;
     }
 }
-HY.Core.Application.prototype.setWaitScrollNode = function(pNode, pEvent){
-    var eid = pEvent.identifier;
+HY.Core.Application.prototype.setWaitScrollNode = function(node, e){
+    var eid = e.identifier;
     if(eid == undefined){ eid = 0; }
-    this._waitScrollNode[eid] = pNode;
+    this._waitScrollNode[eid] = node;
 }
 HY.Core.Application.prototype.getWaitScrollNodes = function(){
     return this._waitScrollNode;
@@ -244,22 +237,22 @@ HY.Core.Application.prototype.getMouseOverNode = function(identifier){
 		return null;
 	}
 }
-HY.Core.Application.prototype.setMouseOverNode = function(pNode,pEvent){
-    var eid = pEvent.identifier;
+HY.Core.Application.prototype.setMouseOverNode = function(node,e){
+    var eid = e.identifier;
 	if(eid == undefined){ eid = 0; }
     if(this._mouseOverNode[eid]){
-        if(this._mouseOverNode[eid] != pNode){
+        if(this._mouseOverNode[eid] != node){
             var tempOverNode = this._mouseOverNode[eid];
-            this._mouseOverNode[eid] = pNode;
-            tempOverNode.onMouseOut(tempOverNode,pEvent);
-            if(pNode){
-                pNode.onMouseOver(pNode,pEvent);
+            this._mouseOverNode[eid] = node;
+            tempOverNode.onMouseOut(tempOverNode,e);
+            if(node){
+                node.onMouseOver(node,e);
             }
         }
     }else{
-        this._mouseOverNode[eid] = pNode;
-        if(pNode){
-            pNode.onMouseOver(pNode,pEvent);
+        this._mouseOverNode[eid] = node;
+        if(node){
+            node.onMouseOver(node,e);
         }
     }
 }
@@ -274,10 +267,10 @@ HY.Core.Application.prototype.getMousePos = function(identifier){
 		return null;
 	}
 }
-HY.Core.Application.prototype.setMousePos = function(pPos,pEvent){
-    var eid = pEvent.identifier;
+HY.Core.Application.prototype.setMousePos = function(pos,e){
+    var eid = e.identifier;
 	if(eid == undefined){ eid = 0; }
-	this._mousePos[eid] = pPos;
+	this._mousePos[eid] = pos;
 }
 HY.Core.Application.prototype.getMousePoses = function(){
     return this._mousePos;
@@ -289,8 +282,8 @@ HY.Core.Application.prototype.isMouseDown = function(){
 		return this._mouseDownFlag;
 	}
 }
-HY.Core.Application.prototype.setMouseDown = function(pDown){
-    return this._mouseDownFlag = pDown;
+HY.Core.Application.prototype.setMouseDown = function(down){
+    return this._mouseDownFlag = down;
 }
 HY.Core.Application.prototype.setInputNode = function(node){
     this._inputNode = node;
@@ -312,19 +305,19 @@ HY.Core.Application.prototype.setMouseCursor = function(cursor){
 HY.Core.Application.prototype.getAppWidth = function(){
     return this._appWidth;
 }
-HY.Core.Application.prototype.setAppWidth = function(pWidth){
-    this._appWidth = pWidth;
+HY.Core.Application.prototype.setAppWidth = function(width){
+    this._appWidth = width;
     if(this._renderContext){
-        this._renderContext.setWidth(pWidth);
+        this._renderContext.setWidth(width);
     }
 }
 HY.Core.Application.prototype.getAppHeight = function(){
     return this._appHeight;
 }
-HY.Core.Application.prototype.setAppHeight = function(pHeight){
-    this._appHeight = pHeight;
+HY.Core.Application.prototype.setAppHeight = function(height){
+    this._appHeight = height;
     if(this._renderContext){
-        this._renderContext.setHeight(pHeight);
+        this._renderContext.setHeight(height);
     }
 }
 HY.Core.Application.prototype.getScaleX = function(){
@@ -461,11 +454,10 @@ HY.Core.Application.prototype.initEventDispatcher = function(){
 	if(HY.isMobilePlatform()){
 		HY.Core.Event.addListener(doc,this,"touchstart",function(e){
             if(this._rootNode != null){
-                var pevent = event?event:e;
-                var touchcount = pevent.changedTouches.length;
+                var lEvent = event?event:e;
                 var renderCanvas = this.getRenderContext().getCanvas();
-                for(var i=0;i<touchcount;++i){
-                    var curtouch = new HY.Core.Event.eArg(pevent,this,renderCanvas,pevent.changedTouches[i]);
+                for(var i= 0, touchcount = lEvent.changedTouches.length ;i<touchcount;++i){
+                    var curtouch = new HY.Core.Event.eArg(lEvent,this,renderCanvas,lEvent.changedTouches[i]);
                     this.setMousePos(new HY.Vect2D({x:curtouch.offsetX,y:curtouch.offsetY}),curtouch);
                     this.setMouseDownNode(null,curtouch);
                     this.setMouseOverNode(null,curtouch);
@@ -477,11 +469,10 @@ HY.Core.Application.prototype.initEventDispatcher = function(){
 		});
 		HY.Core.Event.addListener(doc,this,"touchmove",function(e){
             if(this._rootNode != null) {
-                var pevent = event?event:e;
-                var touchcount = pevent.changedTouches.length;
+                var lEvent = event?event:e;
                 var renderCanvas = this.getRenderContext().getCanvas();
-                for(var i=0;i<touchcount;++i){
-                    var curtouch = new HY.Core.Event.eArg(pevent,this,renderCanvas,pevent.changedTouches[i]);
+                for(var i= 0,touchcount=lEvent.changedTouches.length ; i<touchcount ; ++i){
+                    var curtouch = new HY.Core.Event.eArg(lEvent,this,renderCanvas,lEvent.changedTouches[i]);
                     var mousePos = this.getMousePos(curtouch.identifier);
                     if(!mousePos || mousePos.x != curtouch.offsetX || mousePos.y != curtouch.offsetY){
                         var mouseDownNode = this.getMouseDownNode(curtouch.identifier);
@@ -503,11 +494,10 @@ HY.Core.Application.prototype.initEventDispatcher = function(){
 		});
 		HY.Core.Event.addListener(doc,this,"touchend",function(e){
             if(this._rootNode != null){
-                var pevent = event?event:e;
-                var touchcount = pevent.changedTouches.length;
+                var lEvent = event?event:e;
                 var renderCanvas = this.getRenderContext().getCanvas();
-                for(var i=0;i<touchcount;++i){
-                    var curtouch = new HY.Core.Event.eArg(pevent,this,renderCanvas,pevent.changedTouches[i]);
+                for(var i= 0,touchcount=lEvent.changedTouches.length ; i<touchcount ; ++i){
+                    var curtouch = new HY.Core.Event.eArg(lEvent,this,renderCanvas,lEvent.changedTouches[i]);
                     this.setMousePos(null,curtouch);
                     var mouseDownNode = this.getMouseDownNode(curtouch.identifier);
                     this.setMouseDownNode(null,curtouch);
@@ -526,18 +516,17 @@ HY.Core.Application.prototype.initEventDispatcher = function(){
 		});
 		HY.Core.Event.addListener(doc,this,"touchcancel",function(e){
             if(this._rootNode != null){
-                var pevent = event?event:e;
-                var touchcount = pevent.changedTouches.length;
+                var lEvent = event?event:e;
                 var renderCanvas = this.getRenderContext().getCanvas();
-                for(var i=0;i<touchcount;++i){
-                    var curtouch = new HY.Core.Event.eArg(pevent,this,renderCanvas,pevent.changedTouches[i]);
+                for(var i= 0,touchcount=lEvent.changedTouches.length ; i<touchcount ; ++i){
+                    var curtouch = new HY.Core.Event.eArg(lEvent,this,renderCanvas,lEvent.changedTouches[i]);
                     this.setMousePos(null,curtouch);
                     var mouseDownNode = this.getMouseDownNode(curtouch.identifier);
                     this.setMouseDownNode(null,curtouch);
                     this.setMouseOverNode(null,curtouch);
                     this.setWaitDragNode(null,curtouch);
                     if(mouseDownNode){
-                        mouseDownNode.onMouseUp(mouseDownNode,pevent);
+                        mouseDownNode.onMouseUp(mouseDownNode,lEvent);
                         if(mouseDownNode.isDraging()){
                             mouseDownNode.onEndDrag(mouseDownNode,curtouch);
                         }
@@ -549,11 +538,10 @@ HY.Core.Application.prototype.initEventDispatcher = function(){
 		});
 		HY.Core.Event.addListener(canvas,this,"touchstart",function(e){
             if(this._rootNode){
-                var pevent = event?event:e;
+                var lEvent = event?event:e;
                 var renderCanvas = this.getRenderContext().getCanvas();
-                var touchcount = pevent.changedTouches.length;
-                for(var i=0;i<touchcount;++i){
-                    var curtouch = new HY.Core.Event.eArg(pevent,this,renderCanvas,pevent.changedTouches[i]);
+                for(var i= 0,touchcount = lEvent.changedTouches.length ; i<touchcount ; ++i){
+                    var curtouch = new HY.Core.Event.eArg(lEvent,this,renderCanvas,lEvent.changedTouches[i]);
                     this.setMousePos(new HY.Vect2D({x:curtouch.offsetX,y:curtouch.offsetY}),curtouch);
                     this.setMouseDownNode(null,curtouch);
                     this.setMouseOverNode(null,curtouch);
@@ -567,11 +555,10 @@ HY.Core.Application.prototype.initEventDispatcher = function(){
 		});
 		HY.Core.Event.addListener(canvas,this,"touchmove",function(e){
             if(this._rootNode){
-                var pevent = event?event:e;
-                var touchcount = pevent.changedTouches.length;
+                var lEvent = event?event:e;
                 var renderCanvas = this.getRenderContext().getCanvas();
-                for(var i=0;i<touchcount;++i){
-                    var curtouch = new HY.Core.Event.eArg(pevent,this,renderCanvas,pevent.changedTouches[i]);
+                for(var i= 0,touchcount = lEvent.changedTouches.length ; i<touchcount ; ++i){
+                    var curtouch = new HY.Core.Event.eArg(lEvent,this,renderCanvas,lEvent.changedTouches[i]);
                     var mousePos = this.getMousePos(curtouch.identifier);
                     if(!mousePos || mousePos.x != curtouch.offsetX || mousePos.y != curtouch.offsetY){
                         this.setMousePos(new HY.Vect2D({x:curtouch.offsetX,y:curtouch.offsetY}),curtouch);
@@ -596,11 +583,10 @@ HY.Core.Application.prototype.initEventDispatcher = function(){
 		});
 		HY.Core.Event.addListener(canvas,this,"touchend",function(e){
             if(this._rootNode){
-                var pevent = event?event:e;
-                var touchcount = pevent.changedTouches.length;
+                var lEvent = event?event:e;
                 var renderCanvas = this.getRenderContext().getCanvas();
-                for(var i=0;i<touchcount;++i){
-                    var curtouch = new HY.Core.Event.eArg(pevent,this,renderCanvas,pevent.changedTouches[i]);
+                for(var i= 0,touchcount = lEvent.changedTouches.length ; i<touchcount ; ++i){
+                    var curtouch = new HY.Core.Event.eArg(lEvent,this,renderCanvas,lEvent.changedTouches[i]);
                     this.setMousePos(null,curtouch);
                     var mouseDownNode = this.getMouseDownNode(curtouch.identifier);
                     this.setMouseDownNode(null,curtouch);
@@ -619,11 +605,10 @@ HY.Core.Application.prototype.initEventDispatcher = function(){
 		});
 		HY.Core.Event.addListener(canvas,this,"touchcancel",function(e){
             if(this._rootNode){
-                var pevent = event?event:e;
-                var touchcount = pevent.changedTouches.length;
+                var lEvent = event?event:e;
                 var renderCanvas = this.getRenderContext().getCanvas();
-                for(var i=0;i<touchcount;++i){
-                    var curtouch = new HY.Core.Event.eArg(pevent,this,renderCanvas,pevent.changedTouches[i]);
+                for(var i= 0,touchcount=lEvent.changedTouches.length ; i<touchcount ; ++i){
+                    var curtouch = new HY.Core.Event.eArg(lEvent,this,renderCanvas,lEvent.changedTouches[i]);
                     this.setMousePos(null,curtouch);
                     var mouseDownNode = this.getMouseDownNode(curtouch.identifier);
                     this.setMouseDownNode(null,curtouch);
@@ -644,185 +629,185 @@ HY.Core.Application.prototype.initEventDispatcher = function(){
 		HY.Core.Event.addListener(doc,this,"keydown",function(e){
 			if(this._rootNode != null){
                 var renderCanvas = this.getRenderContext().getCanvas();
-				var pEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
-				this._rootNode._dispatchKeyDownEvent(pEvent);
+				var lEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
+				this._rootNode._dispatchKeyDownEvent(lEvent);
 			}
 		});
 		HY.Core.Event.addListener(doc,this,"keypress",function(e){
 			if(this._rootNode != null){
                 var renderCanvas = this.getRenderContext().getCanvas();
-				var pEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
-				this._rootNode._dispatchKeyPressEvent(pEvent);
+				var lEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
+				this._rootNode._dispatchKeyPressEvent(lEvent);
 			}
 		});
 		HY.Core.Event.addListener(doc,this,"keyup",function(e){
 			if(this._rootNode != null){
                 var renderCanvas = this.getRenderContext().getCanvas();
-				var pEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
-				this._rootNode._dispatchKeyUpEvent(pEvent);
+				var lEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
+				this._rootNode._dispatchKeyUlEvent(lEvent);
 			}
 		});
 		HY.Core.Event.addListener(doc,this,"mousedown",function(e){
 			this.setMouseDown(true);
             if(this._rootNode != null){
                 var renderCanvas = this.getRenderContext().getCanvas();
-                var pEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
-                this.setMouseDownNode(null,pEvent);
-                this.setWaitDragNode(null,pEvent);
-                this.setMousePos(new HY.Vect2D({x:pEvent.offsetX,y:pEvent.offsetY}),pEvent);
+                var lEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
+                this.setMouseDownNode(null,lEvent);
+                this.setWaitDragNode(null,lEvent);
+                this.setMousePos(new HY.Vect2D({x:lEvent.offsetX,y:lEvent.offsetY}),lEvent);
             }
-            pEvent.stopDispatch();
-            pEvent.preventDefault();
+            lEvent.stopDispatch();
+            lEvent.preventDefault();
 		});
 		HY.Core.Event.addListener(doc,this,"mousemove",function(e){
             if(this._rootNode != null){
                 var renderCanvas = this.getRenderContext().getCanvas();
-                var pEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
-                var mousePos = this.getMousePos(pEvent.identifier);
-                if(!mousePos || mousePos.x != pEvent.offsetX || mousePos.y != pEvent.offsetY){
-                    this.setMousePos(new HY.Vect2D({x:pEvent.offsetX,y:pEvent.offsetY}),pEvent);
+                var lEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
+                var mousePos = this.getMousePos(lEvent.identifier);
+                if(!mousePos || mousePos.x != lEvent.offsetX || mousePos.y != lEvent.offsetY){
+                    this.setMousePos(new HY.Vect2D({x:lEvent.offsetX,y:lEvent.offsetY}),lEvent);
                     if (this.isMouseDown()) {
-                        var mouseDownNode = this.getMouseDownNode(pEvent.identifier);
-                        var waitDragNode = this.getWaitDragNode(pEvent.identifier);
-                        this.setMouseOverNode(null,pEvent);
-                        this.setWaitScrollNode(null,pEvent);
+                        var mouseDownNode = this.getMouseDownNode(lEvent.identifier);
+                        var waitDragNode = this.getWaitDragNode(lEvent.identifier);
+                        this.setMouseOverNode(null,lEvent);
+                        this.setWaitScrollNode(null,lEvent);
                         if(waitDragNode && waitDragNode != mouseDownNode){
-                            this.setMouseDownNode(waitDragNode,pEvent);
+                            this.setMouseDownNode(waitDragNode,lEvent);
                             mouseDownNode = waitDragNode;
                         }
                         if(mouseDownNode && mouseDownNode.isDraging()){
-                            mouseDownNode.onDrag(mouseDownNode,pEvent);
+                            mouseDownNode.onDrag(mouseDownNode,lEvent);
                         }
                     }
                 }
-                pEvent.stopDispatch();
-                pEvent.preventDefault();
+                lEvent.stopDispatch();
+                lEvent.preventDefault();
             }
 		});
 		HY.Core.Event.addListener(doc,this,"mouseup",function(e){
 			this.setMouseDown(false);
             if(this._rootNode != null){
                 var renderCanvas = this.getRenderContext().getCanvas();
-                var pEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
-                var mouseDownNode = this.getMouseDownNode(pEvent.identifier);
-                this.setMouseDownNode(null,pEvent);
-                this.setWaitDragNode(null,pEvent);
+                var lEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
+                var mouseDownNode = this.getMouseDownNode(lEvent.identifier);
+                this.setMouseDownNode(null,lEvent);
+                this.setWaitDragNode(null,lEvent);
                 if(mouseDownNode){
-                    mouseDownNode.onMouseUp(mouseDownNode,pEvent);
+                    mouseDownNode.onMouseUp(mouseDownNode,lEvent);
                     if(mouseDownNode.isDraging()){
-                        mouseDownNode.onEndDrag(mouseDownNode,pEvent);
+                        mouseDownNode.onEndDrag(mouseDownNode,lEvent);
                     }
                 }
-                pEvent.stopDispatch();
-                pEvent.preventDefault();
+                lEvent.stopDispatch();
+                lEvent.preventDefault();
             }
 		});
 		HY.Core.Event.addListener(doc,this,"mousewheel",function(e){
             if(this._rootNode != null){
                 var renderCanvas = this.getRenderContext().getCanvas();
-                var pEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
-                var waitScrollNode = this.getWaitScrollNode(pEvent.identifier);
+                var lEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
+                var waitScrollNode = this.getWaitScrollNode(lEvent.identifier);
                 if(waitScrollNode != null){
-                    waitScrollNode._dispatchMouseWheelEvent(pEvent);
+                    waitScrollNode._dispatchMouseWheelEvent(lEvent);
                 }
-                pEvent.stopDispatch();
-                pEvent.preventDefault();
+                lEvent.stopDispatch();
+                lEvent.preventDefault();
             }
 		});
 		HY.Core.Event.addListener(doc,this,"DOMMouseScroll",function(e){
             if(this._rootNode != null){
                 var renderCanvas = this.getRenderContext().getCanvas();
-                var pEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
-                var waitScrollNode = this.getWaitScrollNode(pEvent.identifier);
+                var lEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
+                var waitScrollNode = this.getWaitScrollNode(lEvent.identifier);
                 if(waitScrollNode != null){
-                    waitScrollNode._dispatchMouseWheelEvent(pEvent);
+                    waitScrollNode._dispatchMouseWheelEvent(lEvent);
                 }
-                pEvent.stopDispatch();
-                pEvent.preventDefault();
+                lEvent.stopDispatch();
+                lEvent.preventDefault();
             }
 		});
 		HY.Core.Event.addListener(canvas,this,"click",function(e){
 			if(this._rootNode != null){
-				var pEvent = new HY.Core.Event.eArg(e,this);
-				this._rootNode._dispatchClickEvent(pEvent);
-                pEvent.stopDispatch();
-                pEvent.preventDefault();
+				var lEvent = new HY.Core.Event.eArg(e,this);
+				this._rootNode._dispatchClickEvent(lEvent);
+                lEvent.stopDispatch();
+                lEvent.preventDefault();
 			}
 		});
 		HY.Core.Event.addListener(canvas,this,"dblclick",function(e){
 			if(this._rootNode != null){
-				var pEvent = new HY.Core.Event.eArg(e,this);
-				this._rootNode._dispatchDblClickEvent(pEvent);
-                pEvent.stopDispatch();
-                pEvent.preventDefault();
+				var lEvent = new HY.Core.Event.eArg(e,this);
+				this._rootNode._dispatchDblClickEvent(lEvent);
+                lEvent.stopDispatch();
+                lEvent.preventDefault();
 			}
 		});
 		HY.Core.Event.addListener(canvas,this,"contextmenu",function(e){
 			if(this._rootNode != null){
-				var pEvent = new HY.Core.Event.eArg(e,this);
-				this._rootNode._dispatchContextMenuEvent(pEvent);
-                pEvent.stopDispatch();
-                pEvent.preventDefault();
+				var lEvent = new HY.Core.Event.eArg(e,this);
+				this._rootNode._dispatchContextMenuEvent(lEvent);
+                lEvent.stopDispatch();
+                lEvent.preventDefault();
 			}
 		});
 		HY.Core.Event.addListener(canvas,this,"mousedown", function (e) {
 			this.setMouseDown(true);
             if(this._rootNode != null){
-                var pEvent = new HY.Core.Event.eArg(e,this);
-                this.setWaitDragNode(null,pEvent);
-                this.setMouseDownNode(null,pEvent);
-                this._rootNode._dispatchMouseDownEvent(pEvent);
+                var lEvent = new HY.Core.Event.eArg(e,this);
+                this.setWaitDragNode(null,lEvent);
+                this.setMouseDownNode(null,lEvent);
+                this._rootNode._dispatchMouseDownEvent(lEvent);
                 this.hideContextMenu();
-                pEvent.stopDispatch();
-                pEvent.preventDefault();
+                lEvent.stopDispatch();
+                lEvent.preventDefault();
             }
 		});
 		HY.Core.Event.addListener(canvas,this,"mousemove",function(e){
             if(this._rootNode != null) {
-                var pEvent = new HY.Core.Event.eArg(e, this);
-                var mousePos = this.getMousePos(pEvent.identifier);
-                if(!mousePos || mousePos.x != pEvent.offsetX || mousePos.y != pEvent.offsetY){
-                    this.setMousePos(new HY.Vect2D({x: pEvent.offsetX, y: pEvent.offsetY}), pEvent);
+                var lEvent = new HY.Core.Event.eArg(e, this);
+                var mousePos = this.getMousePos(lEvent.identifier);
+                if(!mousePos || mousePos.x != lEvent.offsetX || mousePos.y != lEvent.offsetY){
+                    this.setMousePos(new HY.Vect2D({x: lEvent.offsetX, y: lEvent.offsetY}), lEvent);
                     if (this.isMouseDown()) {
-                        var mouseDownNode = this.getMouseDownNode(pEvent.identifier);
-                        var waitDragNode = this.getWaitDragNode(pEvent.identifier);
+                        var mouseDownNode = this.getMouseDownNode(lEvent.identifier);
+                        var waitDragNode = this.getWaitDragNode(lEvent.identifier);
                         if(waitDragNode && waitDragNode != mouseDownNode){
-                            this.setMouseDownNode(waitDragNode,pEvent);
+                            this.setMouseDownNode(waitDragNode,lEvent);
                             mouseDownNode = waitDragNode;
                         }
                         if(mouseDownNode && mouseDownNode.isDraging()){
-                            mouseDownNode.onDrag(mouseDownNode,pEvent);
+                            mouseDownNode.onDrag(mouseDownNode,lEvent);
                         }else{
-                            if (!this._rootNode._dispatchMouseMoveEvent(pEvent)) {
-                                this.setMouseOverNode(null, pEvent);
+                            if (!this._rootNode._dispatchMouseMoveEvent(lEvent)) {
+                                this.setMouseOverNode(null, lEvent);
                             }
                         }
                     }else{
-                        if (!this._rootNode._dispatchMouseMoveEvent(pEvent)) {
-                            this.setMouseOverNode(null, pEvent);
+                        if (!this._rootNode._dispatchMouseMoveEvent(lEvent)) {
+                            this.setMouseOverNode(null, lEvent);
                         }
                     }
                 }
-                pEvent.stopDispatch();
-                pEvent.preventDefault();
+                lEvent.stopDispatch();
+                lEvent.preventDefault();
             }
 		});
 		HY.Core.Event.addListener(canvas,this,"mouseup",function(e){
 			this.setMouseDown(false);
             if(this._rootNode != null){
                 var renderCanvas = this.getRenderContext().getCanvas();
-                var pEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
-                var mouseDownNode = this.getMouseDownNode(pEvent.identifier);
-                this.setMouseDownNode(null,pEvent);
-                this.setWaitDragNode(null,pEvent);
+                var lEvent = new HY.Core.Event.eArg(e, this, renderCanvas);
+                var mouseDownNode = this.getMouseDownNode(lEvent.identifier);
+                this.setMouseDownNode(null,lEvent);
+                this.setWaitDragNode(null,lEvent);
                 if(mouseDownNode){
-                    mouseDownNode.onMouseUp(mouseDownNode,pEvent);
+                    mouseDownNode.onMouseUp(mouseDownNode,lEvent);
                     if(mouseDownNode.isDraging()){
-                        mouseDownNode.onEndDrag(mouseDownNode,pEvent);
+                        mouseDownNode.onEndDrag(mouseDownNode,lEvent);
                     }
                 }
-                pEvent.stopDispatch();
-                pEvent.preventDefault();
+                lEvent.stopDispatch();
+                lEvent.preventDefault();
             }
 		});
 	}
@@ -848,9 +833,9 @@ HY.Core.Application.prototype.pause = function(){
 HY.Core.Application.prototype.resume = function(){
     this._actionManager.resume();
 }
-HY.Core.Application.prototype.run = function(pNode){
+HY.Core.Application.prototype.run = function(node){
     this._preFrameTime = 0;
-    this._rootNode = pNode;
+    this._rootNode = node;
     this._rootNode.setApplication(this);
     this._rootNode.setParent(null);
     this.initApp();

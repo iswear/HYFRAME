@@ -7,12 +7,14 @@ HY.GUI.ScrollView.prototype.defaultScrollEnable = true;
 HY.GUI.ScrollView.prototype.defaultScrollStep = 20;
 HY.GUI.ScrollView.prototype.defaultWidthFit = false;
 HY.GUI.ScrollView.prototype.defaultHeightFit = false;
+HY.GUI.ScrollView.prototype.defaultScrollBarVisible = true;
 HY.GUI.ScrollView.prototype.initMember = function(config){
     this.superCall("initMember",[config]);
     if(config.widthFit){ this._widthFit = config.widthFit; } else { this._widthFit = this.defaultWidthFit; }
     if(config.heightFit){ this._heightFit = config.heightFit; } else { this._heightFit = this.defaultHeightFit; }
     if(config.scrollStep != undefined){ this._scrollStep = config.scrollStep; } else { this._scrollStep = this.defaultScrollStep; }
     if(config.contentView != undefined){ this._contentView = config.contentView; } else { this._contentView = new HY.GUI.View({}); }
+    if(config.scrollBarVisible != undefined){ this._scrollBarVisible = config.scrollBarVisible; } else { this._scrollBarVisible = this.defaultScrollBarVisible; }
     this._hScrollBar = new HY.GUI.ScrollBar({
         scrollBarDirection:0,
         scrollBarWidth:10,
@@ -30,7 +32,7 @@ HY.GUI.ScrollView.prototype.initMember = function(config){
 }
 HY.GUI.ScrollView.prototype.initConstraint = function(){
     this.superCall("initConstraint");
-    this.addEventListener("mousewheel",this._selfMouseWheel,this);
+    this.addEventListener("mousewheel",this._scrollViewMouseWheel,this);
     this._hScrollBar.addEventListener("scroll",this._hScrollBarScroll,this);
     this._vScrollBar.addEventListener("scroll",this._vScrollBarScroll,this);
     this._contentView.setX(0);
@@ -42,6 +44,10 @@ HY.GUI.ScrollView.prototype.initConstraint = function(){
     this.addChildNodeAtLayer(this._contentView,0);
     this.addChildNodeAtLayer(this._vScrollBar,1);
     this.addChildNodeAtLayer(this._hScrollBar,1);
+}
+HY.GUI.ScrollView.prototype.layoutSubNodes = function(){
+    this.superCall("layoutSubNodes");
+    this.updateToScrollBar();
 }
 HY.GUI.ScrollView.prototype.getWidthFit = function(){
     return this._widthFit;
@@ -70,6 +76,15 @@ HY.GUI.ScrollView.prototype.setContentView = function(pView){
 }
 HY.GUI.ScrollView.prototype.getContentView = function(){
 	return this._contentView;
+}
+HY.GUI.ScrollView.prototype.getScrollBarVisible = function(){
+    return this._scrollBarVisible;
+}
+HY.GUI.ScrollView.prototype.setScrollBarVisible = function(visible){
+    if(this._scrollBarVisible != visible){
+        this._scrollBarVisible = visible;
+        this.updateToScrollBar();
+    }
 }
 HY.GUI.ScrollView.prototype.getScrollStep = function(){
     return this._scrollStep;
@@ -132,68 +147,91 @@ HY.GUI.ScrollView.prototype.getVScrollParam = function(){
     return {offsetLen:offsetY,showLen:showHeight,fullLen:contentHeight};
 }
 HY.GUI.ScrollView.prototype.checkScrollBarStatus = function(){
-    this._hScrollBar.setY(this.getHeight()-this._vScrollBar.getScrollBarWidth());
-    this._hScrollBar.setScrollBarLength(this.getWidth());
-    this._vScrollBar.setX(this.getWidth()-this._hScrollBar.getScrollBarWidth());
-    this._vScrollBar.setScrollBarLength(this.getHeight());
-    var contentWidth, contentHeight;
-    if(this.getWidthFit()){
-        contentWidth = this._contentView.getMinLayoutWidth();
-    }else{
-        contentWidth = this._contentView.getWidth();
-    }
-    if(this.getHeightFit()){
-        contentHeight = this._contentView.getMinLayoutHeight();
-    }else{
-        contentHeight = this._contentView.getHeight();
-    }
-    if(contentWidth <= this.getWidth() - this._vScrollBar.getScrollBarWidth()){
-        this._hScrollBar.setVisible(false);
-        if(contentHeight > this.getHeight()){
-            this._vScrollBar.setVisible(true);
+    if(this._scrollBarVisible){
+        this._hScrollBar.setY(this.getHeight()-this._vScrollBar.getScrollBarWidth());
+        this._hScrollBar.setScrollBarLength(this.getWidth());
+        this._vScrollBar.setX(this.getWidth()-this._hScrollBar.getScrollBarWidth());
+        this._vScrollBar.setScrollBarLength(this.getHeight());
+        var contentWidth, contentHeight;
+        if(this.getWidthFit()){
+            contentWidth = this._contentView.getMinLayoutWidth();
         }else{
-            this._vScrollBar.setVisible(false);
+            contentWidth = this._contentView.getWidth();
         }
-    }else if(contentWidth <= this.getWidth()){
-        if(contentHeight > this.getHeight()){
-            this._hScrollBar.setVisible(true);
-            this._vScrollBar.setVisible(true);
+        if(this.getHeightFit()){
+            contentHeight = this._contentView.getMinLayoutHeight();
         }else{
+            contentHeight = this._contentView.getHeight();
+        }
+        if(contentWidth <= this.getWidth() - this._vScrollBar.getScrollBarWidth()){
             this._hScrollBar.setVisible(false);
-            this._vScrollBar.setVisible(false);
+            if(contentHeight > this.getHeight()){
+                this._vScrollBar.setVisible(true);
+            }else{
+                this._vScrollBar.setVisible(false);
+            }
+        }else if(contentWidth <= this.getWidth()){
+            if(contentHeight > this.getHeight()){
+                this._hScrollBar.setVisible(true);
+                this._vScrollBar.setVisible(true);
+            }else{
+                this._hScrollBar.setVisible(false);
+                this._vScrollBar.setVisible(false);
+            }
+        }else{
+            this._hScrollBar.setVisible(true);
+            if(contentHeight > this.getHeight() - this._hScrollBar.getScrollBarWidth()){
+                this._vScrollBar.setVisible(true);
+            }else{
+                this._vScrollBar.setVisible(false);
+            }
+        }
+        if(this._vScrollBar.getVisible()){
+            this._hScrollBar.setInsetRB(this._vScrollBar.getScrollBarWidth());
+        }else{
+            this._hScrollBar.setInsetRB(0);
+        }
+        if(this._hScrollBar.getVisible()){
+            this._vScrollBar.setInsetRB(this._hScrollBar.getScrollBarWidth());
+        }else{
+            this._vScrollBar.setInsetRB(0);
+        }
+        if(this.getWidthFit()){
+            var showWidth = this.getShowWidth();
+            if(showWidth > contentWidth){
+                this._contentView.setWidth(showWidth);
+            }else{
+                this._contentView.setWidth(contentWidth);
+            }
+        }
+        if(this.getHeightFit()){
+            var showHeight = this.getShowHeight();
+            if(showHeight > contentHeight){
+                this._contentView.setHeight(showHeight);
+            }else{
+                this._contentView.setHeight(contentHeight);
+            }
         }
     }else{
-        this._hScrollBar.setVisible(true);
-        if(contentHeight > this.getHeight() - this._hScrollBar.getScrollBarWidth()){
-            this._vScrollBar.setVisible(true);
-        }else{
-            this._vScrollBar.setVisible(false);
+        this._hScrollBar.setVisible(false);
+        this._vScrollBar.setVisible(false);
+        if(this.getWidthFit()){
+            var minLayoutWidth = this._contentView.getMinLayoutWidth();
+            var showWidth = this.getWidth();
+            if(minLayoutWidth < showWidth){
+                this._contentView.setWidth(showWidth);
+            } else {
+                this._contentView.setWidth(minLayoutWidth);
+            }
         }
-    }
-    if(this._vScrollBar.getVisible()){
-        this._hScrollBar.setInsetRB(this._vScrollBar.getScrollBarWidth());
-    }else{
-        this._hScrollBar.setInsetRB(0);
-    }
-    if(this._hScrollBar.getVisible()){
-        this._vScrollBar.setInsetRB(this._hScrollBar.getScrollBarWidth());
-    }else{
-        this._vScrollBar.setInsetRB(0);
-    }
-    if(this.getWidthFit()){
-        var showWidth = this.getShowWidth();
-        if(showWidth > contentWidth){
-            this._contentView.setWidth(showWidth);
-        }else{
-            this._contentView.setWidth(contentWidth);
-        }
-    }
-    if(this.getHeightFit()){
-        var showHeight = this.getShowHeight();
-        if(showHeight > contentHeight){
-            this._contentView.setHeight(showHeight);
-        }else{
-            this._contentView.setHeight(contentHeight);
+        if(this.getHeightFit()){
+            var minLayoutHeight = this._contentView.getMinLayoutHeight();
+            var showHeight = this.getHeight();
+            if(minLayoutHeight < showHeight){
+                this._contentView.setHeight(showHeight);
+            }else{
+                this._contentView.setHeight(minLayoutHeight);
+            }
         }
     }
 }
@@ -234,11 +272,7 @@ HY.GUI.ScrollView.prototype.onContentWidthChanged = function(sender){
 HY.GUI.ScrollView.prototype.onContentHeightChanged = function(sender){
     this.launchEvent("contentheightchanged",[this]);
 }
-HY.GUI.ScrollView.prototype.layoutSubNodes = function(){
-    this.superCall("layoutSubNodes");
-    this.updateToScrollBar();
-}
-HY.GUI.ScrollView.prototype._selfMouseWheel = function(sender,e){
+HY.GUI.ScrollView.prototype._scrollViewMouseWheel = function(sender,e){
     var offsetY = this.getContentOffsetY();
     var contentHeight = this.getContentHeight();
     var showHeight = this._hScrollBar.getVisible()?(this.getHeight()-this._hScrollBar.getHeight()):this.getHeight();

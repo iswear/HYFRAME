@@ -2,56 +2,56 @@ HY.Core.Ajax = function(config){
     this.init(config);
 }
 HY.Core.Ajax.prototype = new HY.Object();
-HY.Core.Ajax.prototype.initMember = function(config){
-    this.superCall("initMember");
-    if(config.url != undefined){ this._url = config.url; } else { this._url = null; }
-    if(config.arg != undefined){ this._arg = config.arg; } else { this._arg = null; }
-    if(config.mode != undefined){ this._mode = config.mode; } else { this._mode = 'GET'; }
-    if(config.callbackSelector != undefined){ this._callbackSelector = config.callbackSelector; } else { this._callbackSelector = null; }
-    if(config.callbackTarget != undefined){ this._callbackTarget = config.callbackTarget; } else { this._callbackTarget = null }
+HY.Core.Ajax.prototype.init = function(config){
     this._xmlHttp = new XMLHttpRequest();
+    this.superCall("init",[config]);
+    if(config.url != undefined){ this.setUrl(config.url); } else { this.setUrl(null); }
+    if(config.args != undefined){ this.setArgs(config.args); } else { this.setArgs(null); }
+    if(config.mode != undefined){ this.setMode(config.mode); } else { this.setMode("GET"); }
+    if(config.callBack != undefined){ this.setCallBack(config.callBack); } else { this.setCallBack(null); }
+    if(config.target != undefined){ this.setTarget(config.target); } else { this.setTarget(null); }
 }
 HY.Core.Ajax.prototype.getUrl = function(){
     return this._url;
 }
-HY.Core.Ajax.prototype.setUrl = function(pUrl){
-    this._url = pUrl;
+HY.Core.Ajax.prototype.setUrl = function(url){
+    this._url = url;
 }
 HY.Core.Ajax.prototype.getArg = function(){
-    return this._arg;
+    return this._args;
 }
-HY.Core.Ajax.prototype.setArg = function(pArg){
-    this._arg = pArg;
+HY.Core.Ajax.prototype.setArgs = function(args){
+    this._args = args;
 }
 HY.Core.Ajax.prototype.getMode = function(){
     return this._mode;
 }
-HY.Core.Ajax.prototype.setMode = function(pMode){
-    this._mode = pMode;
+HY.Core.Ajax.prototype.setMode = function(mode){
+    this._mode = mode.toUpperCase();
 }
-HY.Core.Ajax.prototype.getCallbackSelector = function(){
-    return this._callbackSelector;
+HY.Core.Ajax.prototype.getCallBack = function(){
+    return this._callBack;
 }
-HY.Core.Ajax.prototype.setCallbackSelector = function(pSelector){
-    this._callbackSelector = pSelector;
+HY.Core.Ajax.prototype.setCallBack = function(callBack){
+    this._callBack = callBack;
 }
-HY.Core.Ajax.prototype.getCallbackTarget = function(){
-    return this._callbackTarget;
+HY.Core.Ajax.prototype.getTarget = function(){
+    return this._target;
 }
-HY.Core.Ajax.prototype.setCallbackTarget = function(pTarget){
-    this._callbackTarget = pTarget;
+HY.Core.Ajax.prototype.setTarget = function(target){
+    this._target = target;
 }
 HY.Core.Ajax.prototype.sendsync = function(){
-    if(this._mode.toUpperCase() == "POST"){
+    if(this._mode == "POST"){
         if(this._url){
             this._xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
             this._xmlHttp.open("POST",this._url,false);
-            this._xmlHttp.send(this._arg);
+            this._xmlHttp.send(this._args);
             return this._xmlHttp;
         }
     }else{
         if(this._url){
-            this._xmlHttp.open("GET",this._url+"?"+this._arg,false);
+            this._xmlHttp.open("GET",this._url+"?"+this._args,false);
             this._xmlHttp.send();
             return this._xmlHttp;
         }
@@ -59,23 +59,23 @@ HY.Core.Ajax.prototype.sendsync = function(){
 }
 HY.Core.Ajax.prototype.sendAsync = function(){
     var $this = this;
-    if(this._mode.toUpperCase() == "POST"){
+    if(this._mode == "POST"){
         this._xmlHttp.onreadystatechange = function(){
             if(this.readyState == 4){
                 if(this.status == 200){
-                    if($this._callbackSelector){
-                        if($this._callbackTarget){
-                            $this._callbackSelector.apply($this._callbackTarget,[this,true]);
+                    if($this._callBack){
+                        if($this._target){
+                            $this._callBack.apply($this._target,[this,true]);
                         }else{
-                            $this._callbackSelector.apply($this,[this,true]);
+                            $this._callBack.apply($this,[this,true]);
                         }
                     }
                 }else{
-                    if($this._callbackSelector){
-                        if($this._callbackTarget){
-                            $this._callbackSelector.apply($this._callbackTarget,[this,true]);
+                    if($this._callBack){
+                        if($this._target){
+                            $this._callBack.apply($this._target,[this,true]);
                         }else{
-                            $this._callbackSelector.apply($this,[this,false]);
+                            $this._callBack.apply($this,[this,false]);
                         }
                     }
                 }
@@ -83,30 +83,32 @@ HY.Core.Ajax.prototype.sendAsync = function(){
         }
         this._xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         this._xmlHttp.open("POST",this._url,false);
-        this._xmlHttp.send(this._arg);
+        this._xmlHttp.send(this._args);
     }else{
         this._xmlHttp.onreadystatechange = function(){
             if(this.readyState == 4){
                 if(this.status == 200){
-                    $this._callbackSelector.apply($this._callbackTarget,[this,true]);
+                    $this._callBack.apply($this._target,[this,true]);
                 }else{
-                    $this._callbackSelector.apply($this._callbackTarget,[this,true]);
+                    $this._callBack.apply($this._target,[this,true]);
                 }
             }
         }
-        this._xmlHttp.open("GET",this._url+"?"+this._arg,false);
+        this._xmlHttp.open("GET",this._url+"?"+this._args,false);
         this._xmlHttp.send();
     }
 }
-HY.Core.Ajax.prototype.sendWithParamSync = function(pUrl,pArg,pMode){
-    this._url = pUrl;
-    this._arg = pArg;
+HY.Core.Ajax.prototype.sendWithParamSync = function(url,args,mode){
+    this._url = url;
+    this._args = args;
     this._mode = pMode;
     return this.sendsync();
 }
-HY.Core.Ajax.prototype.sendWithParamAsync = function(pUrl,pArg,pMode){
-    this._url = pUrl;
-    this._arg = pArg;
-    this._mode = pMode;
+HY.Core.Ajax.prototype.sendWithParamAsync = function(url,args,mode,callBack,target){
+    this._url = url;
+    this._args = args;
+    this._mode = mode;
+    this._callBack = callBack;
+    this._target = target;
     this.sendAsync();
 }

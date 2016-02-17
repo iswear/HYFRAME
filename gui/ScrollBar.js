@@ -37,8 +37,8 @@ HY.GUI.ScrollBar.prototype.initMember = function(config){
 }
 HY.GUI.ScrollBar.prototype.initConstraint = function(){
     this.superCall("initConstraint");
-    this.addEventListener("widthchanged",this._selfWidthChanged,this);
-    this.addEventListener("heightchanged",this._selfHeightChanged,this);
+    this.addEventListener("widthchanged",this._scrollBarWidthChanged,this);
+    this.addEventListener("heightchanged",this._scrollBarHeightChanged,this);
     this._scrollBar.addEventListener("drag",this._scrollBarDrag,this);
     this.addChildNodeAtLayer(this._scrollBar,0);
 }
@@ -120,7 +120,7 @@ HY.GUI.ScrollBar.prototype.layoutSubNodes = function(){
         this._scrollBar.setLimitMaxY(this.getHeight()-this._scrollBar.getHeight()-this._insetRB);
     }
 }
-HY.GUI.ScrollBar.prototype._selfWidthChanged = function(sender){
+HY.GUI.ScrollBar.prototype._scrollBarWidthChanged = function(sender){
     if(this._scrollBarDirection == 0){
         if(this.getWidth() != this._scrollBarLength){
             this.needLayoutSubNodes();
@@ -131,7 +131,7 @@ HY.GUI.ScrollBar.prototype._selfWidthChanged = function(sender){
         }
     }
 }
-HY.GUI.ScrollBar.prototype._selfHeightChanged = function(sender){
+HY.GUI.ScrollBar.prototype._scrollBarHeightChanged = function(sender){
     if(this._scrollBarDirection == 0){
         if(this.getHeight() != this._scrollBarWidth){
             this.needLayoutSubNodes();

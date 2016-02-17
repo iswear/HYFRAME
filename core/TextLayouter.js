@@ -5,11 +5,11 @@ HY.Core.TextLayouter = function(config){
     this.init(config);
 }
 HY.Core.TextLayouter.prototype = new HY.Object();
-HY.Core.TextLayouter.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
+HY.Core.TextLayouter.prototype.init = function(config){
     this._measureCanvas = document.createElement("canvas");
     this._measureContext = this._measureCanvas.getContext("2d");
     this._charWidthDics = {};
+    this.superCall("init",[config]);
 }
 HY.Core.TextLayouter.prototype.getCharWidthDic = function(font){
     if(this._charWidthDics[font]){
@@ -117,10 +117,9 @@ HY.Core.TextLayouter.prototype.getCharWidthDic = function(font){
 }
 HY.Core.TextLayouter.prototype.getTextLayoutWidth = function(text,font){
     var charWidthDic = this.getCharWidthDic(font);
-    var length = text.length;
     var textWidth = 0;
     var curChar = null;
-    for(var i=0;i<length;++i){
+    for(var i= 0,len = text.length;i<len;++i){
         curChar = text[i];
         if(curChar > '~'){
             textWidth += charWidthDic["zh"];

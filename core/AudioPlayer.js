@@ -2,14 +2,13 @@ HY.Core.AudioPlayer = function(config){
     this.init(config);
 }
 HY.Core.AudioPlayer.prototype = new HY.Object();
-HY.Core.AudioPlayer.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
+HY.Core.AudioPlayer.prototype.init = function(config){
     this._playerStack = [];
+    this.superCall("init",[config]);
 }
 HY.Core.AudioPlayer.prototype.playAudio = function(pAudioItem){
     if(pAudioItem){
-        var i = this._playerStack.length-1;
-        for(;i>=0;--i){
+        for(var i = this._playerStack.length-1 ;i>=0;--i){
             if(this._playerStack[i] == pAudioItem){
                 this._playerStack.splice(i,0);
             }
@@ -69,8 +68,8 @@ HY.Core.AudioPlayer.prototype.pauseAudio = function(pAudioItem){
 }
 HY.Core.AudioPlayer.prototype.resumeAudio = function(pAudioItem){
     if(pAudioItem){
-        var i = this._playerStack.length-1;
-        for(;i>=0;--i){
+
+        for(var i = this._playerStack.length-1 ; i>=0 ; --i){
             if(this._playerStack[i] == pAudioItem){
                 this._playerStack.splice(i,0);
             }

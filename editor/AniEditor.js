@@ -9,19 +9,69 @@ AniEditor.DATA.menu_items = [
 ];
 
 AniEditor.EVENT = {};
-AniEditor.EVENT.window_autosize = function(sender){
+AniEditor.EVENT.window_autolayout = function(sender){
     var app = sender.getApplication();
     if(app){
         sender.setWidth(app.getAppWidth());
         sender.setHeight(app.getAppHeight());
     }
 }
-AniEditor.EVENT.tree_nodeselect = function(sender, nodePath){
-    this.UI.structTree.setSelectedNodePath(nodePath);
-    this.UI.unitTimeNames.setSelectedNodePath(nodePath);
-    this.UI.unitTimeLines.setSelectedNodePath(nodePath);
+AniEditor.EVENT.modeltree_nodeselect = function(sender, nodePath){
+    this.UI.modelStructTree.setSelectedNodePath(nodePath);
+    this.UI.modelTimeNamesTree.setSelectedNodePath(nodePath);
+    this.UI.modelTimeLinesTree.setSelectedNodePath(nodePath);
+    this.FUNCTION.reloadModelTree();
 }
-AniEditor.EVENT.mode
+AniEditor.EVENT.structtree_nodecontextmenu = function(sender,e,nodeView,menuCellView){
+    if(nodeView && menuCellView){
+        switch (menuCellView.getSectionIndex()){
+            case 0:{
+                switch (menuCellView.getCellIndex()){
+                    case 0:
+                    {
+                        var newUnit = new HY.Game.Unit({backgroundColor:"#000000"});
+                        var curUnit = nodeView.getNodeUnit();
+                        curUnit.addChildUnit(newUnit);
+                        this.FUNCTION.reloadModelTree();
+                        break;
+                    }
+                    case 1:
+                    {
+                        var curUnit = nodeView.getNodeUnit();
+                        curUnit.removeFromParent(true);
+                        break;
+                    }
+                    case 2:
+                    {
+                        var curUnit = nodeView.getNodeUnit();
+                        curUnit.setVisible(!curUnit.getVisible());
+                        break;
+                    }
+                    default :
+                        break;
+                }
+            }
+            default :
+                break;
+        }
+        this.UI.modelStructTree.reloadData();
+        this.UI.modelTimeNamesTree.reloadData();
+        this.UI.modelTimeLinesTree.reloadData();
+    }
+}
+AniEditor.EVENT.modeltimetree_yscrolled = function(sender){
+    if(sender){
+        this.UI.modelTimeNamesTree.setContentOffsetY(sender.getContentOffsetY());
+        this.UI.modelTimeLinesTree.setContentOffsetY(sender.getContentOffsetY());
+    }
+}
+
+AniEditor.FUNCTION = {};
+AniEditor.FUNCTION.reloadModelTree = function(){
+    AniEditor.UI.modelStructTree.reloadData();
+    AniEditor.UI.modelTimeNamesTree.reloadData();
+    AniEditor.UI.modelTimeLinesTree.reloadData();
+}
 
 AniEditor.UI = {};
 AniEditor.UI.menu = new HY.GUI.Menu({
@@ -29,7 +79,7 @@ AniEditor.UI.menu = new HY.GUI.Menu({
     backgroundColor:'#ffffff',
     items:AniEditor.DATA.menu_items
 });
-AniEditor.UI.Model = new HY.Game.Model({
+AniEditor.UI.model = new HY.Game.Model({
     name:"新模型",
     x:0,
     y:0,
@@ -38,24 +88,25 @@ AniEditor.UI.Model = new HY.Game.Model({
     backgroundColor:"#ffffff",
     actionNames:["walk"]
 });
-AniEditor.UI.ModelContainer = new HY.GUI.Panel({
+AniEditor.UI.modelContainer = new HY.GUI.Panel({
     title:"编辑",
     viewPort:new HY.GUI.View({backgroundColor:"#aaaaff"})
 });
-AniEditor.UI.structTree = new HY.GUI.ModelStructTreeView({
-    root:AniEditor.UI.Model
-});
-AniEditor.UI.aniNamesList = new HY.GUI.SimpleListView({
+AniEditor.UI.modelActonsList = new HY.GUI.SimpleListView({
     cellSelectEnable:true,
-    items:AniEditor.UI.Model.getActionNames()
+    items:AniEditor.UI.model.getActionNames()
 });
-AniEditor.UI.unitTimeNames = new HY.GUI.ModelNameTreeView({
-    root:AniEditor.UI.Model
+AniEditor.UI.modelStructTree = new HY.GUI.ModelStructTreeView({
+    root:AniEditor.UI.model
 });
-AniEditor.UI.unitTimeLines = new HY.GUI.ModelTimeTreeView({
-    root:AniEditor.UI.Model
+AniEditor.UI.modelTimeNamesTree = new HY.GUI.ModelNameTreeView({
+    scrollBarVisible:false,
+    root:AniEditor.UI.model
 });
-AniEditor.UI.window = new HY.GUI.Window({
+AniEditor.UI.modelTimeLinesTree = new HY.GUI.ModelTimeTreeView({
+    root:AniEditor.UI.model
+});
+AniEditor.UI.modelWindow = new HY.GUI.Window({
     width:610,
     height:100,
     resizeEnable:false,
@@ -77,7 +128,7 @@ AniEditor.UI.window = new HY.GUI.Window({
                 splitViews: [
                     new HY.GUI.Panel({
                         title:"结构",
-                        viewPort:AniEditor.UI.structTree
+                        viewPort:AniEditor.UI.modelStructTree
                     }),
                     new HY.GUI.SplitView({
                         height:300,
@@ -91,7 +142,7 @@ AniEditor.UI.window = new HY.GUI.Window({
                                 splitDirection: 0,
                                 splitInitLayout:[250,150],
                                 splitViews:[
-                                    AniEditor.UI.ModelContainer ,
+                                    AniEditor.UI.modelContainer ,
                                     new HY.GUI.Panel({
                                         title:"参数"
                                     })
@@ -105,7 +156,7 @@ AniEditor.UI.window = new HY.GUI.Window({
                                 splitViews:[
                                     new HY.GUI.Panel({
                                         title:"动作列表",
-                                        viewPort:AniEditor.UI.aniNamesList
+                                        viewPort:AniEditor.UI.modelActonsList
                                     }),
                                     new HY.GUI.Panel({
                                         title:"时间轴",
@@ -115,8 +166,8 @@ AniEditor.UI.window = new HY.GUI.Window({
                                             splitDirection: 0,
                                             splitInitLayout:[120,160],
                                             splitViews:[
-                                                AniEditor.UI.unitTimeNames,
-                                                AniEditor.UI.unitTimeLines
+                                                AniEditor.UI.modelTimeNamesTree,
+                                                AniEditor.UI.modelTimeLinesTree
                                             ]
                                         })
                                     })
@@ -130,10 +181,13 @@ AniEditor.UI.window = new HY.GUI.Window({
     })
 });
 
-AniEditor.UI.ModelContainer.getViewPort().addChildNodeAtLayer(AniEditor.UI.Model,0);
+AniEditor.UI.modelContainer.getViewPort().addChildNodeAtLayer(AniEditor.UI.model,0);
 
-AniEditor.UI.window.addEventListener("finishlaunch",AniEditor.EVENT.window_autosize,AniEditor.UI.window);
-AniEditor.UI.window.addEventListener("canvassizechanged",AniEditor.EVENT.window_autosize,AniEditor.UI.window);
-AniEditor.UI.structTree.addEventListener("nodeselected",AniEditor.EVENT.tree_nodeselect,AniEditor);
-AniEditor.UI.unitTimeNames.addEventListener("nodeselected",AniEditor.EVENT.tree_nodeselect,AniEditor);
-AniEditor.UI.unitTimeLines.addEventListener("nodeselected",AniEditor.EVENT.tree_nodeselect,AniEditor);
+AniEditor.UI.modelWindow.addEventListener("finishlaunch",AniEditor.EVENT.window_autolayout,AniEditor.UI.window);
+AniEditor.UI.modelWindow.addEventListener("canvassizechanged",AniEditor.EVENT.window_autolayout,AniEditor.UI.window);
+AniEditor.UI.modelStructTree.addEventListener("nodeselected",AniEditor.EVENT.modeltree_nodeselect,AniEditor);
+AniEditor.UI.modelStructTree.addEventListener("nodecontextmenu",AniEditor.EVENT.structtree_nodecontextmenu, AniEditor);
+AniEditor.UI.modelTimeNamesTree.addEventListener("nodeselected",AniEditor.EVENT.modeltree_nodeselect,AniEditor);
+AniEditor.UI.modelTimeNamesTree.addEventListener("contentoffsetychanged",AniEditor.EVENT.modeltimetree_yscrolled,AniEditor);
+AniEditor.UI.modelTimeLinesTree.addEventListener("nodeselected",AniEditor.EVENT.modeltree_nodeselect,AniEditor);
+AniEditor.UI.modelTimeLinesTree.addEventListener("contentoffsetychanged",AniEditor.EVENT.modeltimetree_yscrolled,AniEditor);

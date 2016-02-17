@@ -15,8 +15,10 @@ HY.GUI.Label.prototype.defaultFontSize = 12;
 HY.GUI.Label.prototype.defaultFontFamily = "sans-serif";
 HY.GUI.Label.prototype.defaultFontItalic = false;
 HY.GUI.Label.prototype.defaultFontBold = false;
-HY.GUI.Label.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
+HY.GUI.Label.prototype.init = function(config){
+    this._font = null;
+    this._textLayoutArray = null;
+    this.superCall("init",[config]);
     if(config.fontSize != undefined){ this._fontSize = config.fontSize; } else { this._fontSize = this.defaultFontSize; }
     if(config.fontFamily != undefined){ this._fontFamily = config.fontFamily } else{ this._fontFamily = this.defaultFontFamily; }
     if(config.fontItalic != undefined){ this._fontItalic = config.fontItalic; } else { this._fontItalic = false; }
@@ -28,13 +30,12 @@ HY.GUI.Label.prototype.initMember = function(config){
     if(config.verticalAlign != undefined){ this._verticalAlign = config.verticalAlign; } else { this._verticalAlign = this.defaultVerticalAlign; }
     if(config.numberOfLines != undefined){ this._numberOfLines = config.numberOfLines; } else { this._numberOfLines = 1; }
     if(config.textChangedEvent != undefined){ this.addEventListener("textchanged",config.textChangedEvent.selector,config.textChangedEvent.target); }
-    this._font = null;
-    this._textLayoutArray = null;
+
 }
 HY.GUI.Label.prototype.initConstraint = function(){
     this.superCall("initConstraint");
-    this.addEventListener("paint",this._selfPaint,this);
-    this.addEventListener("widthchanged",this._selfWidthChanged,this);
+    this.addEventListener("paint",this._paintLabelText,this);
+    this.addEventListener("widthchanged",this._labelWidthChanged,this);
     this._initFont();
     this._initLayout(this.getWidth());
 }
@@ -128,7 +129,7 @@ HY.GUI.Label.prototype.setVerticalAlign = function(pAlign){
 HY.GUI.Label.prototype.onTextChanged = function(sender){
     this.launchEvent("textchanged",[this]);
 }
-HY.GUI.Label.prototype._selfPaint = function(sender,dc,rect){
+HY.GUI.Label.prototype._paintLabelText = function(sender,dc,rect){
     if(this._numberOfLines >= 0){
         if(this._numberOfLines == 1){
             var textx,texty;
@@ -220,7 +221,7 @@ HY.GUI.Label.prototype._selfPaint = function(sender,dc,rect){
         }
     }
 }
-HY.GUI.Label.prototype._selfWidthChanged = function(sender){
+HY.GUI.Label.prototype._labelWidthChanged = function(sender){
     if(this._numberOfLines != 1){
         this._initLayout(this.getWidth());
     }

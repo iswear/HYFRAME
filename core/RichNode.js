@@ -12,25 +12,9 @@ HY.Core.RichNode.prototype.defaultAnchorX = 0;
 HY.Core.RichNode.prototype.defaultAnchorY = 0;
 HY.Core.RichNode.prototype.defaultLayoutStyle = 1;// 0gamenode布局 1guinode布局
 HY.Core.RichNode.prototype.defaultAdjustBorder = 4;
-HY.Core.RichNode.prototype.initMember = function(config){
-    this.superCall("initMember",[config]);
-    if(config.anchorMoveEnable != undefined){ this._anchorMoveEnable = config.anchorMoveEnable; } else { this._anchorMoveEnable = this.defaultAnchorMoveEnable; }
-    if(config.rotateEnable != undefined){ this._rotateEnable = config.rotateEnable; } else { this._rotateEnable = this.defaultRotateEnable; }
-    if(config.resizeEnable != undefined){ this._resizeEnable = config.resizeEnable; } else { this._resizeEnable = this.defaultResizeEnable; }
-    if(config.layoutStyle != undefined){ this._layoutStyle = config.layoutStyle; } else { this._layoutStyle = this.defaultLayoutStyle; }
-    if(config.adjustBorder != undefined){ this._adjustBorder = config.adjustBorder } else { this._adjustBorder = this.defaultAdjustBorder; }
-
-    if(config.rotateEvent != undefined){ this.addEventListener("rotate",config.rotateEvent.selector,config.rotateEvent.target); }
-    if(config.resizeEvent != undefined){ this.addEventListener("resize",config.resizeEvent.selector,config.resizeEvent.target); }
-    if(config.anchorMoveEvent != undefined){ this.addEventListener("anchormove",config.anchorMoveEvent.selector,config.anchorMoveEvent.target); }
+HY.Core.RichNode.prototype.init = function(config){
 
     this._anchorNode = new HY.Core.Node({anchorX:0.5,anchorY:0.5});
-
-    /*
-    spaceView.setCursor("ew-resize");
-}else{
-    spaceView.setCursor("ns-resize");
-    */
     this._nwResizeNode = new HY.Core.Node({anchorX:0.5,anchorY:0.5,cursor:"nw-resize"});
     this._nResizeNode = new HY.Core.Node({anchorX:0.5,anchorY:0.5,cursor:"ns-resize"});
     this._neResizeNode = new HY.Core.Node({anchorX:0.5,anchorY:0.5,cursor:"ne-resize"});
@@ -44,6 +28,21 @@ HY.Core.RichNode.prototype.initMember = function(config){
     this._neRotateNode = new HY.Core.Node({anchorX:0.5,anchorY:0.5,cursor:""});
     this._seRotateNode = new HY.Core.Node({anchorX:0.5,anchorY:0.5,cursor:""});
     this._swRotateNode = new HY.Core.Node({anchorX:0.5,anchorY:0.5,cursor:""});
+
+    this.addChildNodeAtLayer(this._nwRotateNode,0);
+    this.addChildNodeAtLayer(this._neRotateNode,0);
+    this.addChildNodeAtLayer(this._seRotateNode,0);
+    this.addChildNodeAtLayer(this._swRotateNode,0);
+
+    this.addChildNodeAtLayer(this._nwResizeNode,0);
+    this.addChildNodeAtLayer(this._nResizeNode,0);
+    this.addChildNodeAtLayer(this._neResizeNode,0);
+    this.addChildNodeAtLayer(this._eResizeNode,0);
+    this.addChildNodeAtLayer(this._seResizeNode,0);
+    this.addChildNodeAtLayer(this._sResizeNode,0);
+    this.addChildNodeAtLayer(this._swResizeNode,0);
+    this.addChildNodeAtLayer(this._wResizeNode,0);
+    this.addChildNodeAtLayer(this._anchorNode,0);
 
     this.__resizeNodeIndex = -1;
     this.__rotateNodeIndex = -1;
@@ -59,9 +58,14 @@ HY.Core.RichNode.prototype.initMember = function(config){
     this.__anchorStartEventPos = null;
     this.__anchorStartAnchor = null;
     this.__anchorStartPos = null;
-}
-HY.Core.RichNode.prototype.initConstraint = function(){
-    this.superCall("initConstraint");
+
+    this.superCall("initMember",[config]);
+    if(config.anchorMoveEnable != undefined){ this.setAnchorMoveEnable(config.anchorMoveEnable) } else { this.setAnchorMoveEnable(this.defaultAnchorMoveEnable); }
+    if(config.rotateEnable != undefined){ this.setRotateEnable(config.rotateEnable); } else { this.setRotateEnable(this.defaultRotateEnable); }
+    if(config.resizeEnable != undefined){ this.setResizeEnable(config.resizeEnable); } else { this.setResizeEnable(this.defaultResizeEnable); }
+    if(config.layoutStyle != undefined){ this._layoutStyle = config.layoutStyle; } else { this._layoutStyle = this.defaultLayoutStyle; }
+    if(config.adjustBorder != undefined){ this._adjustBorder = config.adjustBorder } else { this._adjustBorder = this.defaultAdjustBorder; }
+
     this._nwRotateNode.addEventListener("drag",this._nwRotateNodeDrag,this);
     this._neRotateNode.addEventListener("drag",this._neRotateNodeDrag,this);
     this._seRotateNode.addEventListener("drag",this._seRotateNodeDrag,this);
@@ -94,39 +98,10 @@ HY.Core.RichNode.prototype.initConstraint = function(){
     this._anchorNode.addEventListener("enddrag",this._unLockAnchorMove,this);
     this._anchorNode.addEventListener("paint",this._anchorNodePaint,this);
 
+}
+HY.Core.RichNode.prototype.initConstraint = function(){
+    this.superCall("initConstraint");
 
-
-    this._nwRotateNode.setVisible(this._rotateEnable);
-    this._neRotateNode.setVisible(this._rotateEnable);
-    this._seRotateNode.setVisible(this._rotateEnable);
-    this._swRotateNode.setVisible(this._rotateEnable);
-
-    this._nwResizeNode.setVisible(this._resizeEnable);
-    this._nResizeNode.setVisible(this._resizeEnable);
-    this._neResizeNode.setVisible(this._resizeEnable);
-    this._eResizeNode.setVisible(this._resizeEnable);
-    this._seResizeNode.setVisible(this._resizeEnable);
-    this._sResizeNode.setVisible(this._resizeEnable);
-    this._swResizeNode.setVisible(this._resizeEnable);
-    this._wResizeNode.setVisible(this._resizeEnable);
-
-    this._anchorNode.setVisible(this._anchorMoveEnable);
-
-
-    this.addChildNodeAtLayer(this._nwRotateNode,0);
-    this.addChildNodeAtLayer(this._neRotateNode,0);
-    this.addChildNodeAtLayer(this._seRotateNode,0);
-    this.addChildNodeAtLayer(this._swRotateNode,0);
-
-    this.addChildNodeAtLayer(this._nwResizeNode,0);
-    this.addChildNodeAtLayer(this._nResizeNode,0);
-    this.addChildNodeAtLayer(this._neResizeNode,0);
-    this.addChildNodeAtLayer(this._eResizeNode,0);
-    this.addChildNodeAtLayer(this._seResizeNode,0);
-    this.addChildNodeAtLayer(this._sResizeNode,0);
-    this.addChildNodeAtLayer(this._swResizeNode,0);
-    this.addChildNodeAtLayer(this._wResizeNode,0);
-    this.addChildNodeAtLayer(this._anchorNode,0);
 }
 HY.Core.RichNode.prototype.getRotateEnable = function(){
     return this._rotateEnable;
