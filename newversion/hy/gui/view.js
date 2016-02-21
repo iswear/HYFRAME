@@ -58,7 +58,7 @@ hy.gui.View.prototype.getActiveColor = function(){
     return this._activeColor;
 }
 hy.gui.View.prototype.setSelected = function(selected){
-    if(this._selected = selected){
+    if(this._selected != selected){
         this._selected = selected;
         this.postNotification(this.notifySyncSelected,null);
     }

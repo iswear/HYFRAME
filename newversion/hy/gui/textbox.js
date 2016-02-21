@@ -11,7 +11,6 @@ hy.gui.TextBox.prototype.init = function(config){
     this.addObserver(this.notifyMouseOut,this,this._hideHtmlTextBox);
     this.addObserver(this.notifyFocus,this,this._focusHtmlTextBox);
     this.addObserver(this.notifyBlur,this,this._blurHtmlTextBox);
-    this.addObserver(this.notifyClick,this,this._blurHtmlTextBox);
 }
 hy.gui.TextBox.prototype.setEditEnable = function(editEnable){
     this._editEnable = editEnable;
@@ -19,6 +18,7 @@ hy.gui.TextBox.prototype.setEditEnable = function(editEnable){
 hy.gui.TextBox.prototype.getEditEnable = function(){
     return this._editEnable;
 }
+
 hy.gui.TextBox.prototype._focusHtmlTextBox = function(sender, e){
     var app = this.getApplication();
     if(app){
@@ -34,22 +34,24 @@ hy.gui.TextBox.prototype._blurHtmlTextBox = function(sender, e){
     }
 }
 hy.gui.TextBox.prototype._showHtmlTextBox = function(sender, e){
-    var app = this.getApplication();
-    if(app){
-        app.getInputTextBox().showForNode(this);
-        this.setVisible(false);
+    if(this._editEnable){
+        var app = this.getApplication();
+        if(app){
+            app.getInputTextBox().showForNode(this);
+            //this.setVisible(false);
+        }
     }
 }
 hy.gui.TextBox.prototype._hideHtmlTextBox = function(sender, e){
     var app = this.getApplication();
-    if(app && app.getInputTextBox().getInputNode() == this){
+    if(app && app.getInputTextBox().getInputNode() == this && app.getFocusNode() != this){
         app.getInputTextBox().hideForNode(this);
-        this.setVisible(true);
+        //this.setVisible(true);
     }
 }
 hy.gui.TextBox.prototype._syncTextBoxToInputBox = function(){
     var app = this.getApplication();
     if(app && app.getInputNode() == this){
-        app.getInputTextBox().value = this.getText();
+        app.getInputTextBox().setValue(this.getText());
     }
 }

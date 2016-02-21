@@ -158,16 +158,12 @@ hy.RichNode.prototype._syncRotateEnv = function(){
         this.addChildNodeAtLayer(this._rotateSWnode,0);
         this._rotateNWnode.addObserver(this._resizeNWnode.notifyDraging,this,this._rotateNodesDraging,this);
         this._rotateNWnode.addObserver(this._resizeNWnode.notifyDragEnd,this,this._rotateNodesDragEnd,this);
-        this._rotateNWnode.addObserver(this._resizeNWnode.notifyDraging,this,this.needLayoutSubNodes,this);
         this._rotateNEnode.addObserver(this._resizeNWnode.notifyDraging,this,this._rotateNodesDraging,this);
         this._rotateNEnode.addObserver(this._resizeNWnode.notifyDragEnd,this,this._rotateNodesDragEnd,this);
-        this._rotateNEnode.addObserver(this._resizeNWnode.notifyDraging,this,this.needLayoutSubNodes,this);
         this._rotateSEnode.addObserver(this._resizeNWnode.notifyDraging,this,this._rotateNodesDraging,this);
         this._rotateSEnode.addObserver(this._resizeNWnode.notifyDragEnd,this,this._rotateNodesDragEnd,this);
-        this._rotateSEnode.addObserver(this._resizeNWnode.notifyDraging,this,this.needLayoutSubNodes,this);
         this._rotateSWnode.addObserver(this._resizeNWnode.notifyDraging,this,this._rotateNodesDraging,this);
         this._rotateSWnode.addObserver(this._resizeNWnode.notifyDragEnd,this,this._rotateNodesDragEnd,this);
-        this._rotateSWnode.addObserver(this._resizeNWnode.notifyDraging,this,this.needLayoutSubNodes,this);
         this.addObserver(this.notifyLayoutSubNodes,this,this._layoutRotateNodes);
         this.__rotateReady = false;
         this.__rotateStartEventAngle = 0;
@@ -358,6 +354,7 @@ hy.RichNode.prototype._resizeNodesDraging = function(sender, e){
             default :
                 break;
         }
+        this.needLayoutSubNodes();
     }
 }
 hy.RichNode.prototype._resizeNodesDragEnd = function(sender, e){
@@ -376,6 +373,7 @@ hy.RichNode.prototype._rotateNodesDraging = function(sender, e){
         var canvasVector = {x:e.offsetX-canvasPoint.x,y:e.offsetY-canvasPoint.y};
         this.setRotateZ(this.__rotateStartAngle+hy.geometry.vector.getAngle(canvasVector)-this.__rotateStartEventAngle);
         this.postNotification(this.notifyRotating,[this.getRotateZ()]);
+        this.needLayoutSubNodes();
     }
 }
 hy.RichNode.prototype._rotateNodesDragEnd = function(sender, e){
@@ -403,6 +401,7 @@ hy.RichNode.prototype._anchorNodeDraging = function(sender, e){
         this.setAnchorX(this.__anchorStartAnchor.x+localOffsetVector.x/this.getWidth());
         this.setAnchorY(this.__anchorStartAnchor.y+localOffsetVector.y/this.getHeight());
         this.postNotification(this.notifyAnchorMoving,[this.getAnchorX(),this.getAnchorY()]);
+        this.needLayoutSubNodes();
     }
 }
 hy.RichNode.prototype._anchorNodeDragEnd = function(sender, e){

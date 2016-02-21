@@ -4,11 +4,13 @@ hy.html.TextBox = hy.extend(hy.Object);
 hy.html.TextBox.prototype.init = function(config){
     this.superCall("init",[config]);
     this._inputNode = null;
+    this._inputNodeVisible = true;
     this._htmlTextBoxContainer = document.createElement("div");
     this._htmlTextBoxContainer.style.position = "absolute";
     this._htmlTextBoxContainer.style.margin = "0px";
     this._htmlTextBoxContainer.style.padding = "0px";
-    this._htmlTextBoxContainer.style.border = "none";
+    this._htmlTextBoxContainer.style.borderWidth = "0px";
+    this._htmlTextBoxContainer.style.borderStyle = "solid";
     this._htmlTextBoxContainer.style.outline = "none";
     this._htmlTextBoxContainer.style.zIndex = "999";
     this._htmlTextBoxContainer.style.display = "none";
@@ -16,15 +18,12 @@ hy.html.TextBox.prototype.init = function(config){
 
     this._htmlTextBox = document.createElement("div");
     this._htmlTextBox.setAttribute("contenteditable","true");
-    this._htmlTextBox.style.borderStyle = "none";
     this._htmlTextBox.style.margin = "0px";
     this._htmlTextBox.style.padding = "0px";
     this._htmlTextBox.style.outline = "none";
     this._htmlTextBox.style.background = "transparent";
     this._htmlTextBox.style.whiteSpace = "pre-wrap";
-    //this._htmlTextBox.style.whiteSpace = "pre";
-    this._htmlTextBox.style.overflow = "hidden";
-    this._htmlTextBox.style.borderStyle = "solid";
+    this._htmlTextBox.style.border = "none";
     this._htmlTextBox.style.display = "table-cell";
     if(hy.platform.isMobile()){
         hy.event.addEventListener(this._htmlTextBox,this,"touchstart",function(e){
@@ -127,6 +126,18 @@ hy.html.TextBox.prototype.init = function(config){
         hy.event.addEventListener(this._htmlTextBox,"mousewheel",this,function(e){
             var e = event ? event : e;
             try{
+                var height = hy.dom.parsePxStrToInt(this._htmlTextBoxContainer.style.height);
+                var wheelDelta = e.wheelDelta ? e.wheelDelta : e.detail;
+                if(wheelDelta > 0){
+                    if(this._htmlTextBoxContainer.scrollTop > 0){
+                        this._htmlTextBoxContainer.scrollTop -= (this._htmlTextBoxContainer.scrollTop > 20) ? 20 : this._htmlTextBoxContainer.scrollTop;
+                    }
+                }else{
+                    if(this._htmlTextBoxContainer.scrollTop +  height < this._htmlTextBoxContainer.scrollHeight){
+                        var deltaTop = this._htmlTextBoxContainer.scrollHeight - height;
+                        this._htmlTextBoxContainer.scrollTop += (deltaTop > 20) ? 20 : deltaTop;
+                    }
+                }
                 e.stopPropagation();
             }catch(err){
                 e.cancelBubble = true;
@@ -135,6 +146,18 @@ hy.html.TextBox.prototype.init = function(config){
         hy.event.addEventListener(this._htmlTextBox,"DOMMouseScroll",this,function(e){
             var e = event ? event : e;
             try{
+                var height = hy.dom.parsePxStrToInt(this._htmlTextBoxContainer.style.height);
+                var wheelDelta = e.wheelDelta ? e.wheelDelta : e.detail;
+                if(wheelDelta > 0){
+                    if(this._htmlTextBoxContainer.scrollTop > 0){
+                        this._htmlTextBoxContainer.scrollTop -= (this._htmlTextBoxContainer.scrollTop > 20) ? 20 : this._htmlTextBoxContainer.scrollTop;
+                    }
+                }else{
+                    if(this._htmlTextBoxContainer.scrollTop +  height < this._htmlTextBoxContainer.scrollHeight){
+                        var deltaTop = this._htmlTextBoxContainer.scrollHeight - height;
+                        this._htmlTextBoxContainer.scrollTop += (deltaTop > 20) ? 20 : deltaTop;
+                    }
+                }
                 e.stopPropagation();
             }catch(err){
                 e.cancelBubble = true;
@@ -148,16 +171,16 @@ hy.html.TextBox.prototype.init = function(config){
                 e.cancelBubble = true;
             }
         });
-        //hy.event.addEventListener(this._htmlTextBox,"focus",this,function(e){
-        //    if(this._inputNode != null){
-        //        this._inputNode.focus();
-        //    }
-        //});
-        //hy.event.addEventListener(this._htmlTextBox,"blur",this,function(e){
-        //    if(this._inputNode != null){
-        //        this._inputNode.blur();
-        //    }
-        //});
+        hy.event.addEventListener(this._htmlTextBox,"focus",this,function(e){
+            if(this._inputNode != null){
+                this._inputNode.focus(null);
+            }
+        });
+        hy.event.addEventListener(this._htmlTextBox,"blur",this,function(e){
+            if(this._inputNode != null){
+                this._inputNode.blur();
+            }
+        });
     }
     this._htmlTextBoxContainer.appendChild(this._htmlTextBox);
     document.body.appendChild(this._htmlTextBoxContainer);
@@ -177,39 +200,43 @@ hy.html.TextBox.prototype.showForNode = function(node){
         var height = node.getHeight() - node.getTextPaddingTop() - node.getTextPaddingBottom()-2*node.getBorderWidth();
         if(width > 0 && height > 0){
             this.blurForNode();
-            var absPoint = node.transPointToAncestorNode({x:node.getAnchorPixelX()+node.getTextPaddingLeft(),y:node.getAnchorPixelY()+node.getTextPaddingTop()},null);
+            var absPoint = node.transPointToAncestorNode({x:node.getAnchorPixelX(),y:node.getAnchorPixelY()},null);
             /*位置*/
-            this._htmlTextBoxContainer.style.left = absPoint.x + "px";
             this._htmlTextBoxContainer.style.top = absPoint.y + "px";
+            this._htmlTextBoxContainer.style.left = absPoint.x + "px";
+            this._htmlTextBoxContainer.style.width = width + "px";
+            this._htmlTextBoxContainer.style.height = height + "px";
+            this._htmlTextBoxContainer.scrollTop = "0px";
             this._htmlTextBox.style.width = width + "px";
+            this._htmlTextBox.style.maxWidth = width + "px";
             this._htmlTextBox.style.height = height + "px";
             /*背景*/
             if(node.getPaintInheritValue("backgroundColor")){
-                this._htmlTextBox.style.backgroundColor = node.getPaintInheritValue("backgroundColor");
+                this._htmlTextBoxContainer.style.backgroundColor = node.getPaintInheritValue("backgroundColor");
             }else{
-                this._htmlTextBox.style.background = "transparent";
+                this._htmlTextBoxContainer.style.background = "transparent";
             }
             /*内边距边框*/
             if(node.getBorderColor() && node.getBorderWidth() > 0){
-                this._htmlTextBox.style.borderColor = node.getBorderColor();
-                this._htmlTextBox.style.borderWidth = node.getBorderWidth() + "px";
-                this._htmlTextBox.style.paddingLeft = node.getTextPaddingLeft() - node.getBorderWidth() + "px";
-                this._htmlTextBox.style.paddingRight = node.getTextPaddingRight() - node.getBorderWidth() + "px" ;
-                this._htmlTextBox.style.paddingTop = node.getTextPaddingTop() - node.getBorderWidth() + "px";
-                this._htmlTextBox.style.paddingBottom = node.getTextPaddingBottom() - node.getBorderWidth() + "px";
+                this._htmlTextBoxContainer.style.borderColor = node.getBorderColor();
+                this._htmlTextBoxContainer.style.borderWidth = node.getBorderWidth() + "px";
+                this._htmlTextBoxContainer.style.paddingLeft = node.getTextPaddingLeft() + "px";
+                this._htmlTextBoxContainer.style.paddingRight = node.getTextPaddingRight() + "px" ;
+                this._htmlTextBoxContainer.style.paddingTop = node.getTextPaddingTop() + "px";
+                this._htmlTextBoxContainer.style.paddingBottom = node.getTextPaddingBottom() + "px";
             }else{
-                this._htmlTextBox.style.borderColor = "transparent";
-                this._htmlTextBox.style.borderWidth = "0px";
-                this._htmlTextBox.style.paddingLeft = node.getTextPaddingLeft() + "px";
-                this._htmlTextBox.style.paddingRight = node.getTextPaddingRight() + "px";
-                this._htmlTextBox.style.paddingTop = node.getTextPaddingTop() + "px";
-                this._htmlTextBox.style.paddingBottom = node.getTextPaddingBottom() + "px";
+                this._htmlTextBoxContainer.style.borderColor = "transparent";
+                this._htmlTextBoxContainer.style.borderWidth = "0px";
+                this._htmlTextBoxContainer.style.paddingLeft = node.getTextPaddingLeft() + "px";
+                this._htmlTextBoxContainer.style.paddingRight = node.getTextPaddingRight() + "px";
+                this._htmlTextBoxContainer.style.paddingTop = node.getTextPaddingTop() + "px";
+                this._htmlTextBoxContainer.style.paddingBottom = node.getTextPaddingBottom() + "px";
             }
             /*圆角*/
             if(node.getCornorRadius() > 0){
-                this._htmlTextBox.style.borderRadius = node.getCornorRadius() + "px";
+                this._htmlTextBoxContainer.style.borderRadius = node.getCornorRadius() + "px";
             }else{
-                this._htmlTextBox.style.borderRadius = "0px";
+                this._htmlTextBoxContainer.style.borderRadius = "0px";
             }
             /*字体*/
             this._htmlTextBox.style.font = node.getTextFont();
@@ -247,6 +274,8 @@ hy.html.TextBox.prototype.showForNode = function(node){
             this._htmlTextBox.innerText = node.getText();
             this._htmlTextBoxContainer.style.display = "inline";
             this._inputNode = node;
+            this._inputNodeVisible = node.getVisible();
+            node.setVisible(false);
             return true;
         }else{
             return false;
@@ -259,6 +288,7 @@ hy.html.TextBox.prototype.hideForNode = function(node){
     if(this._inputNode && this._inputNode == node){
         this._inputNode.setText(this._htmlTextBox.innerText);
         this._inputNode.blur();
+        this._inputNode.setVisible(this._inputNodeVisible);
         this._inputNode = null;
         this._htmlTextBoxContainer.style.display = "none";
         return true;

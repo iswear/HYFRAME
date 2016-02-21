@@ -27,15 +27,11 @@ hy.gui.ScrollBar.prototype.init = function(config){
     this.addChildNodeAtLayer(this._scrollBar, 0);
     this._scrollBar.addObserver(this._scrollBar.notifyDraging, this, this._dragScrollBar);
     this.addObserver(this.notifyLayoutSubNodes, this, this._layoutScrollBar);
-    this.addObserver(this.notifySyncPaddingLeft, this, this.needLayoutSubNodes);
-    this.addObserver(this.notifySyncPaddingRight, this, this.needLayoutSubNodes);
-    this.addObserver(this.notifySyncPaddingTop, this, this.needLayoutSubNodes);
-    this.addObserver(this.notifySyncPaddingBottom, this, this.needLayoutSubNodes);
-    this.addObserver(this.notifySyncScrollRate, this, this.needLayoutSubNodes);
 }
 hy.gui.ScrollBar.prototype.setPaddingLeft = function(paddingLeft){
     if(this._paddingLeft != paddingLeft){
         this._paddingLeft = paddingLeft;
+        this.needLayoutSubNodes();
         this.postNotification(this.notifySyncPaddingLeft, null);
     }
 }
@@ -45,6 +41,7 @@ hy.gui.ScrollBar.prototype.getPaddingLeft = function(){
 hy.gui.ScrollBar.prototype.setPaddingRight = function(paddingRight){
     if(this._paddingRight != paddingRight){
         this._paddingRight = paddingRight;
+        this.needLayoutSubNodes();
         this.postNotification(this.notifySyncPaddingRight, null);
     }
 }
@@ -54,6 +51,7 @@ hy.gui.ScrollBar.prototype.getPaddingRight = function(){
 hy.gui.ScrollBar.prototype.setPaddingTop = function(paddingTop){
     if(this._paddingTop != paddingTop){
         this._paddingTop = paddingTop;
+        this.needLayoutSubNodes();
         this.postNotification(this.notifySyncPaddingTop, null);
     }
 }
@@ -63,6 +61,7 @@ hy.gui.ScrollBar.prototype.getPaddingTop = function(){
 hy.gui.ScrollBar.prototype.setPaddingBottom = function(paddingBottom){
     if(this._paddingBottom != paddingBottom){
         this._paddingBottom = paddingBottom;
+        this.needLayoutSubNodes();
         this.postNotification(this.notifySyncPaddingBottom, null);
     }
 }
@@ -75,7 +74,7 @@ hy.gui.ScrollBar.prototype.setScrollRate = function(scrolledLen,visibleLen,overa
     if(this.__scrolledRate != scrolledRate || this.__visibleRate != visibleRate){
         this.__scrolledRate = scrolledLen / overallLen;
         this.__visibleRate = visibleLen / overallLen;
-
+        this.needLayoutSubNodes();
         this.postNotification(this.notifySyncScrollRate, null);
     }
 }

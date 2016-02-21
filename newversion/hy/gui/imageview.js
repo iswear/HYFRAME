@@ -1,20 +1,16 @@
 var hy = hy || {};
 hy.gui = hy.gui || {};
 hy.gui.ImageView = hy.extend(hy.gui.View);
-hy.gui.ImageView.prototype.notifySyncImage = "syncimage";
-hy.gui.ImageView.prototype.notifySyncMirror = "syncmirror";
 hy.gui.ImageView.prototype.init = function(config){
     this.superCall("init",[config]);
     this._image = this.isUndefined(config.image) ? null : config.image;
     this._mirror = this.isUndefined(config.mirror) ? hy.gui.MIRROR_NONE : config.mirror;
     this.addObserver(this.notifyPaint, this, this._paintImageViewImg);
-    this.addObserver(this.notifySyncImage, this, this.refresh);
-    this.addObserver(this.notifySyncMirror, this, this.refresh);
 }
 hy.gui.ImageView.prototype.setImage = function(image){
     if(this._image != image){
         this._image = image;
-        this.postNotification(this.notifySyncImage, null);
+        this.refresh();
     }
 }
 hy.gui.ImageView.prototype.getImage = function(){
@@ -23,7 +19,7 @@ hy.gui.ImageView.prototype.getImage = function(){
 hy.gui.ImageView.prototype.setMirror = function(mirror){
     if(this._mirror != mirror){
         this._mirror = mirror;
-        this.postNotification(this.notifySyncMirror, null);
+        this.refresh();
     }
 }
 hy.gui.ImageView.prototype.getMirror = function(){

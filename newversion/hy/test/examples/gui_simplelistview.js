@@ -4,10 +4,21 @@ var testNode = new hy.gui.SimpleListView({
     width:200,
     height:200,
     normalColor:'#f00',
+    cellSelectEnable:true,
+    cellEditEnable:true,
+    cellMoveEnable:true,
     items:[
-        "oneoneoneoneoneoneoneoneoneoneoneoneoneoneoneoneoneoneoneoneoneoneoneoneoneoneoneone",
-        "two",
-        "three",
-        "four"
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
     ]
 });

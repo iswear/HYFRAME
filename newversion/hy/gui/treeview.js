@@ -25,8 +25,13 @@ hy.gui.TreeView.prototype.init = function(config){
     this._nodeViews = [];
     this._nodeInfos = {};/*{y:,height:,view:,childNodes:}*/
     this.__needReloadTree = false;
-    this.addObserver(this.notifyLayoutSubNodes, this, this._layoutTreeNodeViews);
+    this.__needMallocTreeView = false;
+    var contentView = this.getContentView();
+    contentView.addObserver(this.notifySyncY, this, this.needMallocTreeView);
+    contentView.addObserver(this.notifySyncHeight, this, this.needMallocTreeView);
     this.addObserver(this.notifyEnterFrame, this, this._reloadTree);
+    this.addObserver(this.notifyEnterFrame, this, this._mallocTreeView);
+    this.addObserver(this.notifyLayoutSubNodes, this, this._layoutTreeNodeViews);
     this.needReloadTree();
 }
 hy.gui.TreeView.prototype.setRoot = function(root){
@@ -69,6 +74,9 @@ hy.gui.TreeView.prototype.getReuseNodeViewOfIdentity = function(reuseIdentity){
 hy.gui.TreeView.prototype.needReloadTree = function(){
     this.__needReloadTree = true;
 }
+hy.gui.TreeView.prototype.needMallocTreeView = function(){
+    this.__needMallocTreeView = true;
+}
 hy.gui.TreeView.prototype._reloadTree = function(){
     if(this.__needReloadTree){
         this.__needReloadTree = false;
@@ -78,7 +86,7 @@ hy.gui.TreeView.prototype._reloadTree = function(){
                 dataSource = this;
             }
             this._recycleAllNodeView();
-            this._nodeInfos = {y:0,height:0,nodePath:null,view:null,childNodes:[]};
+            this._nodeInfos = {y:0,height:0,nodePath:[],view:null,childNodes:[]};
             var layoutY = this._reloadTreeNode(dataSource, this._nodeInfos, "", 0);
             this.setContentHeight(layoutY);
             this._mallocTreeView();
@@ -114,35 +122,37 @@ hy.gui.TreeView.prototype._reloadTreeNode = function(dataSource , nodeInfo, node
     return layoutY;
 }
 hy.gui.TreeView.prototype._mallocTreeView = function(){
-    var dataSource = this._dataSource;
-    if(dataSource == null){
-        dataSource = this;
-    }
-    var contentOffsetY = this.getContentOffsetY();
-    var contentMaxY = contentOffsetY+this.getHeight();
-    for(var i=this._nodeViews.length-1;i>=0;--i){
-        var nodeView = this._nodeViews[i];
-        if(nodeView.getY() > contentMaxY || (nodeView.getY()+nodeView.getHeight()<contentOffsetY)){
-            var reuseIdentity = nodeView.getReuseIdentity();
-            if(!this._reuseNodeViews[reuseIdentity]){
-                this._reuseNodeViews[reuseIdentity] = [];
-            }
-            this._reuseNodeViews[reuseIdentity].push(nodeView);
-            var nodePath = nodeView.getNodePath();
-            var nodeInfo = this._nodeInfos;
-            var nodeDeepth = nodePath.length;
-            for(var i=0;i<nodeDeepth;++i) {
-                nodeInfo = nodeInfo.childNodes[nodePath[i]];
-            }
-            nodeInfo.view = null;
-            nodeView.setNodePath(null);
-            nodeView.removeFromParent(false);
-            nodeView.setSelected(false);
-            this._nodeViews.splice(i, 1);
+    if(this.__needMallocTreeView){
+        this.__needMallocTreeView = false;
+        var dataSource = this._dataSource;
+        if(dataSource == null){
+            dataSource = this;
         }
+        var contentOffsetY = this.getContentOffsetY();
+        var contentMaxY = contentOffsetY+this.getHeight();
+        for(var i=this._nodeViews.length-1;i>=0;--i){
+            var nodeView = this._nodeViews[i];
+            if(nodeView.getY() >= contentMaxY || (nodeView.getY()+nodeView.getHeight() <= contentOffsetY)){
+                var reuseIdentity = nodeView.getReuseIdentity();
+                if(!this._reuseNodeViews[reuseIdentity]){
+                    this._reuseNodeViews[reuseIdentity] = [];
+                }
+                this._reuseNodeViews[reuseIdentity].push(nodeView);
+                var nodePath = nodeView.getNodePath();
+                var nodeInfo = this._nodeInfos;
+                for(var j=0, nodeDeepth = nodePath.length;j<nodeDeepth;++j) {
+                    nodeInfo = nodeInfo.childNodes[nodePath[j]];
+                }
+                nodeInfo.view = null;
+                nodeView.setNodePath(null);
+                nodeView.removeFromParent(false);
+                nodeView.setSelected(false);
+                this._nodeViews.splice(i, 1);
+            }
+        }
+        var maxContentWidth =this._mallocTreeNodeViews(dataSource,this._nodeInfos,contentOffsetY,contentMaxY,0);
+        this.setContentWidth(maxContentWidth);
     }
-    var maxContentWidth =this._mallocTreeNodeViews(dataSource,this._nodeInfos,contentOffsetY,contentMaxY,0);
-    this.setContentWidth(maxContentWidth);
 }
 hy.gui.TreeView.prototype._mallocTreeNodeViews = function(dataSource, nodeInfo ,offsetY , maxY, maxContentWidth){
     if(nodeInfo.y < maxY){
@@ -167,10 +177,10 @@ hy.gui.TreeView.prototype._mallocTreeNodeViews = function(dataSource, nodeInfo ,
                 this._nodeViews.push(nodeView);
                 this.getContentView().addChildNodeAtLayer(nodeView, 0);
                 nodeInfo.view = nodeView;
-                var nodeWidth = this.widthOfNodeInPath(this, nodeInfo.nodePath);
-                if(nodeWidth > maxContentWidth){
-                    maxContentWidth = nodeWidth;
-                }
+            }
+            var nodeWidth = this.widthOfNodeInPath(this, nodeInfo.nodePath);
+            if(nodeWidth > maxContentWidth){
+                maxContentWidth = nodeWidth;
             }
         }
         if(nodeInfo.childNodes){
@@ -191,11 +201,11 @@ hy.gui.TreeView.prototype._recycleAllNodeView = function(){
         }
         this._reuseNodeViews[reuseIdentity].push(nodeView);
         var nodePath = nodeView.getNodePath();
-        var node = this._nodeInfos;
+        var nodeInfo = this._nodeInfos;
         for(var i= 0,nodeDeepth=nodePath.length ; i < nodeDeepth ; ++i){
-            node = node.childNodes[nodePath[i]];
+            nodeInfo = nodeInfo.childNodes[nodePath[i]];
         }
-        node.view = null;
+        nodeInfo.view = null;
         nodeView.setNodePath(null);
         nodeView.removeFromParent(false);
         nodeView.setSelected(false);

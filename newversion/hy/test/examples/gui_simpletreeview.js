@@ -4,13 +4,31 @@ var testNode = new hy.gui.SimpleTreeView({
     width:200,
     height:200,
     normalColor:'#f00',
+    nodeSelectEnable:true,
+    nodeEditEnable:true,
+    nodeMoveEnable:true,
     root:{
-        name:'rootssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss',
+        name:'rootsssss',
         expanded:true,
         childNodes:[
             {name:"node1"},
             {name:"node2"},
-            {name:"node3"}
+            {name:"node3"},
+            {name:"node4"},
+            {name:"node5"},
+            {name:"node6"},
+            {name:"node7"},
+            {name:"node8"},
+            {name:"node9"},
+            {name:"node10"},
+            {name:"node11"},
+            {name:"node12"},
+            {name:"node13"},
+            {name:"node14"},
+            {name:"node15"},
+            {name:"node16"},
+            {name:"node17"},
+            {name:"node18"}
         ]
     }
 });

@@ -1,11 +1,11 @@
 var hy = hy || {};
 hy.gui = hy.gui || {};
 hy.gui.ScrollView = hy.extend(hy.gui.View);
+hy.gui.ScrollView.prototype.defaultMouseEnable = true;
 hy.gui.ScrollView.prototype.defaultWheelEnable = true;
 hy.gui.ScrollView.prototype.defaultWheelStep = 20;
 hy.gui.ScrollView.prototype.defaultWidthFit = false;
 hy.gui.ScrollView.prototype.defaultHeightFit = false;
-hy.gui.ScrollView.prototype.defaultBackgroundColor = "#f00";
 hy.gui.ScrollView.prototype.defaultScrollBarVisible = true;
 hy.gui.ScrollView.prototype.init = function(config){
     this.superCall("init",[config]);
@@ -13,7 +13,7 @@ hy.gui.ScrollView.prototype.init = function(config){
     this._heightFit = this.isUndefined(config.heightFit) ? this.defaultHeightFit : config.heightFit;
     this._wheelStep = this.isUndefined(config.wheelStep) ? this.defaultWheelStep : config.wheelStep;
     this._scrollBarVisible = this.isUndefined(config.scrollBarVisible) ? this.defaultScrollBarVisible : config.scrollBarVisible;
-    this._contentView = this.isUndefined(config.contentView) ? (new hy.gui.View({normalColor:"#0f0",activeColor:null})) : config.contentView;
+    this._contentView = this.isUndefined(config.contentView) ? (new hy.gui.View({mouseEnable:false})) : config.contentView;
     this._horScrollBar = new hy.gui.ScrollBar({paddingLeft:0, paddingRight:0,paddingTop:1,paddingBottom:1,height:10,scrollDirection:0});
     this._verScrollBar = new hy.gui.ScrollBar({paddingLeft:1, paddingRight:1,paddingTop:0,paddingBottom:0,width:10,scrollDirection:1});
     this.addChildNodeAtLayer(this._contentView, 0);
@@ -84,12 +84,6 @@ hy.gui.ScrollView.prototype._layoutScrollView = function(sender){
         var height = this.getHeight();
         var minContentWidth = this._contentView.getWidth();
         var minContentHeight = this._contentView.getHeight();
-        //if(this.getWidthFit()){
-        //    minContentWidth = this._contentView.getMinWidth();
-        //}
-        //if(this.getHeightFit()){
-        //    minContentHeight = this._contentView.getMinHeight();
-        //}
         if(minContentWidth <= width && minContentHeight <= height){
             /*两者都不显示*/
             this._horScrollBar.setPaddingRight(0);

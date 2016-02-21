@@ -136,34 +136,50 @@ hy.TextLayouter.prototype.getTextLayoutWidth = function(text,font){
 hy.TextLayouter.prototype.getTextLayoutArray = function(text,font,maxWidth){
     if(!text){ text = ""; }
     var charWidthDic = this.getCharWidthDic(font);
-    var length = text.length, curLineWidth = 0, curCharWidth = 0, preCharIndex = 0;
+    var length = text.length;
+    var curLineWidth = 0, curCharWidth = 0;
+    var startCharIndex = 0, preSpaceIndex = -1, preSpaceWidth = 0;
     var curChar = null;
     var textArr = [];
+    var clearSpace = false;
     if(maxWidth > 0){
         for(var i = 0; i < length ; ++i){
             curChar = text[i];
             if(curChar > '~'){
-                curCharWidth = charWidthDic['zh'];
+                curCharWidth = charWidthDic["zh"];
+                curLineWidth += curCharWidth;
+                preSpaceIndex = i;
+                preSpaceWidth = curLineWidth;
             }else{
+                curCharWidth = charWidthDic[curChar];
+                curLineWidth += curCharWidth;
                 if(curChar == '\n'){
-                    textArr.push(text.substring(preCharIndex,i));
+                    textArr.push(text.substring(startCharIndex,i));
+                    startCharIndex = i+1;
                     curLineWidth = 0;
-                    preCharIndex = i+1;
+                    clearSpace = false;
                     continue;
-                }else{
-                    curCharWidth = charWidthDic[curChar];
+                }else if(curChar == ' '){
+                    preSpaceIndex = i;
+                    preSpaceWidth = curLineWidth;
                 }
             }
-            curLineWidth += curCharWidth;
             if(curLineWidth > maxWidth){
-                textArr.push(text.substring(preCharIndex,i));
-                curLineWidth = curCharWidth;
-                preCharIndex = i;
+                clearSpace = true;
+                if(curChar > '~' || curChar == '' || preSpaceIndex <= startCharIndex){
+                    textArr.push(text.substring(startCharIndex, i));
+                    startCharIndex = i;
+                    curLineWidth = curCharWidth;
+                }else{
+                    textArr.push(text.substring(startCharIndex, preSpaceIndex));
+                    startCharIndex = preSpaceIndex + 1;
+                    curLineWidth -= preSpaceWidth;
+                }
             }
         }
-        if(preCharIndex < length){
-            textArr.push(text.substring(preCharIndex,length));
-        }
+    }
+    if(startCharIndex < length){
+        textArr.push(text.substring(startCharIndex,length));
     }
     return textArr;
 }

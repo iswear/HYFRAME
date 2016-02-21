@@ -100,27 +100,7 @@ hy.Node.prototype.init = function(config){
     this.__dragStartParentPoint = null;
     this.__dragReady = false;
 
-    this.addObserver(this.notifySyncX,this,this.refresh);
-    this.addObserver(this.notifySyncY,this,this.refresh);
-    this.addObserver(this.notifySyncWidth,this,this.refresh);
-    this.addObserver(this.notifySyncHeight,this,this.refresh);
-    this.addObserver(this.notifySyncAnchorX,this,this.refresh);
-    this.addObserver(this.notifySyncAnchorY,this,this.refresh);
-    this.addObserver(this.notifySyncRotateZ,this,this.refresh);
-    this.addObserver(this.notifySyncScaleX,this,this.refresh);
-    this.addObserver(this.notifySyncScaleY,this,this.refresh);
-    this.addObserver(this.notifySyncAlpha,this,this.refresh);
-    this.addObserver(this.notifySyncVisible,this,this.refresh);
-    this.addObserver(this.notifySyncClipBound,this,this.refresh);
-    this.addObserver(this.notifySyncCornorRadius,this,this.refresh);
-
-    this.addObserver(this.notifySyncWidth,this,this.needLayoutSubNodes);
-    this.addObserver(this.notifySyncHeight,this,this.needLayoutSubNodes);
-    this.addObserver(this.notifySyncAnchorX,this,this.needLayoutSubNodes);
-    this.addObserver(this.notifySyncAnchorY,this,this.needLayoutSubNodes);
-
     this.addObserver(this.notifyPaint,this,this._clipBoundForNode);
-
     this.addObserver(this.notifySyncWidth,this,this._syncAnchorPixelX);
     this.addObserver(this.notifySyncAnchorX,this,this._syncAnchorPixelX);
     this.addObserver(this.notifySyncHeight,this,this._syncAnchorPixelY);
@@ -129,7 +109,6 @@ hy.Node.prototype.init = function(config){
     this.addObserver(this.notifySyncRotateZ,this,this._syncCosRotateZ);
     this.addObserver(this.notifyDraging,this,this._nodeDragImpl);
     this.addObserver(this.notifyDragEnd,this,this._nodeDragEnd);
-
 }
 hy.Node.prototype.sync = function(){
     this.superCall("sync",null);
@@ -144,6 +123,7 @@ hy.Node.prototype.setX = function(x){
         x = (x < this._maxX) ? x : this._maxX;
         if(this._x != x){
             this._x = x;
+            this.refresh();
             this.postNotification(this.notifySyncX,null);
         }
     }
@@ -157,6 +137,7 @@ hy.Node.prototype.setY = function(y){
         y = (y < this._maxY) ? y : this._maxY;
         if(this._y != y){
             this._y = y;
+            this.refresh();
             this.postNotification(this.notifySyncY,null);
         }
     }
@@ -170,6 +151,8 @@ hy.Node.prototype.setWidth = function(width){
         width = (width < this._maxWidth) ? width : this._maxWidth;
         if(this._width != width) {
             this._width = width;
+            this.needLayoutSubNodes();
+            this.refresh();
             this.postNotification(this.notifySyncWidth, null);
         }
     }
@@ -183,6 +166,8 @@ hy.Node.prototype.setHeight = function(height){
         height = (height < this._maxHeight) ? height : this._maxHeight;
         if(this._height != height){
             this._height = height;
+            this.needLayoutSubNodes();
+            this.refresh();
             this.postNotification(this.notifySyncHeight, null);
         }
     }
@@ -193,6 +178,8 @@ hy.Node.prototype.getHeight = function(){
 hy.Node.prototype.setAnchorX = function(anchorX){
     if(this._anchorX != anchorX){
         this._anchorX = anchorX;
+        this.needLayoutSubNodes();
+        this.refresh();
         this.postNotification(this.notifySyncAnchorX, null);
     }
 }
@@ -202,6 +189,8 @@ hy.Node.prototype.getAnchorX = function(){
 hy.Node.prototype.setAnchorY = function(anchorY){
     if(this._anchorY != anchorY){
         this._anchorY = anchorY;
+        this.needLayoutSubNodes();
+        this.refresh();
         this.postNotification(this.notifySyncAnchorY, null);
     }
 }
@@ -211,6 +200,7 @@ hy.Node.prototype.getAnchorY = function(){
 hy.Node.prototype.setScaleX = function(scaleX){
     if(this._scaleX != scaleX){
         this._scaleX = scaleX;
+        this.refresh();
         this.postNotification(this.notifySyncScaleX,null);
     }
 }
@@ -220,6 +210,7 @@ hy.Node.prototype.getScaleX = function(){
 hy.Node.prototype.setScaleY = function(scaleY){
     if(this._scaleY != scaleY){
         this._scaleY = scaleY;
+        this.refresh();
         this.postNotification(this.notifySyncScaleY,null);
     }
 }
@@ -229,6 +220,7 @@ hy.Node.prototype.getScaleY = function(){
 hy.Node.prototype.setAlpha = function(alpha){
     if(this._alpha != alpha){
         this._alpha = alpha;
+        this.refresh();
         this.postNotification(this.notifySyncAlpha, null);
     }
 }
@@ -238,6 +230,7 @@ hy.Node.prototype.getAlpha = function(){
 hy.Node.prototype.setRotateZ = function(rotateZ){
     if(this._rotateZ != rotateZ){
         this._rotateZ = rotateZ;
+        this.refresh();
         this.postNotification(this.notifySyncRotateZ, null);
     }
 }
@@ -247,6 +240,7 @@ hy.Node.prototype.getRotateZ = function(){
 hy.Node.prototype.setVisible = function(visible){
     if(this._visible != visible){
         this._visible = visible;
+        this.refresh();
         this.postNotification(this.notifySyncVisible, null);
     }
 }
@@ -256,6 +250,7 @@ hy.Node.prototype.getVisible = function(){
 hy.Node.prototype.setClipBound = function(clipBound){
     if(this._clipBound != clipBound){
         this._clipBound = clipBound;
+        this.refresh();
         this.postNotification(this.notifySyncClipBound, null);
     }
 }
@@ -265,6 +260,7 @@ hy.Node.prototype.getClipBound = function(){
 hy.Node.prototype.setCornorRadius = function(radius){
     if(this._cornorRadius != radius){
         this._cornorRadius = radius;
+        this.refresh();
         this.postNotification(this.notifySyncCornorRadius,null);
     }
 }
@@ -548,7 +544,7 @@ hy.Node.prototype.removeFromParent = function(clean){
 hy.Node.prototype.focus = function(e){
     var app = this.getApplication();
     if(app){
-        app.setFocusNode(e,node);
+        app.setFocusNode(e,this);
         return true;
     }else{
         return false;
@@ -1018,13 +1014,13 @@ hy.Node.prototype._dispatchContextMenu = function(e){
     }
 }
 hy.Node.prototype._dispatchLoop = function(dc,deltaTime,paint){
+    /*进入当前帧*/
+    this.postNotification(this.notifyEnterFrame,[deltaTime]);
     /*重新布局*/
     if(this._needLayoutSubNodes){
         this.postNotification(this.notifyLayoutSubNodes,null);
         this._needLayoutSubNodes = false;
     }
-    /*进入当前帧*/
-    this.postNotification(this.notifyEnterFrame,[deltaTime]);
     /*绘制操作*/
     if(this._visible && paint){
         dc.pushTransform(this._x,this._y,this._scaleX,this._scaleY,this._rotateZ,this._clipBound);

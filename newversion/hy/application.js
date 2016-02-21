@@ -39,6 +39,7 @@ hy.Application.prototype.init = function(config){
     this._actionManager = new hy.action.Manager({});
     this._fileLoader = new hy.net.FileLoader({});
     this._inputTextBox = new hy.html.TextBox({});
+    this._contextMenu = new hy.gui.SimpleListView({});
     //this._inputNode = null;
     //this._inputTextBox = document.createElement("input");
     //this._inputTextBox.type = "text";
@@ -156,14 +157,22 @@ hy.Application.prototype.getInputTextBox = function(){
 
 hy.Application.prototype.setFocusNode = function(e,node){
     if(node){
-        if(this._focusNode != node){
-            var preFocusNode = this._focusNode;
-            this._focusNode = node;
-            preFocusNode.postNotification(node.notifyBlur,[e]);
-            node.postNotification(node.notifyFocus,[e]);
+        if(this._focusNode){
+            if(this._focusNode != node){
+                var preFocusNode = this._focusNode;
+                this._focusNode = node;
+                preFocusNode.postNotification(preFocusNode.notifyBlur,[e]);
+                node.postNotification(node.notifyFocus,[e]);
+            }
         }else{
             this._focusNode = node;
             node.postNotification(node.notifyFocus,[e]);
+        }
+    }else{
+        if(this._focusNode){
+            var preFocusNode = this._focusNode;
+            this._focusNode = null;
+            preFocusNode.postNotification(preFocusNode.notifyBlur,[e]);
         }
     }
 }
@@ -174,7 +183,10 @@ hy.Application.prototype.getFocusNode = function(){
 hy.Application.prototype.setMouseDownNode = function(e,node){
     this._mouseDownNodes[e.identifier] = node;
     if(node){
+        this.setFocusNode(e, node);
         node.postNotification(node.notifyMouseDown,[e]);
+    }else{
+        this.setFocusNode(e, null);
     }
 }
 hy.Application.prototype.getMouseDownNode = function(id){
@@ -624,7 +636,9 @@ hy.Application.prototype.initEventDispatcher = function(){
         hy.event.addEventListener(canvas,"click", this, function(e){
             if(this._runNode){
                 var e = hy.event.createEvent(e,this);
-                this._runNode._dispatchClick(e);
+                if(e.button == 0){
+                    this._runNode._dispatchClick(e);
+                }
                 e.stopDispatch();
                 e.preventDefault();
             }
@@ -632,7 +646,9 @@ hy.Application.prototype.initEventDispatcher = function(){
         hy.event.addEventListener(canvas,"dblclick", this, function(e){
             if(this._runNode){
                 var e = hy.event.createEvent(e,this);
-                this._runNode._dispatchDblClick(e);
+                if(e.button == 0){
+                    this._runNode._dispatchDblClick(e);
+                }
                 e.stopDispatch();
                 e.preventDefault();
             }
@@ -649,7 +665,9 @@ hy.Application.prototype.initEventDispatcher = function(){
             this.setMouseDown(true);
             if(this._runNode){
                 var e = hy.event.createEvent(e,this);
-                this._runNode._dispatchMouseDown(e);
+                if(e.button == 0){
+                    this._runNode._dispatchMouseDown(e);
+                }
                 this.hideContextMenu();
                 e.stopDispatch();
                 e.preventDefault();

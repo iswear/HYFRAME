@@ -12,7 +12,7 @@ hy.gui.Label.prototype.notifySyncTextLineNum = "synctextlinenum";
 hy.gui.Label.prototype.notifySyncTextPadding = "synctextpadding";
 hy.gui.Label.prototype.defaultText = "Label";
 hy.gui.Label.prototype.defaultTextColor = "#000000";
-hy.gui.Label.prototype.defaultTextHorAlign = hy.gui.TEXT_VERALIGN_CENTER;
+hy.gui.Label.prototype.defaultTextHorAlign = hy.gui.TEXT_HORALIGN_LEFT;
 hy.gui.Label.prototype.defaultTextVerAlign = hy.gui.TEXT_VERALIGN_CENTER;
 hy.gui.Label.prototype.defaultLineHeight = 0;
 hy.gui.Label.prototype.defaultTextFont = "14px sans-serif";
@@ -59,15 +59,6 @@ hy.gui.Label.prototype.init = function(config){
     this.addObserver(this.notifySyncTextPadding,this,this._syncLabelRenderCacheInvalid);
     this.addObserver(this.notifySyncWidth,this,this._syncLabelTextSizeReason);
     this.addObserver(this.notifyPaint,this,this._paintLabelText);
-    this.addObserver(this.notifySyncText,this,this.refresh);
-    this.addObserver(this.notifySyncTextFont,this,this.refresh);
-    this.addObserver(this.notifySyncTextColor,this,this.refresh);
-    this.addObserver(this.notifySyncTextHidden,this,this.refresh);
-    this.addObserver(this.notifySyncTextHorAlign,this,this.refresh);
-    this.addObserver(this.notifySyncTextVerAlign,this,this.refresh);
-    this.addObserver(this.notifySyncTextLineHeight,this,this.refresh);
-    this.addObserver(this.notifySyncTextLineNum,this,this.refresh);
-    this.addObserver(this.notifySyncTextPadding,this,this.refresh);
 }
 hy.gui.Label.prototype.sync = function(){
     this.superCall("sync",null);
@@ -79,6 +70,7 @@ hy.gui.Label.prototype.sync = function(){
 hy.gui.Label.prototype.setText = function(text){
     if(this._text != text){
         this._text = text;
+        this.refresh();
         this.postNotification(this.notifySyncText,null);
     }
 }
@@ -88,6 +80,7 @@ hy.gui.Label.prototype.getText = function(){
 hy.gui.Label.prototype.setTextFont = function(font){
     if(this._textFont != font){
         this._textFont = font;
+        this.refresh();
         this.postNotification(this.notifySyncTextFont,null);
     }
 }
@@ -97,6 +90,7 @@ hy.gui.Label.prototype.getTextFont = function(){
 hy.gui.Label.prototype.setTextColor = function(color){
     if(this._textColor != color){
         this._textColor = color;
+        this.refresh();
         this.postNotification(this.notifySyncTextColor,null);
     }
 }
@@ -106,6 +100,7 @@ hy.gui.Label.prototype.getTextColor = function(){
 hy.gui.Label.prototype.setTextHidden = function(hidden){
     if(this._textHidden != hidden){
         this._textHidden = hidden;
+        this.refresh();
         this.postNotification(this.notifySyncTextHidden,null);
     }
 }
@@ -115,6 +110,7 @@ hy.gui.Label.prototype.getTextHidden = function(){
 hy.gui.Label.prototype.setTextHorAlign = function(textAlign){
     if(this._textHorAlign != textAlign){
         this._textHorAlign = textAlign;
+        this.refresh();
         this.postNotification(this.notifySyncTextHorAlign,null);
     }
 }
@@ -124,6 +120,7 @@ hy.gui.Label.prototype.getTextHorAlign = function(){
 hy.gui.Label.prototype.setTextVerAlign = function(textAlign){
     if(this._textVerAlign != textAlign){
         this._textVerAlign = textAlign;
+        this.refresh();
         this.postNotification(this.notifySyncTextVerAlign,null);
     }
 }
@@ -133,6 +130,7 @@ hy.gui.Label.prototype.getTextVerAlign = function(){
 hy.gui.Label.prototype.setTextLineHeight = function(lineHeight){
     if(this._textLineHeight != lineHeight){
         this._textLineHeight = lineHeight;
+        this.refresh();
         this.postNotification(this.notifySyncTextLineHeight,null);
     }
 }
@@ -142,6 +140,7 @@ hy.gui.Label.prototype.getTextLineHeight = function(){
 hy.gui.Label.prototype.setTextLineNum = function(lineNum){
     if(this._textLineNum != lineNum){
         this._textLineNum = lineNum;
+        this.refresh();
         this.postNotification(this.notifySyncTextLineNum,null);
     }
 }
@@ -151,6 +150,7 @@ hy.gui.Label.prototype.getTextLineNum = function(){
 hy.gui.Label.prototype.setTextPaddingLeft = function(padding){
     if(this._textPaddingLeft != padding){
         this._textPaddingLeft = padding;
+        this.refresh();
         this.postNotification(this.notifySyncTextPadding,null);
     }
 }
@@ -160,6 +160,7 @@ hy.gui.Label.prototype.getTextPaddingLeft = function(){
 hy.gui.Label.prototype.setTextPaddingRight = function(padding){
     if(this._textPaddingRight != padding){
         this._textPaddingRight = padding;
+        this.refresh();
         this.postNotification(this.notifySyncTextPadding,null);
     }
 }
@@ -169,6 +170,7 @@ hy.gui.Label.prototype.getTextPaddingRight = function(){
 hy.gui.Label.prototype.setTextPaddingTop = function(padding){
     if(this._textPaddingTop != padding){
         this._textPaddingTop = padding;
+        this.refresh();
         this.postNotification(this.notifySyncTextPadding,null);
     }
 }
@@ -178,6 +180,7 @@ hy.gui.Label.prototype.getTextPaddingTop = function(){
 hy.gui.Label.prototype.setTextPaddingBottom = function(padding){
     if(this._textPaddingBottom != padding){
         this._textPaddingBottom = padding;
+        this.refresh();
         this.postNotification(this.notifySyncTextPadding,null);
     }
 }
@@ -217,7 +220,8 @@ hy.gui.Label.prototype._pickupLabelTextFontSize = function(){
 }
 hy.gui.Label.prototype._layoutLabelText = function(){
     if(this._textLineNum != 1){
-        this.__textMutliLines = hy.textlayouter.getInstance().getTextLayoutArray(this._text,this._textFont,this.getWidth()-this._textPaddingLeft-this._textPaddingRight);
+        var borderWidth = (this._borderColor && this._borderWidth > 0) ? this._borderWidth : 0;
+        this.__textMutliLines = hy.textlayouter.getInstance().getTextLayoutArray(this._text,this._textFont,this.getWidth()-this._textPaddingLeft-this._textPaddingRight-2*borderWidth);
     }else{
         this.__textMutliLines = [this._text];
     }

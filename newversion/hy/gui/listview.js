@@ -24,7 +24,12 @@ hy.gui.ListView.prototype.init = function(config) {
     this._cellViews = [];
     this._cellInfos = [];/*{y:(Number),height:(Number),view:(view)}*/
     this.__needReloadList = false;
+    this.__needMallocListView = false;
+    var contentView = this.getContentView();
+    contentView.addObserver(contentView.notifySyncY, this, this.needMallocListView);
+    contentView.addObserver(contentView.notifySyncHeight, this, this.needMallocListView);
     this.addObserver(this.notifyEnterFrame, this, this._reloadList);
+    this.addObserver(this.notifyEnterFrame, this, this._mallocListView);
     this.addObserver(this.notifyLayoutSubNodes, this, this._layoutListCellViews);
     this.needReloadList();
 }
@@ -59,7 +64,7 @@ hy.gui.ListView.prototype.getFooterViewFloat = function(){
     return this._footerViewFloat;
 }
 hy.gui.ListView.prototype.getCellViewOfCellIndex = function(cellIndex){
-    if(cellIndex < this._cellInfos.length) {
+    if(cellIndex >= 0 && cellIndex < this._cellInfos.length) {
         return this._cellInfos[cellIndex].view;
     }else{
         return null;
@@ -75,6 +80,9 @@ hy.gui.ListView.prototype.getReuseCellViewOfIdentity = function(reuseIdentity){
 
 hy.gui.ListView.prototype.needReloadList = function(){
     this.__needReloadList = true;
+}
+hy.gui.ListView.prototype.needMallocListView = function(){
+    this.__needMallocListView = true;
 }
 hy.gui.ListView.prototype._reloadList = function(){
     if(this.__needReloadList){
@@ -110,70 +118,73 @@ hy.gui.ListView.prototype._reloadList = function(){
             cursorY += this._footerView.getHeight();
         }
         this.setContentHeight(cursorY);
-        this._mallocListCellViews();
+        this.needMallocListView();
     }
 }
-hy.gui.ListView.prototype._mallocListCellViews = function(){
-    var dataSource = this;
-    if(this._dataSource != null){
-        dataSource = this._dataSource;
-    }
-    var contentOffsetY = this.getContentOffsetY();
-    var contentMaxY = contentOffsetY + this.getHeight();
-    for(var i=this._cellViews.length-1;i>=0;--i){
-        var cellView = this._cellViews[i];
-        if(cellView.getY() >= contentMaxY || (cellView.getY()+cellView.getHeight() <= contentOffsetY)){
-            var reuseIdentity = cellView.getReuseIdentity();
-            if(!this._reuseCellViews[reuseIdentity]){
-                this._reuseCellViews[reuseIdentity] = [];
-            }
-            this._reuseCellViews[reuseIdentity].push(cellView);
-            this._cellInfos[cellView.getCellIndex()].view = null;
-            cellView.setCellIndex(-1);
-            cellView.removeFromParent(false);
-            cellView.setSelected(false);
-            this._cellViews.splice(i, 1);
+hy.gui.ListView.prototype._mallocListView = function(){
+    if(this.__needMallocListView){
+        this.__needMallocListView = false;
+        var dataSource = this;
+        if(this._dataSource != null){
+            dataSource = this._dataSource;
         }
-    }
-    var cellWidth = this.getContentWidth();
-    var cellMaxWidth = 0;
-    for(var i= 0, cellNum = this._cellInfos.length ; i < cellNum ; ++i){
-        var cellInfo = this._cellInfos[i];
-        if(cellInfo.y < contentMaxY){
-            if(cellInfo.y + cellInfo.height > contentOffsetY && cellInfo.height > 0){
-                if(!cellInfo.view){
-                    var cellView = dataSource.viewOfListCell(this,i);
-                    if(cellView != null){
-                        var contextMenu = dataSource.contextMenuOfListCell(this,i);
-                        cellView.setContextMenu(contextMenu);
-                        cellView.setX(0);
-                        cellView.setY(cellInfo.y);
-                        cellView.setWidth(cellWidth);
-                        cellView.setHeight(cellInfo.height);
-                        cellView.setCellIndex(i);
-                        cellView.addObserver(this.notifyMouseDown, this, this._mouseDownListCell);
-                        cellView.addObserver(this.notifyMouseUp, this, this._mouseUpListCell);
-                        cellView.addObserver(this.notifyMouseOver, this, this._mouseOverListCell);
-                        cellView.addObserver(this.notifyMouseOut, this, this._mouseOutListCell);
-                        cellView.addObserver(this.notifyMouseMove, this, this._mouseMoveListCell);
-                        cellView.addObserver(this.notifyClick, this, this._clickListCell);
-                        cellView.addObserver(this.notifyDblClick, this, this._dblclickListCell);
-                        cellView.addObserver(this.notifyContextMenu, this, this._contextMenuListCell);
-                        this._cellViews.push(cellView);
-                        this.getContentView().addChildNodeAtLayer(cellView, 0);
-                        cellInfo.view = cellView;
-                        var cellViewWidth = dataSource.widthOfListCell(this, i);
-                        if(cellViewWidth > cellMaxWidth){
-                            cellMaxWidth = cellViewWidth;
+        var contentOffsetY = this.getContentOffsetY();
+        var contentMaxY = contentOffsetY + this.getHeight();
+        for(var i=this._cellViews.length-1;i>=0;--i){
+            var cellView = this._cellViews[i];
+            if(cellView.getY() >= contentMaxY || (cellView.getY()+cellView.getHeight() <= contentOffsetY)){
+                var reuseIdentity = cellView.getReuseIdentity();
+                if(!this._reuseCellViews[reuseIdentity]){
+                    this._reuseCellViews[reuseIdentity] = [];
+                }
+                this._reuseCellViews[reuseIdentity].push(cellView);
+                this._cellInfos[cellView.getCellIndex()].view = null;
+                cellView.setCellIndex(-1);
+                cellView.removeFromParent(false);
+                cellView.setSelected(false);
+                this._cellViews.splice(i, 1);
+            }
+        }
+        var cellWidth = this.getContentWidth();
+        var cellMaxWidth = 0;
+        for(var i= 0, cellNum = this._cellInfos.length ; i < cellNum ; ++i){
+            var cellInfo = this._cellInfos[i];
+            if(cellInfo.y < contentMaxY){
+                if(cellInfo.y + cellInfo.height > contentOffsetY && cellInfo.height > 0){
+                    if(!cellInfo.view){
+                        var cellView = dataSource.viewOfListCell(this,i);
+                        if(cellView != null){
+                            var contextMenu = dataSource.contextMenuOfListCell(this,i);
+                            cellView.setContextMenu(contextMenu);
+                            cellView.setX(0);
+                            cellView.setY(cellInfo.y);
+                            cellView.setWidth(cellWidth);
+                            cellView.setHeight(cellInfo.height);
+                            cellView.setCellIndex(i);
+                            cellView.addObserver(this.notifyMouseDown, this, this._mouseDownListCell);
+                            cellView.addObserver(this.notifyMouseUp, this, this._mouseUpListCell);
+                            cellView.addObserver(this.notifyMouseOver, this, this._mouseOverListCell);
+                            cellView.addObserver(this.notifyMouseOut, this, this._mouseOutListCell);
+                            cellView.addObserver(this.notifyMouseMove, this, this._mouseMoveListCell);
+                            cellView.addObserver(this.notifyClick, this, this._clickListCell);
+                            cellView.addObserver(this.notifyDblClick, this, this._dblclickListCell);
+                            cellView.addObserver(this.notifyContextMenu, this, this._contextMenuListCell);
+                            this._cellViews.push(cellView);
+                            this.getContentView().addChildNodeAtLayer(cellView, 0);
+                            cellInfo.view = cellView;
                         }
                     }
+                    var cellViewWidth = dataSource.widthOfListCell(this, i);
+                    if(cellViewWidth > cellMaxWidth){
+                        cellMaxWidth = cellViewWidth;
+                    }
                 }
+            }else{
+                break;
             }
-        }else{
-            break;
         }
+        this.setContentWidth(cellMaxWidth);
     }
-    this.setContentWidth(cellMaxWidth);
 }
 hy.gui.ListView.prototype._recycleAllCellViews = function(){
     for(var i=this._cellViews.length-1;i>=0;--i){
