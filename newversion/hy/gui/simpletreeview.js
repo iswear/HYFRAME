@@ -97,13 +97,14 @@ hy.gui.SimpleTreeView.prototype.moveNodeFromTo = function(fromPath, toPath){
         var toIndex = toPath[toPath.length - 1];
         if(fromParNodeData == toParNodeData){
             if(fromIndex > toIndex){
-                toParNodeData.childNodes.splice(toIndex, 0, fromNodeData);
-                fromParNodeData.childNodes.splice(fromIndex, 1);
-            }else{
                 fromParNodeData.childNodes.splice(fromIndex, 1);
                 toParNodeData.childNodes.splice(toIndex, 0, fromNodeData);
+                this.needReloadTree();
+            }else if(fromIndex < toIndex){
+                toParNodeData.childNodes.splice(toIndex, 0, fromNodeData);
+                fromParNodeData.childNodes.splice(fromIndex, 1);
+                this.needReloadTree();
             }
-            this.needReloadTree();
         }else{
             if(!toParNodeData.leaf){
                 if(!toParNodeData.childNodes){
@@ -202,19 +203,19 @@ hy.gui.SimpleTreeView.prototype._moveLocTreeNode = function(sender, e){
                 var pointOverNodeView = overNodeView.transPointFromAncestorNode({x: e.offsetX, y: e.offsetY}, null);
                 if(overNodeData.leaf){
                     if(pointOverNodeView.y < overNodeView.getHeight()/4 && this.__moveOverNodePath.length > 0){
-                        overNodeView.setNodeInsertMode(2);
+                        overNodeView.setNodeInsertMode(1);
                     }else if(pointOverNodeView.y > 3*overNodeView.getHeight()/4 && this.__moveOverNodePath.length > 0){
-                        overNodeView.setNodeInsertMode(3);
+                        overNodeView.setNodeInsertMode(2);
                     }else{
                         overNodeView.setNodeInsertMode(0);
                     }
                 }else{
                     if(pointOverNodeView.y < overNodeView.getHeight()/4 && this.__moveOverNodePath.length > 0){
-                        overNodeView.setNodeInsertMode(2);
-                    }else if(pointOverNodeView.y > 3*overNodeView.getHeight()/4 && this.__moveOverNodePath.length > 0){
-                        overNodeView.setNodeInsertMode(3);
-                    }else{
                         overNodeView.setNodeInsertMode(1);
+                    }else if(pointOverNodeView.y > 3*overNodeView.getHeight()/4 && this.__moveOverNodePath.length > 0){
+                        overNodeView.setNodeInsertMode(2);
+                    }else{
+                        overNodeView.setNodeInsertMode(3);
                     }
                 }
             }
@@ -233,16 +234,16 @@ hy.gui.SimpleTreeView.prototype._moveOkTreeNode = function(sender, e){
             if(overNodeView){
                 switch (overNodeView.getNodeInsertMode()){
                     case 1:{
-                        toNodePath.push(0);
                         this.setSelectedNodePath(this.moveNodeFromTo(this._selNodePath, toNodePath));
                         break;
                     }
                     case 2:{
+                        toNodePath[toNodePath.length - 1] = [toNodePath.length - 1] + 1;
                         this.setSelectedNodePath(this.moveNodeFromTo(this._selNodePath, toNodePath));
                         break;
                     }
                     case 3:{
-                        toNodePath[toNodePath.length - 1] = [toNodePath.length - 1] + 1;
+                        toNodePath.push(0);
                         this.setSelectedNodePath(this.moveNodeFromTo(this._selNodePath, toNodePath));
                         break;
                     }
@@ -253,6 +254,7 @@ hy.gui.SimpleTreeView.prototype._moveOkTreeNode = function(sender, e){
                 overNodeView.setNodeInsertMode(0);
             }
         }
+        this.__moveNodeInit = false;
     }
 }
 

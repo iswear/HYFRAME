@@ -28,6 +28,7 @@ hy.gui.SimpleTreeNodeView.prototype.init = function(config){
     this.addChildNodeAtLayer(this._nodeEditBox, 0);
     this.addChildNodeAtLayer(this._nodeExpandIcon, 0);
     this._nodeExpandIcon.addObserver(this._nodeExpandIcon.notifyPaint, this, this._paintNodeExpandIcon);
+    this.addObserver(this.notifyPaint, this, this._paintNodeInsertMode);
     this.addObserver(this.notifyLayoutSubNodes, this, this._layoutTreeNodeView);
     this.addObserver(this.notifyMouseDown, this, this._nodeEditBoxReady);
     this.addObserver(this.notifyMouseMove, this, this._nodeEditBoxInvalid);
@@ -76,7 +77,10 @@ hy.gui.SimpleTreeNodeView.prototype.getNodeData = function(){
     return this._nodeData;
 }
 hy.gui.SimpleTreeNodeView.prototype.setNodeInsertMode = function(mode){
-    this._nodeInsertMode = mode;
+    if(this._nodeInsertMode != mode){
+        this._nodeInsertMode = mode;
+        this.refresh();
+    }
 }
 hy.gui.SimpleTreeNodeView.prototype.getNodeInsertMode = function(){
     return this._nodeInsertMode;
@@ -110,7 +114,7 @@ hy.gui.SimpleTreeNodeView.prototype._paintNodeExpandIcon = function(sender,dc,re
         dc.lineTo(width/2, 2*height/3);
     }
     dc.closePath();
-    dc.setFillStyle("#000000");
+    dc.setFillStyle("#000");
     dc.fill();
 }
 hy.gui.SimpleTreeNodeView.prototype._paintNodeInsertMode = function(sender, dc, rect){
@@ -119,7 +123,7 @@ hy.gui.SimpleTreeNodeView.prototype._paintNodeInsertMode = function(sender, dc, 
             if(this.getNodePath()){
                 var nodeDeepth = this.getNodePath().length;
                 var x = nodeDeepth * this.getHeight()+1;
-                dc.setStrokeStyle("#f00");
+                dc.setStrokeStyle("#00f");
                 dc.strokeRect(x, -1, this.getWidth()-x, 2);
             }
             break;
@@ -128,7 +132,7 @@ hy.gui.SimpleTreeNodeView.prototype._paintNodeInsertMode = function(sender, dc, 
             if(this.getNodePath()){
                 var nodeDeepth = this.getNodePath().length;
                 var x = nodeDeepth * this.getHeight()+1;
-                dc.setStrokeStyle("#f00");
+                dc.setStrokeStyle("#00f");
                 dc.strokeRect(x, this.getHeight()-1, this.getWidth()-x, 2);
             }
             break;
@@ -140,7 +144,7 @@ hy.gui.SimpleTreeNodeView.prototype._paintNodeInsertMode = function(sender, dc, 
                 var y = 1;
                 var width = this.getWidth()-x-1;
                 var height = this.getHeight()-2;
-                dc.setStrokeStyle("#f00");
+                dc.setStrokeStyle("#00f");
                 dc.strokeRect(x,y,width,height);
             }
             break;

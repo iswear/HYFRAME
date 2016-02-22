@@ -119,6 +119,7 @@ hy.gui.TreeView.prototype._reloadTreeNode = function(dataSource , nodeInfo, node
         layoutY = this._reloadTreeNode(dataSource, childNode, nextNodePathStr, layoutY);
         nodeInfo.childNodes.push(childNode);
     }
+    this.needMallocTreeView();
     return layoutY;
 }
 hy.gui.TreeView.prototype._mallocTreeView = function(){
@@ -202,8 +203,8 @@ hy.gui.TreeView.prototype._recycleAllNodeView = function(){
         this._reuseNodeViews[reuseIdentity].push(nodeView);
         var nodePath = nodeView.getNodePath();
         var nodeInfo = this._nodeInfos;
-        for(var i= 0,nodeDeepth=nodePath.length ; i < nodeDeepth ; ++i){
-            nodeInfo = nodeInfo.childNodes[nodePath[i]];
+        for(var j= 0,nodeDeepth=nodePath.length ; j < nodeDeepth ; ++j){
+            nodeInfo = nodeInfo.childNodes[nodePath[j]];
         }
         nodeInfo.view = null;
         nodeView.setNodePath(null);

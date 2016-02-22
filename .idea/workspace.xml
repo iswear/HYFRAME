@@ -18,134 +18,17 @@
   <component name="DaemonCodeAnalyzer">
     <disable_hints />
   </component>
-  <component name="DockManager">
-    <window id="1">
-      <content type="file-editors">
-        <state>
-          <leaf>
-            <file leaf-file-name="SimpleListView.js" pinned="false" current-in-tab="false">
-              <entry file="file://$PROJECT_DIR$/gui/SimpleListView.js">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state vertical-scroll-proportion="-10.6" vertical-offset="518" max-vertical-offset="1330">
-                    <caret line="127" column="52" selection-start-line="127" selection-start-column="52" selection-end-line="127" selection-end-column="52" />
-                    <folding>
-                      <element signature="e#0#49#0" expanded="false" />
-                      <element signature="e#94#120#0" expanded="false" />
-                      <element signature="e#506#954#0" expanded="false" />
-                      <element signature="e#1018#1306#0" expanded="false" />
-                      <element signature="e#1370#1559#0" expanded="false" />
-                      <element signature="e#1626#1679#0" expanded="false" />
-                      <element signature="e#1739#1768#0" expanded="false" />
-                      <element signature="e#1825#1864#0" expanded="false" />
-                      <element signature="e#1925#1961#0" expanded="false" />
-                      <element signature="e#2024#2056#0" expanded="false" />
-                      <element signature="e#2129#2167#0" expanded="false" />
-                      <element signature="e#2229#2260#0" expanded="false" />
-                      <element signature="e#2327#2359#0" expanded="false" />
-                      <element signature="e#2433#2524#0" expanded="false" />
-                      <element signature="e#2599#2636#0" expanded="false" />
-                      <element signature="e#2711#2897#0" expanded="false" />
-                      <element signature="e#2737#2895#0" expanded="false" />
-                      <element signature="e#2842#2889#0" expanded="false" />
-                      <element signature="e#2939#2965#0" expanded="false" />
-                      <element signature="e#3267#3905#0" expanded="false" />
-                      <element signature="e#3965#4074#0" expanded="false" />
-                      <element signature="e#4128#4155#0" expanded="false" />
-                      <element signature="e#4214#4265#0" expanded="false" />
-                      <element signature="e#4323#4354#0" expanded="false" />
-                      <element signature="e#4421#4480#0" expanded="false" />
-                      <element signature="e#4545#4583#0" expanded="false" />
-                      <element signature="e#4664#4714#0" expanded="false" />
-                      <element signature="e#4777#4813#0" expanded="false" />
-                      <element signature="e#4890#4959#0" expanded="false" />
-                      <element signature="e#5024#5057#0" expanded="false" />
-                      <element signature="e#5692#5818#0" expanded="false" />
-                      <element signature="e#5842#5960#0" expanded="false" />
-                      <element signature="e#6047#6174#0" expanded="false" />
-                      <element signature="e#6079#6172#0" expanded="false" />
-                      <element signature="e#6267#6271#0" expanded="false" />
-                      <element signature="e#6362#6437#0" expanded="false" />
-                      <element signature="e#6530#6607#0" expanded="false" />
-                      <element signature="e#6701#6705#0" expanded="false" />
-                      <element signature="e#6779#6796#0" expanded="false" />
-                      <element signature="e#6882#6899#0" expanded="false" />
-                      <element signature="e#7003#7097#0" expanded="false" />
-                      <element signature="e#7024#7066#0" expanded="false" />
-                      <element signature="e#7070#7095#0" expanded="false" />
-                      <element signature="e#7201#7232#0" expanded="false" />
-                      <element signature="e#7341#7361#0" expanded="false" />
-                      <element signature="e#7446#7662#0" expanded="false" />
-                      <element signature="e#7548#7636#0" expanded="false" />
-                      <element signature="e#7764#8250#0" expanded="false" />
-                      <element signature="e#7855#7941#0" expanded="false" />
-                      <element signature="e#8136#8179#0" expanded="false" />
-                      <element signature="e#8183#8227#0" expanded="false" />
-                    </folding>
-                  </state>
-                </provider>
-              </entry>
-            </file>
-            <file leaf-file-name="SimpleTreeView.js" pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/gui/SimpleTreeView.js">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state vertical-scroll-proportion="0.3327787" vertical-offset="3771" max-vertical-offset="9975">
-                    <caret line="232" column="37" selection-start-line="232" selection-start-column="21" selection-end-line="232" selection-end-column="37" />
-                    <folding>
-                      <element signature="e#6695#6813#0" expanded="false" />
-                      <element signature="e#6873#6991#0" expanded="false" />
-                      <element signature="e#7053#7171#0" expanded="false" />
-                    </folding>
-                  </state>
-                </provider>
-              </entry>
-            </file>
-          </leaf>
-        </state>
-      </content>
-    </window>
-  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="2015.11.28" />
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="textbox.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/newversion/hy/html/textbox.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="830" max-vertical-offset="2014">
-              <caret line="282" column="10" selection-start-line="282" selection-start-column="10" selection-end-line="282" selection-end-column="10" />
-              <folding>
-                <element signature="e#133#7383#0" expanded="false" />
-                <element signature="e#1294#2351#0" expanded="false" />
-                <element signature="e#2435#2617#0" expanded="false" />
-                <element signature="e#2699#2881#0" expanded="false" />
-                <element signature="e#7436#7480#0" expanded="false" />
-                <element signature="e#7528#7571#0" expanded="false" />
-                <element signature="e#7623#7654#0" expanded="false" />
-                <element signature="e#12225#12585#0" expanded="false" />
-                <element signature="e#12641#12771#0" expanded="false" />
-                <element signature="e#12826#12955#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="listview.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/newversion/hy/gui/listview.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="57" max-vertical-offset="4864">
-              <caret line="167" column="20" selection-start-line="167" selection-start-column="20" selection-end-line="167" selection-end-column="20" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="simpletreeview.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="simpletreeview.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/newversion/hy/gui/simpletreeview.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.24955116" vertical-offset="2255" max-vertical-offset="4750">
-              <caret line="194" column="34" selection-start-line="194" selection-start-column="34" selection-end-line="194" selection-end-column="34" />
+            <state vertical-scroll-proportion="1.4333333" vertical-offset="1373" max-vertical-offset="4788">
+              <caret line="102" column="42" selection-start-line="102" selection-start-column="42" selection-end-line="102" selection-end-column="42" />
               <folding>
                 <element signature="e#1339#1372#0" expanded="false" />
                 <element signature="e#1441#1479#0" expanded="false" />
@@ -158,11 +41,11 @@
                 <element signature="e#3565#3641#0" expanded="false" />
                 <element signature="e#3750#3786#0" expanded="false" />
                 <element signature="e#3796#3824#0" expanded="false" />
-                <element signature="e#5231#5928#0" expanded="false" />
-                <element signature="e#6210#6255#0" expanded="false" />
-                <element signature="e#6259#6496#0" expanded="false" />
-                <element signature="e#6311#6453#0" expanded="false" />
-                <element signature="e#6374#6435#0" expanded="false" />
+                <element signature="e#5298#5995#0" expanded="false" />
+                <element signature="e#6277#6322#0" expanded="false" />
+                <element signature="e#6326#6563#0" expanded="false" />
+                <element signature="e#6378#6520#0" expanded="false" />
+                <element signature="e#6441#6502#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -171,10 +54,9 @@
       <file leaf-file-name="simplelistcellview.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/newversion/hy/gui/simplelistcellview.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.333333" vertical-offset="165" max-vertical-offset="798">
-              <caret line="59" column="38" selection-start-line="59" selection-start-column="38" selection-end-line="59" selection-end-column="38" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1026">
+              <caret line="7" column="59" selection-start-line="7" selection-start-column="59" selection-end-line="7" selection-end-column="59" />
               <folding>
-                <element signature="e#425#1174#0" expanded="false" />
                 <element signature="e#1238#1271#0" expanded="false" />
                 <element signature="e#1336#1376#0" expanded="false" />
                 <element signature="e#1437#1480#0" expanded="false" />
@@ -192,65 +74,27 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="simplelistview.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/newversion/hy/gui/simplelistview.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.766667" vertical-offset="199" max-vertical-offset="1368">
-              <caret line="18" column="23" selection-start-line="18" selection-start-column="9" selection-end-line="18" selection-end-column="23" />
-              <folding>
-                <element signature="e#1374#1402#0" expanded="false" />
-                <element signature="e#1456#1483#0" expanded="false" />
-                <element signature="e#1550#1586#0" expanded="false" />
-                <element signature="e#1644#1675#0" expanded="false" />
-                <element signature="e#1752#1798#0" expanded="false" />
-                <element signature="e#1861#1897#0" expanded="false" />
-                <element signature="e#1974#2020#0" expanded="false" />
-                <element signature="e#2084#2120#0" expanded="false" />
-                <element signature="e#2197#2243#0" expanded="false" />
-                <element signature="e#2308#2346#0" expanded="false" />
-                <element signature="e#2417#3115#0" expanded="false" />
-                <element signature="e#3177#3211#0" expanded="false" />
-                <element signature="e#3289#3813#0" expanded="false" />
-                <element signature="e#3886#4171#0" expanded="false" />
-                <element signature="e#4241#4455#0" expanded="false" />
-                <element signature="e#4527#4623#0" expanded="false" />
-                <element signature="e#4694#5256#0" expanded="false" />
-                <element signature="e#5327#5398#0" expanded="false" />
-                <element signature="e#5468#6300#0" expanded="false" />
-                <element signature="e#6371#6465#0" expanded="false" />
-                <element signature="e#6392#6434#0" expanded="false" />
-                <element signature="e#6545#6717#0" expanded="false" />
-                <element signature="e#6626#6686#0" expanded="false" />
-                <element signature="e#6798#6830#0" expanded="false" />
-                <element signature="e#6916#6936#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="simpletreenodeview.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/newversion/hy/gui/simpletreenodeview.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1843">
-              <caret line="47" column="21" selection-start-line="47" selection-start-column="21" selection-end-line="47" selection-end-column="21" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1446" max-vertical-offset="2318">
+              <caret line="116" column="28" selection-start-line="116" selection-start-column="28" selection-end-line="116" selection-end-column="28" />
               <folding>
-                <element signature="e#439#1628#0" expanded="false" />
-                <element signature="e#1689#1719#0" expanded="false" />
-                <element signature="e#1783#1816#0" expanded="false" />
-                <element signature="e#1883#1919#0" expanded="false" />
-                <element signature="e#1996#2038#0" expanded="false" />
-                <element signature="e#2105#2141#0" expanded="false" />
-                <element signature="e#2216#2256#0" expanded="false" />
-                <element signature="e#2322#2357#0" expanded="false" />
-                <element signature="e#2426#2491#0" expanded="false" />
-                <element signature="e#2552#2582#0" expanded="false" />
-                <element signature="e#2651#2918#0" expanded="false" />
-                <element signature="e#2979#3009#0" expanded="false" />
-                <element signature="e#3080#3116#0" expanded="false" />
-                <element signature="e#3183#3219#0" expanded="false" />
-                <element signature="e#5880#6003#0" expanded="false" />
-                <element signature="e#6081#6118#0" expanded="false" />
-                <element signature="e#6194#6317#0" expanded="false" />
+                <element signature="e#1762#1792#0" expanded="false" />
+                <element signature="e#1856#1889#0" expanded="false" />
+                <element signature="e#1956#1992#0" expanded="false" />
+                <element signature="e#2069#2111#0" expanded="false" />
+                <element signature="e#2178#2214#0" expanded="false" />
+                <element signature="e#2289#2329#0" expanded="false" />
+                <element signature="e#2395#2430#0" expanded="false" />
+                <element signature="e#2499#2564#0" expanded="false" />
+                <element signature="e#2625#2655#0" expanded="false" />
+                <element signature="e#2724#2991#0" expanded="false" />
+                <element signature="e#3052#3082#0" expanded="false" />
+                <element signature="e#3328#3364#0" expanded="false" />
+                <element signature="e#6022#6145#0" expanded="false" />
+                <element signature="e#6223#6260#0" expanded="false" />
+                <element signature="e#6336#6459#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -259,28 +103,28 @@
       <file leaf-file-name="main.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/newversion/hy/test/main.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-13.857142" vertical-offset="600" max-vertical-offset="1273">
-              <caret line="52" column="79" selection-start-line="52" selection-start-column="79" selection-end-line="52" selection-end-column="79" />
+            <state vertical-scroll-proportion="-13.178572" vertical-offset="600" max-vertical-offset="1273">
+              <caret line="51" column="76" selection-start-line="51" selection-start-column="76" selection-end-line="51" selection-end-column="76" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="gui_simpletreeview.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/newversion/hy/test/examples/gui_simpletreeview.js">
+      <file leaf-file-name="treenodeview.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/newversion/hy/gui/treenodeview.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="141" max-vertical-offset="741">
-              <caret line="8" column="24" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="494">
+              <caret line="13" column="31" selection-start-line="13" selection-start-column="31" selection-end-line="13" selection-end-column="31" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="scrollview.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/newversion/hy/gui/scrollview.js">
+      <file leaf-file-name="gui_simplelistview.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/newversion/hy/test/examples/gui_simplelistview.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3591">
-              <caret line="15" column="98" selection-start-line="15" selection-start-column="98" selection-end-line="15" selection-end-column="98" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="551">
+              <caret line="10" column="12" selection-start-line="10" selection-start-column="12" selection-end-line="10" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -289,25 +133,54 @@
       <file leaf-file-name="treeview.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/newversion/hy/gui/treeview.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4465">
-              <caret line="165" column="58" selection-start-line="165" selection-start-column="58" selection-end-line="165" selection-end-column="58" />
+            <state vertical-scroll-proportion="-9.066667" vertical-offset="1989" max-vertical-offset="4522">
+              <caret line="123" column="1" selection-start-line="123" selection-start-column="1" selection-end-line="123" selection-end-column="1" />
               <folding>
                 <element signature="e#2410#2448#0" expanded="false" />
                 <element signature="e#2501#2533#0" expanded="false" />
-                <element signature="e#9920#9993#0" expanded="false" />
-                <element signature="e#10058#10129#0" expanded="false" />
-                <element signature="e#10196#10269#0" expanded="false" />
-                <element signature="e#10335#10407#0" expanded="false" />
-                <element signature="e#10474#10547#0" expanded="false" />
-                <element signature="e#10610#10679#0" expanded="false" />
-                <element signature="e#10745#10817#0" expanded="false" />
-                <element signature="e#10886#10961#0" expanded="false" />
-                <element signature="e#11037#11054#0" expanded="false" />
-                <element signature="e#11129#11146#0" expanded="false" />
-                <element signature="e#11221#11238#0" expanded="false" />
-                <element signature="e#11318#11338#0" expanded="false" />
-                <element signature="e#11411#11431#0" expanded="false" />
+                <element signature="e#10089#10160#0" expanded="false" />
+                <element signature="e#10227#10300#0" expanded="false" />
+                <element signature="e#10366#10438#0" expanded="false" />
+                <element signature="e#10505#10578#0" expanded="false" />
+                <element signature="e#10641#10710#0" expanded="false" />
+                <element signature="e#10776#10848#0" expanded="false" />
+                <element signature="e#10917#10992#0" expanded="false" />
+                <element signature="e#11068#11085#0" expanded="false" />
+                <element signature="e#11160#11177#0" expanded="false" />
+                <element signature="e#11252#11269#0" expanded="false" />
+                <element signature="e#11349#11369#0" expanded="false" />
+                <element signature="e#11442#11462#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="timelinerule.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/newversion/hy/gui/timelinerule.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="228">
+              <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TimeLineRule.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/gui/TimeLineRule.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.54684836" vertical-offset="59" max-vertical-offset="1615">
+              <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="77" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="timeline.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/newversion/hy/gui/timeline.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="114">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -317,8 +190,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/newversion/hy/test/examples/gui_scrollview.js" />
-        <option value="$PROJECT_DIR$/newversion/hy/gui/ListView.js" />
         <option value="$PROJECT_DIR$/newversion/hy/object.js" />
         <option value="$PROJECT_DIR$/newversion/hy/lang.js" />
         <option value="$PROJECT_DIR$/newversion/hy/gui/listsectionindex.js" />
@@ -357,17 +228,19 @@
         <option value="$PROJECT_DIR$/newversion/hy/gui/label.js" />
         <option value="$PROJECT_DIR$/newversion/hy/html/textbox.js" />
         <option value="$PROJECT_DIR$/newversion/hy/node.js" />
-        <option value="$PROJECT_DIR$/newversion/hy/gui/treeview.js" />
         <option value="$PROJECT_DIR$/newversion/hy/gui/listview.js" />
         <option value="$PROJECT_DIR$/newversion/hy/application.js" />
         <option value="$PROJECT_DIR$/newversion/hy/gui/scrollview.js" />
         <option value="$PROJECT_DIR$/newversion/hy/test/examples/gui_simplelistview.js" />
         <option value="$PROJECT_DIR$/newversion/hy/gui/simplelistview.js" />
         <option value="$PROJECT_DIR$/newversion/hy/gui/simplelistcellview.js" />
-        <option value="$PROJECT_DIR$/newversion/hy/gui/simpletreenodeview.js" />
-        <option value="$PROJECT_DIR$/newversion/hy/test/main.html" />
         <option value="$PROJECT_DIR$/newversion/hy/test/examples/gui_simpletreeview.js" />
+        <option value="$PROJECT_DIR$/newversion/hy/test/main.html" />
+        <option value="$PROJECT_DIR$/newversion/hy/gui/simpletreenodeview.js" />
         <option value="$PROJECT_DIR$/newversion/hy/gui/simpletreeview.js" />
+        <option value="$PROJECT_DIR$/newversion/hy/gui/treeview.js" />
+        <option value="$PROJECT_DIR$/newversion/hy/gui/timelinerule.js" />
+        <option value="$PROJECT_DIR$/newversion/hy/gui/timeline.js" />
       </list>
     </option>
   </component>
@@ -375,6 +248,7 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
+    <option name="x" value="29" />
     <option name="width" value="1123" />
     <option name="height" value="760" />
   </component>
@@ -708,8 +582,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1123" height="760" extended-state="0" />
-    <editor active="false" />
+    <frame x="29" y="0" width="1123" height="760" extended-state="1" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -922,12 +796,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/newversion/hy/gui/simpletreenodeview.js</url>
-          <line>56</line>
+          <line>57</line>
           <option name="timeStamp" value="97" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/newversion/hy/gui/simpletreenodeview.js</url>
-          <line>46</line>
+          <line>47</line>
           <option name="timeStamp" value="98" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -986,35 +860,10 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/newversion/hy/gui/gui.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.7" vertical-offset="0" max-vertical-offset="551">
-          <caret line="9" column="27" selection-start-line="9" selection-start-column="7" selection-end-line="9" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/newversion/hy/gui/imageview.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.133333" vertical-offset="1077" max-vertical-offset="1634">
-          <caret line="79" column="5" selection-start-line="79" selection-start-column="5" selection-end-line="79" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/newversion/hy/richnode.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="6603" max-vertical-offset="7885">
-          <caret line="356" column="34" selection-start-line="356" selection-start-column="34" selection-end-line="356" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/newversion/hy/textlayout.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2858" max-vertical-offset="3629">
           <caret line="182" column="5" selection-start-line="182" selection-start-column="5" selection-end-line="182" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1029,7 +878,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3230" max-vertical-offset="14364">
           <caret line="171" column="1" selection-start-line="171" selection-start-column="1" selection-end-line="171" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1037,7 +885,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2812">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1094,7 +941,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="207" max-vertical-offset="779">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1102,7 +948,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="69103">
           <caret line="16" column="5" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1110,7 +955,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="600">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1118,7 +962,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-10.857142" vertical-offset="285" max-vertical-offset="3135">
           <caret line="31" column="32" selection-start-line="31" selection-start-column="32" selection-end-line="31" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1126,7 +969,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="40.714287" vertical-offset="1140" max-vertical-offset="2052">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1134,7 +976,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2033">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1142,7 +983,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="817">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1150,7 +990,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-11.714286" vertical-offset="185" max-vertical-offset="1102">
           <caret line="27" column="30" selection-start-line="27" selection-start-column="30" selection-end-line="27" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1158,7 +997,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="600">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1166,7 +1004,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.107143" vertical-offset="0" max-vertical-offset="741">
           <caret line="9" column="18" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1174,13 +1011,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3591" max-vertical-offset="5890">
           <caret line="201" column="52" selection-start-line="201" selection-start-column="52" selection-end-line="201" selection-end-column="52" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gui/SimpleListView.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.6" vertical-offset="518" max-vertical-offset="1330">
+        <state vertical-scroll-proportion="0.0" vertical-offset="518" max-vertical-offset="1330">
           <caret line="127" column="52" selection-start-line="127" selection-start-column="52" selection-end-line="127" selection-end-column="52" />
           <folding>
             <element signature="e#0#49#0" expanded="false" />
@@ -1242,20 +1078,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-9.5" vertical-offset="722" max-vertical-offset="2451">
           <caret line="64" column="1" selection-start-line="64" selection-start-column="1" selection-end-line="64" selection-end-column="1" />
-          <folding>
-            <element signature="e#2346#2502#0" expanded="false" />
-            <element signature="e#2386#2500#0" expanded="false" />
-            <element signature="e#2556#2593#0" expanded="false" />
-            <element signature="e#2820#2854#0" expanded="false" />
-            <element signature="e#2904#2937#0" expanded="false" />
-            <element signature="e#3180#3210#0" expanded="false" />
-            <element signature="e#3265#3409#0" expanded="false" />
-            <element signature="e#3301#3407#0" expanded="false" />
-            <element signature="e#3459#3492#0" expanded="false" />
-            <element signature="e#3547#3691#0" expanded="false" />
-            <element signature="e#3583#3689#0" expanded="false" />
-            <element signature="e#3741#3774#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1263,7 +1085,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6175">
           <caret line="16" column="32" selection-start-line="16" selection-start-column="32" selection-end-line="16" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1281,18 +1102,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="26" max-vertical-offset="627">
           <caret line="37" column="1" selection-start-line="37" selection-start-column="1" selection-end-line="37" selection-end-column="1" />
-          <folding>
-            <element signature="e#685#992#0" expanded="false" />
-            <element signature="e#1044#1073#0" expanded="false" />
-            <element signature="e#1135#1170#0" expanded="false" />
-            <element signature="e#1221#1252#0" expanded="false" />
-            <element signature="e#1308#1340#0" expanded="false" />
-            <element signature="e#1388#1417#0" expanded="false" />
-            <element signature="e#1468#1736#0" expanded="false" />
-            <element signature="e#1782#2043#0" expanded="false" />
-            <element signature="e#2088#4095#0" expanded="false" />
-            <element signature="e#4138#4623#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1300,13 +1109,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="513">
           <caret line="7" column="56" selection-start-line="7" selection-start-column="56" selection-end-line="7" selection-end-column="56" />
-          <folding>
-            <element signature="e#808#838#0" expanded="false" />
-            <element signature="e#886#916#0" expanded="false" />
-            <element signature="e#966#998#0" expanded="false" />
-            <element signature="e#1047#1078#0" expanded="false" />
-            <element signature="e#1127#1695#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1359,7 +1161,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2022" max-vertical-offset="2622">
           <caret line="28" column="77" selection-start-line="28" selection-start-column="77" selection-end-line="28" selection-end-column="77" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1616,14 +1417,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/newversion/hy/gui/treenodeview.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="494">
-          <caret line="13" column="31" selection-start-line="13" selection-start-column="31" selection-end-line="13" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/newversion/hy/gui/splitview.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="361" max-vertical-offset="4617">
@@ -1636,15 +1429,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="380">
           <caret line="14" column="3" selection-start-line="14" selection-start-column="3" selection-end-line="14" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/newversion/hy/test/examples/gui_splitview.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="361">
-          <caret line="7" column="33" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1652,171 +1436,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="532" max-vertical-offset="5472">
           <caret line="41" column="52" selection-start-line="41" selection-start-column="52" selection-end-line="41" selection-end-column="52" />
-          <folding>
-            <element signature="e#3309#3380#0" expanded="false" />
-            <element signature="e#3435#3570#0" expanded="false" />
-            <element signature="e#3468#3568#0" expanded="false" />
-            <element signature="e#3620#3650#0" expanded="false" />
-            <element signature="e#3707#3847#0" expanded="false" />
-            <element signature="e#3742#3845#0" expanded="false" />
-            <element signature="e#3898#3929#0" expanded="false" />
-            <element signature="e#3997#4210#0" expanded="false" />
-            <element signature="e#4043#4208#0" expanded="false" />
-            <element signature="e#4121#4202#0" expanded="false" />
-            <element signature="e#4265#4300#0" expanded="false" />
-            <element signature="e#4348#4376#0" expanded="false" />
-            <element signature="e#4424#4452#0" expanded="false" />
-            <element signature="e#4508#4539#0" expanded="false" />
-            <element signature="e#4590#4621#0" expanded="false" />
-            <element signature="e#4685#5153#0" expanded="false" />
-            <element signature="e#4714#5151#0" expanded="false" />
-            <element signature="e#4788#5145#0" expanded="false" />
-            <element signature="e#4817#5012#0" expanded="false" />
-            <element signature="e#4871#4998#0" expanded="false" />
-            <element signature="e#5016#5135#0" expanded="false" />
-            <element signature="e#5209#5240#0" expanded="false" />
-            <element signature="e#5291#5322#0" expanded="false" />
-            <element signature="e#5376#5410#0" expanded="false" />
-            <element signature="e#6179#6210#0" expanded="false" />
-            <element signature="e#6539#6663#0" expanded="false" />
-            <element signature="e#6581#6629#0" expanded="false" />
-            <element signature="e#6633#6661#0" expanded="false" />
-            <element signature="e#6719#6755#0" expanded="false" />
-            <element signature="e#6817#7383#0" expanded="false" />
-            <element signature="e#6861#7230#0" expanded="false" />
-            <element signature="e#6917#7224#0" expanded="false" />
-            <element signature="e#7134#7214#0" expanded="false" />
-            <element signature="e#7234#7381#0" expanded="false" />
-            <element signature="e#7303#7375#0" expanded="false" />
-            <element signature="e#7440#7564#0" expanded="false" />
-            <element signature="e#7482#7530#0" expanded="false" />
-            <element signature="e#7534#7562#0" expanded="false" />
-            <element signature="e#7620#7656#0" expanded="false" />
-            <element signature="e#7718#7819#0" expanded="false" />
-            <element signature="e#7779#7817#0" expanded="false" />
-            <element signature="e#7876#8000#0" expanded="false" />
-            <element signature="e#7918#7966#0" expanded="false" />
-            <element signature="e#7970#7998#0" expanded="false" />
-            <element signature="e#8056#8092#0" expanded="false" />
-            <element signature="e#8155#8206#0" expanded="false" />
-            <element signature="e#8264#8390#0" expanded="false" />
-            <element signature="e#8307#8356#0" expanded="false" />
-            <element signature="e#8360#8388#0" expanded="false" />
-            <element signature="e#8447#8484#0" expanded="false" />
-            <element signature="e#8544#8595#0" expanded="false" />
-            <element signature="e#8649#8767#0" expanded="false" />
-            <element signature="e#8688#8733#0" expanded="false" />
-            <element signature="e#8737#8765#0" expanded="false" />
-            <element signature="e#8820#8853#0" expanded="false" />
-            <element signature="e#9046#9081#0" expanded="false" />
-            <element signature="e#9133#9165#0" expanded="false" />
-            <element signature="e#9210#9246#0" expanded="false" />
-            <element signature="e#9291#9328#0" expanded="false" />
-            <element signature="e#9331#9346#0" expanded="false" />
-            <element signature="e#9409#9438#0" expanded="false" />
-            <element signature="e#9492#9649#0" expanded="false" />
-            <element signature="e#9506#9647#0" expanded="false" />
-            <element signature="e#9702#9924#0" expanded="false" />
-            <element signature="e#9801#9881#0" expanded="false" />
-            <element signature="e#9885#9922#0" expanded="false" />
-            <element signature="e#9970#10100#0" expanded="false" />
-            <element signature="e#10147#11547#0" expanded="false" />
-            <element signature="e#10198#10352#0" expanded="false" />
-            <element signature="e#10356#10438#0" expanded="false" />
-            <element signature="e#10460#10723#0" expanded="false" />
-            <element signature="e#10513#10717#0" expanded="false" />
-            <element signature="e#10728#10748#0" expanded="false" />
-            <element signature="e#10903#11545#0" expanded="false" />
-            <element signature="e#11594#11653#0" expanded="false" />
-            <element signature="e#11703#12300#0" expanded="false" />
-            <element signature="e#11733#12298#0" expanded="false" />
-            <element signature="e#12535#13101#0" expanded="false" />
-            <element signature="e#12566#13091#0" expanded="false" />
-            <element signature="e#12758#13077#0" expanded="false" />
-            <element signature="e#13172#14516#0" expanded="false" />
-            <element signature="e#13212#14506#0" expanded="false" />
-            <element signature="e#13404#14492#0" expanded="false" />
-            <element signature="e#13683#14474#0" expanded="false" />
-            <element signature="e#14059#14452#0" expanded="false" />
-            <element signature="e#14123#14233#0" expanded="false" />
-            <element signature="e#14291#14426#0" expanded="false" />
-            <element signature="e#15418#15545#0" expanded="false" />
-            <element signature="e#16514#16641#0" expanded="false" />
-            <element signature="e#16780#17334#0" expanded="false" />
-            <element signature="e#16811#17324#0" expanded="false" />
-            <element signature="e#17005#17270#0" expanded="false" />
-            <element signature="e#17408#19117#0" expanded="false" />
-            <element signature="e#17439#19107#0" expanded="false" />
-            <element signature="e#17633#19093#0" expanded="false" />
-            <element signature="e#17912#19075#0" expanded="false" />
-            <element signature="e#18225#18844#0" expanded="false" />
-            <element signature="e#18289#18400#0" expanded="false" />
-            <element signature="e#18458#18593#0" expanded="false" />
-            <element signature="e#18597#18818#0" expanded="false" />
-            <element signature="e#18678#18788#0" expanded="false" />
-            <element signature="e#18848#19053#0" expanded="false" />
-            <element signature="e#18925#19027#0" expanded="false" />
-            <element signature="e#19190#20205#0" expanded="false" />
-            <element signature="e#19221#20195#0" expanded="false" />
-            <element signature="e#19415#20181#0" expanded="false" />
-            <element signature="e#19863#20163#0" expanded="false" />
-            <element signature="e#20014#20141#0" expanded="false" />
-            <element signature="e#20281#21296#0" expanded="false" />
-            <element signature="e#20312#21286#0" expanded="false" />
-            <element signature="e#20506#21272#0" expanded="false" />
-            <element signature="e#20954#21254#0" expanded="false" />
-            <element signature="e#21105#21232#0" expanded="false" />
-            <element signature="e#21376#21612#0" expanded="false" />
-            <element signature="e#21407#21602#0" expanded="false" />
-            <element signature="e#21682#21919#0" expanded="false" />
-            <element signature="e#21713#21909#0" expanded="false" />
-            <element signature="e#21986#22220#0" expanded="false" />
-            <element signature="e#22017#22210#0" expanded="false" />
-            <element signature="e#22291#22676#0" expanded="false" />
-            <element signature="e#22359#22666#0" expanded="false" />
-            <element signature="e#22747#23961#0" expanded="false" />
-            <element signature="e#22778#23951#0" expanded="false" />
-            <element signature="e#23065#23937#0" expanded="false" />
-            <element signature="e#23181#23919#0" expanded="false" />
-            <element signature="e#23499#23897#0" expanded="false" />
-            <element signature="e#23563#23667#0" expanded="false" />
-            <element signature="e#23742#23871#0" expanded="false" />
-            <element signature="e#24572#24684#0" expanded="false" />
-            <element signature="e#24798#25202#0" expanded="false" />
-            <element signature="e#24829#25192#0" expanded="false" />
-            <element signature="e#25069#25178#0" expanded="false" />
-            <element signature="e#25277#25681#0" expanded="false" />
-            <element signature="e#25308#25671#0" expanded="false" />
-            <element signature="e#25548#25657#0" expanded="false" />
-            <element signature="e#25751#26037#0" expanded="false" />
-            <element signature="e#25782#26027#0" expanded="false" />
-            <element signature="e#25871#25943#0" expanded="false" />
-            <element signature="e#26110#26399#0" expanded="false" />
-            <element signature="e#26141#26389#0" expanded="false" />
-            <element signature="e#26230#26305#0" expanded="false" />
-            <element signature="e#26475#26710#0" expanded="false" />
-            <element signature="e#26506#26700#0" expanded="false" />
-            <element signature="e#26784#27151#0" expanded="false" />
-            <element signature="e#26852#27141#0" expanded="false" />
-            <element signature="e#26941#27017#0" expanded="false" />
-            <element signature="e#27859#27964#0" expanded="false" />
-            <element signature="e#28171#28378#0" expanded="false" />
-            <element signature="e#28245#28348#0" expanded="false" />
-            <element signature="e#28408#28601#0" expanded="false" />
-            <element signature="e#28480#28575#0" expanded="false" />
-            <element signature="e#28627#28804#0" expanded="false" />
-            <element signature="e#28695#28782#0" expanded="false" />
-            <element signature="e#29528#29640#0" expanded="false" />
-            <element signature="e#29823#31411#0" expanded="false" />
-            <element signature="e#29852#31409#0" expanded="false" />
-            <element signature="e#29926#31403#0" expanded="false" />
-            <element signature="e#30124#30936#0" expanded="false" />
-            <element signature="e#30142#30922#0" expanded="false" />
-            <element signature="e#30194#30362#0" expanded="false" />
-            <element signature="e#30390#30603#0" expanded="false" />
-            <element signature="e#30631#30843#0" expanded="false" />
-            <element signature="e#30940#31053#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1824,7 +1443,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="190">
           <caret line="4" column="39" selection-start-line="4" selection-start-column="39" selection-end-line="4" selection-end-column="39" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1832,7 +1450,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-7.6" vertical-offset="0" max-vertical-offset="570">
           <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1840,7 +1457,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="587">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1848,7 +1464,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="703">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1864,15 +1479,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="494">
           <caret line="13" column="31" selection-start-line="13" selection-start-column="31" selection-end-line="13" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/newversion/hy/test/examples/gui_simplelistview.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="551">
-          <caret line="10" column="12" selection-start-line="10" selection-start-column="12" selection-end-line="10" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1881,30 +1487,6 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="138" max-vertical-offset="3591">
           <caret line="15" column="98" selection-start-line="15" selection-start-column="98" selection-end-line="15" selection-end-column="98" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/newversion/hy/gui/treeview.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4465">
-          <caret line="165" column="58" selection-start-line="165" selection-start-column="58" selection-end-line="165" selection-end-column="58" />
-          <folding>
-            <element signature="e#2410#2448#0" expanded="false" />
-            <element signature="e#2501#2533#0" expanded="false" />
-            <element signature="e#9920#9993#0" expanded="false" />
-            <element signature="e#10058#10129#0" expanded="false" />
-            <element signature="e#10196#10269#0" expanded="false" />
-            <element signature="e#10335#10407#0" expanded="false" />
-            <element signature="e#10474#10547#0" expanded="false" />
-            <element signature="e#10610#10679#0" expanded="false" />
-            <element signature="e#10745#10817#0" expanded="false" />
-            <element signature="e#10886#10961#0" expanded="false" />
-            <element signature="e#11037#11054#0" expanded="false" />
-            <element signature="e#11129#11146#0" expanded="false" />
-            <element signature="e#11221#11238#0" expanded="false" />
-            <element signature="e#11318#11338#0" expanded="false" />
-            <element signature="e#11411#11431#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1918,7 +1500,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/newversion/hy/gui/simplelistview.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.766667" vertical-offset="199" max-vertical-offset="1368">
+        <state vertical-scroll-proportion="0.0" vertical-offset="199" max-vertical-offset="1368">
           <caret line="18" column="23" selection-start-line="18" selection-start-column="9" selection-end-line="18" selection-end-column="23" />
           <folding>
             <element signature="e#1374#1402#0" expanded="false" />
@@ -1950,28 +1532,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/newversion/hy/gui/simplelistcellview.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.333333" vertical-offset="165" max-vertical-offset="798">
-          <caret line="59" column="38" selection-start-line="59" selection-start-column="38" selection-end-line="59" selection-end-column="38" />
-          <folding>
-            <element signature="e#425#1174#0" expanded="false" />
-            <element signature="e#1238#1271#0" expanded="false" />
-            <element signature="e#1336#1376#0" expanded="false" />
-            <element signature="e#1437#1480#0" expanded="false" />
-            <element signature="e#1557#1599#0" expanded="false" />
-            <element signature="e#1666#1702#0" expanded="false" />
-            <element signature="e#1779#1841#0" expanded="false" />
-            <element signature="e#1908#1944#0" expanded="false" />
-            <element signature="e#2019#2076#0" expanded="false" />
-            <element signature="e#2157#2322#0" expanded="false" />
-            <element signature="e#2864#2987#0" expanded="false" />
-            <element signature="e#3065#3102#0" expanded="false" />
-            <element signature="e#3178#3301#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/newversion/hy/html/textbox.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="830" max-vertical-offset="2014">
@@ -1991,10 +1551,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/newversion/hy/test/main.html">
+    <entry file="file://$PROJECT_DIR$/gui/SimpleTreeView.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.857142" vertical-offset="600" max-vertical-offset="1273">
-          <caret line="52" column="79" selection-start-line="52" selection-start-column="79" selection-end-line="52" selection-end-column="79" />
+        <state vertical-scroll-proportion="0.3407155" vertical-offset="3771" max-vertical-offset="9975">
+          <caret line="232" column="37" selection-start-line="232" selection-start-column="21" selection-end-line="232" selection-end-column="37" />
+          <folding>
+            <element signature="e#6695#6813#0" expanded="false" />
+            <element signature="e#6873#6991#0" expanded="false" />
+            <element signature="e#7053#7171#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/newversion/hy/test/examples/gui_splitview.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="361">
+          <caret line="7" column="33" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
           <folding />
         </state>
       </provider>
@@ -2007,48 +1579,79 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/newversion/hy/gui/simpletreenodeview.js">
+    <entry file="file://$PROJECT_DIR$/newversion/hy/test/examples/gui_simplelistview.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1843">
-          <caret line="47" column="21" selection-start-line="47" selection-start-column="21" selection-end-line="47" selection-end-column="21" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="551">
+          <caret line="10" column="12" selection-start-line="10" selection-start-column="12" selection-end-line="10" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/newversion/hy/test/main.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.178572" vertical-offset="600" max-vertical-offset="1273">
+          <caret line="51" column="76" selection-start-line="51" selection-start-column="76" selection-end-line="51" selection-end-column="76" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/newversion/hy/gui/treenodeview.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="494">
+          <caret line="13" column="31" selection-start-line="13" selection-start-column="31" selection-end-line="13" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/newversion/hy/gui/simplelistcellview.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1026">
+          <caret line="7" column="59" selection-start-line="7" selection-start-column="59" selection-end-line="7" selection-end-column="59" />
           <folding>
-            <element signature="e#439#1628#0" expanded="false" />
-            <element signature="e#1689#1719#0" expanded="false" />
-            <element signature="e#1783#1816#0" expanded="false" />
-            <element signature="e#1883#1919#0" expanded="false" />
-            <element signature="e#1996#2038#0" expanded="false" />
-            <element signature="e#2105#2141#0" expanded="false" />
-            <element signature="e#2216#2256#0" expanded="false" />
-            <element signature="e#2322#2357#0" expanded="false" />
-            <element signature="e#2426#2491#0" expanded="false" />
-            <element signature="e#2552#2582#0" expanded="false" />
-            <element signature="e#2651#2918#0" expanded="false" />
-            <element signature="e#2979#3009#0" expanded="false" />
-            <element signature="e#3080#3116#0" expanded="false" />
-            <element signature="e#3183#3219#0" expanded="false" />
-            <element signature="e#5880#6003#0" expanded="false" />
-            <element signature="e#6081#6118#0" expanded="false" />
-            <element signature="e#6194#6317#0" expanded="false" />
+            <element signature="e#1238#1271#0" expanded="false" />
+            <element signature="e#1336#1376#0" expanded="false" />
+            <element signature="e#1437#1480#0" expanded="false" />
+            <element signature="e#1557#1599#0" expanded="false" />
+            <element signature="e#1666#1702#0" expanded="false" />
+            <element signature="e#1779#1841#0" expanded="false" />
+            <element signature="e#1908#1944#0" expanded="false" />
+            <element signature="e#2019#2076#0" expanded="false" />
+            <element signature="e#2157#2322#0" expanded="false" />
+            <element signature="e#2864#2987#0" expanded="false" />
+            <element signature="e#3065#3102#0" expanded="false" />
+            <element signature="e#3178#3301#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gui/SimpleTreeView.js">
+    <entry file="file://$PROJECT_DIR$/newversion/hy/gui/simpletreenodeview.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3327787" vertical-offset="3771" max-vertical-offset="9975">
-          <caret line="232" column="37" selection-start-line="232" selection-start-column="21" selection-end-line="232" selection-end-column="37" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1446" max-vertical-offset="2318">
+          <caret line="116" column="28" selection-start-line="116" selection-start-column="28" selection-end-line="116" selection-end-column="28" />
           <folding>
-            <element signature="e#6695#6813#0" expanded="false" />
-            <element signature="e#6873#6991#0" expanded="false" />
-            <element signature="e#7053#7171#0" expanded="false" />
+            <element signature="e#1762#1792#0" expanded="false" />
+            <element signature="e#1856#1889#0" expanded="false" />
+            <element signature="e#1956#1992#0" expanded="false" />
+            <element signature="e#2069#2111#0" expanded="false" />
+            <element signature="e#2178#2214#0" expanded="false" />
+            <element signature="e#2289#2329#0" expanded="false" />
+            <element signature="e#2395#2430#0" expanded="false" />
+            <element signature="e#2499#2564#0" expanded="false" />
+            <element signature="e#2625#2655#0" expanded="false" />
+            <element signature="e#2724#2991#0" expanded="false" />
+            <element signature="e#3052#3082#0" expanded="false" />
+            <element signature="e#3328#3364#0" expanded="false" />
+            <element signature="e#6022#6145#0" expanded="false" />
+            <element signature="e#6223#6260#0" expanded="false" />
+            <element signature="e#6336#6459#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/newversion/hy/gui/simpletreeview.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.24955116" vertical-offset="2255" max-vertical-offset="4750">
-          <caret line="194" column="34" selection-start-line="194" selection-start-column="34" selection-end-line="194" selection-end-column="34" />
+        <state vertical-scroll-proportion="1.4333333" vertical-offset="1373" max-vertical-offset="4788">
+          <caret line="102" column="42" selection-start-line="102" selection-start-column="42" selection-end-line="102" selection-end-column="42" />
           <folding>
             <element signature="e#1339#1372#0" expanded="false" />
             <element signature="e#1441#1479#0" expanded="false" />
@@ -2061,12 +1664,59 @@
             <element signature="e#3565#3641#0" expanded="false" />
             <element signature="e#3750#3786#0" expanded="false" />
             <element signature="e#3796#3824#0" expanded="false" />
-            <element signature="e#5231#5928#0" expanded="false" />
-            <element signature="e#6210#6255#0" expanded="false" />
-            <element signature="e#6259#6496#0" expanded="false" />
-            <element signature="e#6311#6453#0" expanded="false" />
-            <element signature="e#6374#6435#0" expanded="false" />
+            <element signature="e#5298#5995#0" expanded="false" />
+            <element signature="e#6277#6322#0" expanded="false" />
+            <element signature="e#6326#6563#0" expanded="false" />
+            <element signature="e#6378#6520#0" expanded="false" />
+            <element signature="e#6441#6502#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/newversion/hy/gui/treeview.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.066667" vertical-offset="1989" max-vertical-offset="4522">
+          <caret line="123" column="1" selection-start-line="123" selection-start-column="1" selection-end-line="123" selection-end-column="1" />
+          <folding>
+            <element signature="e#2410#2448#0" expanded="false" />
+            <element signature="e#2501#2533#0" expanded="false" />
+            <element signature="e#10089#10160#0" expanded="false" />
+            <element signature="e#10227#10300#0" expanded="false" />
+            <element signature="e#10366#10438#0" expanded="false" />
+            <element signature="e#10505#10578#0" expanded="false" />
+            <element signature="e#10641#10710#0" expanded="false" />
+            <element signature="e#10776#10848#0" expanded="false" />
+            <element signature="e#10917#10992#0" expanded="false" />
+            <element signature="e#11068#11085#0" expanded="false" />
+            <element signature="e#11160#11177#0" expanded="false" />
+            <element signature="e#11252#11269#0" expanded="false" />
+            <element signature="e#11349#11369#0" expanded="false" />
+            <element signature="e#11442#11462#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/newversion/hy/gui/timeline.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="600">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/newversion/hy/gui/timelinerule.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="228">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/TimeLineRule.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.54684836" vertical-offset="59" max-vertical-offset="1615">
+          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="77" selection-end-column="1" />
+          <folding />
         </state>
       </provider>
     </entry>
