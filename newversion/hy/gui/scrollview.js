@@ -128,8 +128,8 @@ hy.gui.ScrollView.prototype._layoutScrollView = function(sender){
                 this._contentView.setHeight(this.getHeight());
             }
         }
-        this._hScrollBar.setVisible(false);
-        this._hScrollBar.setVisible(false);
+        this._horScrollBar.setVisible(false);
+        this._verScrollBar.setVisible(false);
     }
     this._syncLocalScrollToHorBar(null);
     this._syncLocalScrollToVerBar(null);

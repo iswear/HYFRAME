@@ -33,51 +33,44 @@ hy.Application.prototype.init = function(config){
     this._mouseWheelNodes = [];
     this._mousePoints = [];
 
+    this._runRootNode = new hy.Node({x:0,y:0,width:0,height:0,alpha:1.0,rotateZ:0,visible:true,mouseEnable:false,dragEnable:false,wheelEnable:false});
     this._runNodeStack = [];
     this._runNode = null;
 
     this._actionManager = new hy.action.Manager({});
     this._fileLoader = new hy.net.FileLoader({});
     this._inputTextBox = new hy.html.TextBox({});
-    this._contextMenu = new hy.gui.SimpleListView({});
-    //this._inputNode = null;
-    //this._inputTextBox = document.createElement("input");
-    //this._inputTextBox.type = "text";
-    //this._inputTextBox.style.zIndex = "999";
-    //this._inputTextBox.style.position = "absolute";
-    //this._inputTextBox.style.borderStyle = "solid";
-    //this._inputTextBox.style.backgroundColor = "transparent";
-    //this._inputTextBox.style.display = "none";
-    //hy.event.addEventListener(this._inputTextBox,this,"mousedown",function(e){
-    //    var e = event ? event : e;
-    //    try{
-    //        e.stopPropagation();
-    //    }catch (err){
-    //        e.cancelBubble = true;
-    //    }
-    //});
-    //hy.event.addEventListener(this._inputTextBox,this,"mouseup",function(e){
-    //    var e = event ? event : e;
-    //    try{
-    //        e.stopPropagation();
-    //    }catch (err){
-    //        e.cancelBubble = true;
-    //    }
-    //});
-    //hy.event.addEventListener(this._inputTextBox,this,"keypress",function(e){
-    //    var e = event ? event : e;
-    //    if(e.keyCode == hy.event.key.ENTER){
-    //        if(this._inputNode){
-    //            try{
-    //                this._inputNode.postNotification(this._inputNode.notifyBlur,[e]);
-    //            }catch (err){
-    //                window.console.log(err);
-    //            }
-    //        }
-    //    }
-    //});
-    //document.body.appendChild(this._inputTextBox);
+    this._contextMenu = new hy.gui.SimpleListView({
+        x:0,
+        y:0,
+        width:100,
+        height:100,
+        visible:false,
+        normalColor:'#f00',
+        cellSelectEnable:false,
+        cellEditEnable:false,
+        cellMoveEnable:false,
+        scrollBarVisible:false,
+        borderColor:'#000',
+        borderWidth:1
+    });
+    this._contextMenu.addObserver(this._contextMenu.notifyListCellMouseDown, this, function(sender, e){
+        this._contextMenu.setUserProperty("menushown", true);
+    });
+    this._contextMenu.addObserver(this._contextMenu.notifyListCellMouseUp, this, function(sender, e){
+        var menutype = this._contextMenu.getUserProperty();
+        var menunode = this._contextMenu.getUserProperty();
+        if(menutype == 0){
 
+        }
+        if(menutype == 1){
+
+        }
+        this._contextMenu.setUserProperty("menushown", false);
+        this.hideContextMenu();
+    });
+    this._runRootNode.setApplication(this);
+    this._runRootNode.addChildNodeAtLayer(this._contextMenu, 1);
     this.addObserver(this.notifySyncWinWidth,this,this._syncRenderContextSize);
     this.addObserver(this.notifySyncWinHeight,this,this._syncRenderContextSize);
     this.addObserver(this.notifySyncRenderContext,this,this._syncRenderContextSize);
@@ -273,8 +266,27 @@ hy.Application.prototype.getMousePoints = function(){
     return this._mousePoints;
 }
 
-hy.Application.prototype.showContextMenu = function(e,node,menuItems,menuType){}
-hy.Application.prototype.hideContextMenu = function(){}
+hy.Application.prototype.showContextMenu = function(e,node,menuItems,menuType){
+    this._contextMenu.setUserProperty("menunode", node);
+    this._contextMenu.setUserProperty("menutype", menuType);
+    if(menuType == 0){
+        this._contextMenu.setX(e.offsetX - this._runRootNode.getX());
+        this._contextMenu.setY(e.offsetY - this._runRootNode.getY());
+        this._contextMenu.setItems(menuItems);
+    }else{
+        var pointNode = node.transPointToAncestorNode({x: 0,y: e.offsetY}, null);
+        this._contextMenu.setX(pointNode.x - this._runRootNode.getX());
+        this._contextMenu.setY(pointNode.y - this._runRootNode.getY());
+        this._contextMenu.setItems(menuItems);
+    }
+    this._contextMenu.setVisible(true);
+}
+hy.Application.prototype.hideContextMenu = function(){
+    if(!this._contextMenu.getUserProperty("menushown")){
+        this._contextMenu.setItems(null);
+        this._contextMenu.setVisible(false);
+    }
+}
 hy.Application.prototype.getActionManager = function(){
     return this._actionManager;
 }
@@ -297,20 +309,25 @@ hy.Application.prototype.refresh = function(){
 }
 hy.Application.prototype.pushRunNode = function(node){
     if(node){
-        node.setApplication(this);
-        node.setParent(null);
+        if(this._runNode){
+            this._runRootNode.removeChildNode(this._runNode,false);
+        }
         this._runNodeStack.push(node);
         this._runNode = node;
+        this._runRootNode.addChildNode(node, 0);
     }
 }
-hy.Application.prototype.popRunNode = function(node){
+hy.Application.prototype.popRunNode = function(clean){
     var node = this._runNode;
-    this._runNodeStack.pop();
-    if(this._runNodeStack.length > 0){
-        this._runNode = this._runNodeStack[this._runNodeStack.length-1];
-    }else{
-        this._runNode = null;
+    if(node){
+        this._runRootNode.removeChildNode(node, clean);
+        this._runNodeStack.pop();
+        if(this._runNodeStack.length > 0){
+            this._runNode = this._runNodeStack[this._runNodeStack.length - 1];
+            this._runRootNode.addChildNode(this._runNode, 0);
+        }
     }
+    return node;
 }
 hy.Application.prototype.run = function(node){
     this._preLoopTime = 0;
@@ -329,12 +346,10 @@ hy.Application.prototype.mainLoop = function(){
         this._preLoopTime = (new Date()).getTime();
         deltaTime = 0;
     }
-    if(this._runNode){
-        if(this._refresh || this._refreshMode == 1){
-            this._refresh = false;
-            this._renderContext.clearRect(0,0,this._winWidth,this._winHeight);
-            this._runNode._dispatchLoop(this._renderContext, deltaTime, true);
-        }
+    if(this._refresh || this._refreshMode == 1){
+        this._refresh = false;
+        this._renderContext.clearRect(0,0,this._winWidth,this._winHeight);
+        this._runRootNode._dispatchLoop(this._renderContext, deltaTime, true);
     }
     //time += deltaTime;
     //count ++;
@@ -383,215 +398,189 @@ hy.Application.prototype.initEventDispatcher = function(){
     var canvas = this._renderContext.getCanvas();
     if(hy.platform.isMobile()){
         hy.event.addEventListener(doc,"touchstart", this, function(e){
-            if(this._runNode){
-                var e = event ? event : e;
-                var canvas = this._renderContext.getCanvas();
-                for(var i= 0, touchCount = e.changedTouches.length ;i<touchCount;++i){
-                    var curTouch = hy.event.createEvent(e,this,canvas,e.changedTouches[i]);
-                    this.setMousePoint({x:curTouch.offsetX,y:curTouch.offsetY},curTouch);
-                    this.setMouseDownNode(curTouch, null);
-                    this.setMouseDragNode(curTouch, null);
-                }
+            var e = event ? event : e;
+            var canvas = this._renderContext.getCanvas();
+            for(var i= 0, touchCount = e.changedTouches.length ;i<touchCount;++i){
+                var curTouch = hy.event.createEvent(e,this,canvas,e.changedTouches[i]);
+                this.setMousePoint({x:curTouch.offsetX,y:curTouch.offsetY},curTouch);
+                this.setMouseDownNode(curTouch, null);
+                this.setMouseDragNode(curTouch, null);
             }
         });
         hy.event.addEventListener(doc,"touchmove", this, function(e){
-            if(this._runNode != null) {
-                var e = event?event:e;
-                var canvas = this.getRenderContext().getCanvas();
-                for(var i= 0,touchCount=e.changedTouches.length ; i<touchCount ; ++i){
-                    var curTouch = hy.event.createEvent(e,this,canvas,e.changedTouches[i]);
-                    var mousePoint = this.getMousePoint(curTouch.identifier);
-                    if(!mousePoint || mousePoint.x != curTouch.offsetX || mousePoint.y != curTouch.offsetY){
-                        var mouseDownNode = this.getMouseDownNode(curTouch.identifier);
-                        var mouseDragNode = this.getMouseDragNode(curTouch.identifier);
-                        this.setMousePoint({x:curTouch.offsetX,y:curTouch.offsetY},curTouch);
-                        this.setMouseOverNode(curTouch, null);
-                        if(mouseDragNode){
-                            if(mouseDragNode != mouseDownNode){
-                                this.setMouseDownNode(curTouch,mouseDragNode);
-                            }
-                            if(mouseDragNode.dragReady()){
-                                mouseDragNode.postNotification(mouseDragNode.notifyDraging,[curTouch]);
-                            }
+            var e = event?event:e;
+            var canvas = this.getRenderContext().getCanvas();
+            for(var i= 0,touchCount=e.changedTouches.length ; i<touchCount ; ++i){
+                var curTouch = hy.event.createEvent(e,this,canvas,e.changedTouches[i]);
+                var mousePoint = this.getMousePoint(curTouch.identifier);
+                if(!mousePoint || mousePoint.x != curTouch.offsetX || mousePoint.y != curTouch.offsetY){
+                    var mouseDownNode = this.getMouseDownNode(curTouch.identifier);
+                    var mouseDragNode = this.getMouseDragNode(curTouch.identifier);
+                    this.setMousePoint({x:curTouch.offsetX,y:curTouch.offsetY},curTouch);
+                    this.setMouseOverNode(curTouch, null);
+                    if(mouseDragNode){
+                        if(mouseDragNode != mouseDownNode){
+                            this.setMouseDownNode(curTouch,mouseDragNode);
+                        }
+                        if(mouseDragNode.dragReady()){
+                            mouseDragNode.postNotification(mouseDragNode.notifyDraging,[curTouch]);
                         }
                     }
                 }
             }
         });
         hy.event.addEventListener(doc,"touchend", this, function(e){
-            if(this._runNode != null){
-                var e = event?event:e;
-                var canvas = this.getRenderContext().getCanvas();
-                for(var i= 0,touchCount=e.changedTouches.length ; i<touchCount ; ++i){
-                    var curTouch = hy.event.createEvent(e,this,canvas,e.changedTouches[i]);
-                    var mouseDownNode = this.getMouseDownNode(curTouch.identifier);
-                    this.setMousePoint(curTouch, null);
-                    this.setMouseDownNode(curTouch, null);
-                    this.setMouseDragNode(curTouch, null);
-                    this.setMouseOverNode(curTouch, null);
-                    if(mouseDownNode){
-                        mouseDownNode.postNotification(mouseDownNode.notifyMouseDown,[curTouch]);
-                        if(mouseDownNode.dragReady()){
-                            mouseDownNode.postNotification(mouseDownNode.notifyDragEnd,[curTouch]);
-                        }
+            var e = event?event:e;
+            var canvas = this.getRenderContext().getCanvas();
+            for(var i= 0,touchCount=e.changedTouches.length ; i<touchCount ; ++i){
+                var curTouch = hy.event.createEvent(e,this,canvas,e.changedTouches[i]);
+                var mouseDownNode = this.getMouseDownNode(curTouch.identifier);
+                this.setMousePoint(curTouch, null);
+                this.setMouseDownNode(curTouch, null);
+                this.setMouseDragNode(curTouch, null);
+                this.setMouseOverNode(curTouch, null);
+                if(mouseDownNode){
+                    mouseDownNode.postNotification(mouseDownNode.notifyMouseDown,[curTouch]);
+                    if(mouseDownNode.dragReady()){
+                        mouseDownNode.postNotification(mouseDownNode.notifyDragEnd,[curTouch]);
                     }
                 }
             }
         });
         hy.event.addEventListener(doc,"touchcancel", this, function(e){
-            if(this._runNode != null){
-                var e = event?event:e;
-                var canvas = this.getRenderContext().getCanvas();
-                for(var i= 0,touchCount=e.changedTouches.length ; i<touchCount ; ++i){
-                    var curTouch = hy.event.createEvent(e,this,canvas,e.changedTouches[i]);
-                    var mouseDownNode = this.getMouseDownNode(curTouch.identifier);
-                    this.setMousePoint(curTouch, null);
-                    this.setMouseDownNode(curTouch, null);
-                    this.setMouseDragNode(curTouch, null);
-                    this.setMouseOverNode(curTouch, null);
-                    if(mouseDownNode){
-                        mouseDownNode.postNotification(mouseDownNode.notifyMouseDown,[curTouch]);
-                        if(mouseDownNode.dragReady()){
-                            mouseDownNode.postNotification(mouseDownNode.notifyDragEnd,[curTouch]);
-                        }
+            var e = event?event:e;
+            var canvas = this.getRenderContext().getCanvas();
+            for(var i= 0,touchCount=e.changedTouches.length ; i<touchCount ; ++i){
+                var curTouch = hy.event.createEvent(e,this,canvas,e.changedTouches[i]);
+                var mouseDownNode = this.getMouseDownNode(curTouch.identifier);
+                this.setMousePoint(curTouch, null);
+                this.setMouseDownNode(curTouch, null);
+                this.setMouseDragNode(curTouch, null);
+                this.setMouseOverNode(curTouch, null);
+                if(mouseDownNode){
+                    mouseDownNode.postNotification(mouseDownNode.notifyMouseDown,[curTouch]);
+                    if(mouseDownNode.dragReady()){
+                        mouseDownNode.postNotification(mouseDownNode.notifyDragEnd,[curTouch]);
                     }
                 }
             }
         });
         hy.event.addEventListener(canvas,"touchstart", this, function(e){
-            if(this._runNode){
-                var e = event?event:e;
-                var canvas = this.getRenderContext().getCanvas();
-                for(var i= 0,touchCount = e.changedTouches.length ; i<touchCount ; ++i){
-                    var curTouch = hy.event.createEvent(e,this,canvas,e.changedTouches[i]);
-                    this.setMousePoint({x:curTouch.offsetX,y:curTouch.offsetY},curTouch);
-                    this._runNode._dispatchMouseDown(curTouch);
-                }
-                this.hideContextMenu();
+            var e = event?event:e;
+            var canvas = this.getRenderContext().getCanvas();
+            for(var i= 0,touchCount = e.changedTouches.length ; i<touchCount ; ++i){
+                var curTouch = hy.event.createEvent(e,this,canvas,e.changedTouches[i]);
+                this.setMousePoint({x:curTouch.offsetX,y:curTouch.offsetY},curTouch);
+                this._runRootNode._dispatchMouseDown(curTouch);
             }
+            this.hideContextMenu();
         });
         hy.event.addEventListener(canvas,"touchmove", this, function(e){
-            if(this._runNode){
-                var e = event?event:e;
-                var canvas = this.getRenderContext().getCanvas();
-                for(var i= 0,touchCount = e.changedTouches.length ; i<touchCount ; ++i){
-                    var curTouch = hy.event.createEvent(e,this,canvas,e.changedTouches[i]);
-                    var mousePoint = this.getMousePoint(curTouch.identifier);
-                    if(!mousePoint || mousePoint.x != curTouch.offsetX || mousePoint.y != curTouch.offsetY){
-                        this.setMousePoint({x:curTouch.offsetX,y:curTouch.offsetY},curTouch);
-                        var mouseDownNode = this.getMouseDownNode(curTouch.identifier);
-                        var mouseDragNode = this.getMouseDragNode(curTouch.identifier);
-                        if(mouseDragNode){
-                            if(mouseDragNode != mouseDownNode){
-                                this.setMouseDownNode(curTouch, mouseDragNode);
-                            }
-                            if(mouseDragNode.dragReady()){
-                                mouseDragNode.postNotification(mouseDragNode.notifyDraging,[curTouch]);
-                            }else{
-                                if(!this._runNode._dispatchMouseMove(curTouch)){
-                                    this.setMouseOverNode(curTouch, null);
-                                }
-                            }
+            var e = event?event:e;
+            var canvas = this.getRenderContext().getCanvas();
+            for(var i= 0,touchCount = e.changedTouches.length ; i<touchCount ; ++i){
+                var curTouch = hy.event.createEvent(e,this,canvas,e.changedTouches[i]);
+                var mousePoint = this.getMousePoint(curTouch.identifier);
+                if(!mousePoint || mousePoint.x != curTouch.offsetX || mousePoint.y != curTouch.offsetY){
+                    this.setMousePoint({x:curTouch.offsetX,y:curTouch.offsetY},curTouch);
+                    var mouseDownNode = this.getMouseDownNode(curTouch.identifier);
+                    var mouseDragNode = this.getMouseDragNode(curTouch.identifier);
+                    if(mouseDragNode){
+                        if(mouseDragNode != mouseDownNode){
+                            this.setMouseDownNode(curTouch, mouseDragNode);
+                        }
+                        if(mouseDragNode.dragReady()){
+                            mouseDragNode.postNotification(mouseDragNode.notifyDraging,[curTouch]);
                         }else{
-                            if(!this._runNode._dispatchMouseMove(curTouch)){
+                            if(!this._runRootNode._dispatchMouseMove(curTouch)){
                                 this.setMouseOverNode(curTouch, null);
                             }
+                        }
+                    }else{
+                        if(!this._runRootNode._dispatchMouseMove(curTouch)){
+                            this.setMouseOverNode(curTouch, null);
                         }
                     }
                 }
             }
         });
         hy.event.addEventListener(canvas,"touchend", this, function(e){
-            if(this._runNode){
-                var e = event?event:e;
-                var canvas = this.getRenderContext().getCanvas();
-                for(var i= 0,touchCount = e.changedTouches.length ; i<touchCount ; ++i){
-                    var curTouch = hy.event.createEvent(e,this,canvas,e.changedTouches[i]);
-                    var mouseDownNode = this.getMouseDownNode(curTouch.identifier);
-                    this.setMousePoint(curTouch, null);
-                    this.setMouseDownNode(curTouch, null);
-                    this.setMouseOverNode(curTouch, null);
-                    this.setMouseDragNode(curTouch, null);
-                    if(mouseDownNode){
-                        mouseDownNode.postNotification(mouseDownNode.notifyMouseUp,[curTouch]);
-                        if(mouseDownNode.dragReady()){
-                            mouseDownNode.postNotification(mouseDownNode.notifyDragEnd,[curTouch]);
-                        }
+            var e = event?event:e;
+            var canvas = this.getRenderContext().getCanvas();
+            for(var i= 0,touchCount = e.changedTouches.length ; i<touchCount ; ++i){
+                var curTouch = hy.event.createEvent(e,this,canvas,e.changedTouches[i]);
+                var mouseDownNode = this.getMouseDownNode(curTouch.identifier);
+                this.setMousePoint(curTouch, null);
+                this.setMouseDownNode(curTouch, null);
+                this.setMouseOverNode(curTouch, null);
+                this.setMouseDragNode(curTouch, null);
+                if(mouseDownNode){
+                    mouseDownNode.postNotification(mouseDownNode.notifyMouseUp,[curTouch]);
+                    if(mouseDownNode.dragReady()){
+                        mouseDownNode.postNotification(mouseDownNode.notifyDragEnd,[curTouch]);
                     }
                 }
             }
         });
         hy.event.addEventListener(canvas,"touchcancel", this, function(e){
-            if(this._runNode){
-                var e = event?event:e;
-                var canvas = this.getRenderContext().getCanvas();
-                for(var i= 0,touchCount = e.changedTouches.length ; i<touchCount ; ++i){
-                    var curTouch = hy.event.createEvent(e,this,canvas,e.changedTouches[i]);
-                    var mouseDownNode = this.getMouseDownNode(curTouch.identifier);
-                    this.setMousePoint(curTouch, null);
-                    this.setMouseDownNode(curTouch, null);
-                    this.setMouseOverNode(curTouch, null);
-                    this.setMouseDragNode(curTouch, null);
-                    if(mouseDownNode){
-                        mouseDownNode.postNotification(mouseDownNode.notifyMouseUp,[curTouch]);
-                        if(mouseDownNode.dragReady()){
-                            mouseDownNode.postNotification(mouseDownNode.notifyDragEnd,[curTouch]);
-                        }
+            var e = event?event:e;
+            var canvas = this.getRenderContext().getCanvas();
+            for(var i= 0,touchCount = e.changedTouches.length ; i<touchCount ; ++i){
+                var curTouch = hy.event.createEvent(e,this,canvas,e.changedTouches[i]);
+                var mouseDownNode = this.getMouseDownNode(curTouch.identifier);
+                this.setMousePoint(curTouch, null);
+                this.setMouseDownNode(curTouch, null);
+                this.setMouseOverNode(curTouch, null);
+                this.setMouseDragNode(curTouch, null);
+                if(mouseDownNode){
+                    mouseDownNode.postNotification(mouseDownNode.notifyMouseUp,[curTouch]);
+                    if(mouseDownNode.dragReady()){
+                        mouseDownNode.postNotification(mouseDownNode.notifyDragEnd,[curTouch]);
                     }
                 }
             }
         });
     }else{
         hy.event.addEventListener(doc,"keydown", this, function(e){
-            if(this._runNode){
-                var canvas = this.getRenderContext().getCanvas();
-                var e = hy.event.createEvent(e, this, canvas);
-                this._runNode._dispatchKeyDown(e);
-            }
+            var canvas = this.getRenderContext().getCanvas();
+            var e = hy.event.createEvent(e, this, canvas);
+            this._runRootNode._dispatchKeyDown(e);
         });
         hy.event.addEventListener(doc,"keypress", this, function(e){
-            if(this._runNode){
-                var canvas = this.getRenderContext().getCanvas();
-                var e = hy.event.createEvent(e, this, canvas);
-                this._runNode._dispatchKeyPress(e);
-            }
+            var canvas = this.getRenderContext().getCanvas();
+            var e = hy.event.createEvent(e, this, canvas);
+            this._runRootNode._dispatchKeyPress(e);
         });
         hy.event.addEventListener(doc,"keyup", this, function(e){
-            if(this._runNode){
-                var canvas = this.getRenderContext().getCanvas();
-                var e = hy.event.createEvent(e, this, canvas);
-                this._runNode._dispatchKeyUp(e);
-            }
+            var canvas = this.getRenderContext().getCanvas();
+            var e = hy.event.createEvent(e, this, canvas);
+            this._runRootNode._dispatchKeyUp(e);
         });
         hy.event.addEventListener(doc,"mousedown", this, function(e){
             this.setMouseDown(true);
-            if(this._runNode){
-                var canvas = this.getRenderContext().getCanvas();
-                var e = hy.event.createEvent(e, this, canvas);
-                this.setMouseDownNode(e , null);
-                this.setMouseDragNode(e , null);
-                this.setMousePoint({x:e.offsetX,y:e.offsetY},e);
-            }
+            var canvas = this.getRenderContext().getCanvas();
+            var e = hy.event.createEvent(e, this, canvas);
+            this.setMouseDownNode(e , null);
+            this.setMouseDragNode(e , null);
+            this.setMousePoint({x:e.offsetX,y:e.offsetY},e);
         });
         hy.event.addEventListener(doc,"mousemove", this, function(e){
-            if(this._runNode){
-                var canvas = this.getRenderContext().getCanvas();
-                var e = hy.event.createEvent(e, this, canvas);
-                var mousePoint = this.getMousePoint(e.identifier);
-                if(!mousePoint || mousePoint.x != e.offsetX || mousePoint.y != e.offsetY){
-                    this.setMousePoint({x:e.offsetX,y:e.offsetY},e);
-                    if (this.getMouseDown()) {
-                        var mouseDownNode = this.getMouseDownNode(e.identifier);
-                        var mouseDragNode = this.getMouseDragNode(e.identifier);
-                        this.setMouseOverNode(e, null);
-                        this.setMouseWheelNode(e, null);
-                        if(mouseDragNode){
-                            if(mouseDragNode != mouseDownNode){
-                                this.setMouseDownNode(e, mouseDragNode);
-                            }
-                            if(mouseDragNode && mouseDragNode.dragReady()){
-                                mouseDragNode.postNotification(mouseDragNode.notifyDraging, [e]);
-                            }
+            var canvas = this.getRenderContext().getCanvas();
+            var e = hy.event.createEvent(e, this, canvas);
+            var mousePoint = this.getMousePoint(e.identifier);
+            if(!mousePoint || mousePoint.x != e.offsetX || mousePoint.y != e.offsetY){
+                this.setMousePoint({x:e.offsetX,y:e.offsetY},e);
+                if (this.getMouseDown()) {
+                    var mouseDownNode = this.getMouseDownNode(e.identifier);
+                    var mouseDragNode = this.getMouseDragNode(e.identifier);
+                    this.setMouseOverNode(e, null);
+                    this.setMouseWheelNode(e, null);
+                    if(mouseDragNode){
+                        if(mouseDragNode != mouseDownNode){
+                            this.setMouseDownNode(e, mouseDragNode);
+                        }
+                        if(mouseDragNode && mouseDragNode.dragReady()){
+                            mouseDragNode.postNotification(mouseDragNode.notifyDraging, [e]);
                         }
                     }
                 }
@@ -599,132 +588,114 @@ hy.Application.prototype.initEventDispatcher = function(){
         });
         hy.event.addEventListener(doc,"mouseup", this, function(e){
             this.setMouseDown(false);
-            if(this._runNode){
-                var canvas = this.getRenderContext().getCanvas();
-                var e = hy.event.createEvent(e, this, canvas);
-                var mouseDownNode = this.getMouseDownNode(e.identifier);
-                this.setMouseDownNode(e , null);
-                this.setMouseDragNode(e , null);
-                if(mouseDownNode){
-                    mouseDownNode.postNotification(mouseDownNode.notifyMouseDown,[e]);
-                    if(mouseDownNode.dragReady()){
-                        mouseDownNode.postNotification(mouseDownNode.notifyDragEnd,[e]);
-                    }
+            var canvas = this.getRenderContext().getCanvas();
+            var e = hy.event.createEvent(e, this, canvas);
+            var mouseDownNode = this.getMouseDownNode(e.identifier);
+            this.setMouseDownNode(e , null);
+            this.setMouseDragNode(e , null);
+            if(mouseDownNode){
+                mouseDownNode.postNotification(mouseDownNode.notifyMouseDown,[e]);
+                if(mouseDownNode.dragReady()){
+                    mouseDownNode.postNotification(mouseDownNode.notifyDragEnd,[e]);
                 }
             }
         });
         hy.event.addEventListener(doc,"mousewheel", this, function(e){
-            if(this._runNode){
-                var canvas = this.getRenderContext().getCanvas();
-                var e = hy.event.createEvent(e, this, canvas);
-                var mouseWheelNode = this.getMouseWheelNode(e.identifier);
-                if(mouseWheelNode){
-                    mouseWheelNode.postNotification(mouseWheelNode.notifyMouseWheel,[e]);
-                }
+            var canvas = this.getRenderContext().getCanvas();
+            var e = hy.event.createEvent(e, this, canvas);
+            var mouseWheelNode = this.getMouseWheelNode(e.identifier);
+            if(mouseWheelNode){
+                mouseWheelNode.postNotification(mouseWheelNode.notifyMouseWheel,[e]);
             }
         });
         hy.event.addEventListener(doc,"DOMMouseScroll",this, function(e){
-            if(this._runNode){
-                var canvas = this.getRenderContext().getCanvas();
-                var e = hy.event.createEvent(e, this, canvas);
-                var mouseWheelNode = this.getMouseWheelNode(e.identifier);
-                if(mouseWheelNode){
-                    mouseWheelNode.postNotification(mouseWheelNode.notifyMouseWheel,[e]);
-                }
+            var canvas = this.getRenderContext().getCanvas();
+            var e = hy.event.createEvent(e, this, canvas);
+            var mouseWheelNode = this.getMouseWheelNode(e.identifier);
+            if(mouseWheelNode){
+                mouseWheelNode.postNotification(mouseWheelNode.notifyMouseWheel,[e]);
             }
         });
         hy.event.addEventListener(canvas,"click", this, function(e){
-            if(this._runNode){
-                var e = hy.event.createEvent(e,this);
-                if(e.button == 0){
-                    this._runNode._dispatchClick(e);
-                }
-                e.stopDispatch();
-                e.preventDefault();
+            var e = hy.event.createEvent(e,this);
+            if(e.button == 0){
+                this._runRootNode._dispatchClick(e);
             }
+            e.stopDispatch();
+            e.preventDefault();
         });
         hy.event.addEventListener(canvas,"dblclick", this, function(e){
-            if(this._runNode){
-                var e = hy.event.createEvent(e,this);
-                if(e.button == 0){
-                    this._runNode._dispatchDblClick(e);
-                }
-                e.stopDispatch();
-                e.preventDefault();
+            var e = hy.event.createEvent(e,this);
+            if(e.button == 0){
+                this._runRootNode._dispatchDblClick(e);
             }
+            e.stopDispatch();
+            e.preventDefault();
         });
         hy.event.addEventListener(canvas,"contextmenu", this, function(e){
-            if(this._runNode){
-                var e = hy.event.createEvent(e,this);
-                this._runNode._dispatchContextMenu(e);
-                e.stopDispatch();
-                e.preventDefault();
-            }
+            var e = hy.event.createEvent(e,this);
+            this._runRootNode._dispatchContextMenu(e);
+            e.stopDispatch();
+            e.preventDefault();
         });
         hy.event.addEventListener(canvas,"mousedown", this, function(e){
             this.setMouseDown(true);
-            if(this._runNode){
-                var e = hy.event.createEvent(e,this);
-                if(e.button == 0){
-                    this._runNode._dispatchMouseDown(e);
-                }
-                this.hideContextMenu();
-                e.stopDispatch();
-                e.preventDefault();
+            var e = hy.event.createEvent(e,this);
+            if(e.button == 0){
+                this._runRootNode._dispatchMouseDown(e);
             }
+            this.hideContextMenu();
+            e.stopDispatch();
+            e.preventDefault();
         });
         hy.event.addEventListener(canvas,"mousemove", this, function(e){
-            if(this._runNode) {
-                var e = hy.event.createEvent(e, this);
-                var mousePoint = this.getMousePoint(e.identifier);
-                if(!mousePoint || mousePoint.x != e.offsetX || mousePoint.y != e.offsetY){
-                    this.setMousePoint({x: e.offsetX, y: e.offsetY}, e);
-                    if (this.getMouseDown()) {
-                        var mouseDownNode = this.getMouseDownNode(e.identifier);
-                        var mouseDragNode = this.getMouseDragNode(e.identifier);
-                        if(mouseDragNode){
-                            if(mouseDragNode != mouseDownNode){
-                                this.setMouseDownNode(e , mouseDragNode);
-                            }
-                            if(mouseDragNode && mouseDragNode.dragReady()){
-                                mouseDragNode.postNotification(mouseDragNode.notifyDraging,[e]);
-                            }else{
-                                if(!this._runNode._dispatchMouseMove(e)){
-                                    this.setMouseOverNode(e, null);
-                                }
-                            }
+            var e = hy.event.createEvent(e, this);
+            var mousePoint = this.getMousePoint(e.identifier);
+            if(!mousePoint || mousePoint.x != e.offsetX || mousePoint.y != e.offsetY){
+                this.setMousePoint({x: e.offsetX, y: e.offsetY}, e);
+                if (this.getMouseDown()) {
+                    var mouseDownNode = this.getMouseDownNode(e.identifier);
+                    var mouseDragNode = this.getMouseDragNode(e.identifier);
+                    if(mouseDragNode){
+                        if(mouseDragNode != mouseDownNode){
+                            this.setMouseDownNode(e , mouseDragNode);
+                        }
+                        if(mouseDragNode && mouseDragNode.dragReady()){
+                            mouseDragNode.postNotification(mouseDragNode.notifyDraging,[e]);
                         }else{
-                            if (!this._runNode._dispatchMouseMove(e)) {
+                            if(!this._runRootNode._dispatchMouseMove(e)){
                                 this.setMouseOverNode(e, null);
                             }
                         }
                     }else{
-                        if (!this._runNode._dispatchMouseMove(e)) {
+                        if (!this._runRootNode._dispatchMouseMove(e)) {
                             this.setMouseOverNode(e, null);
                         }
                     }
+                }else{
+                    if (!this._runRootNode._dispatchMouseMove(e)) {
+                        this.setMouseOverNode(e, null);
+                    }
                 }
-                e.stopDispatch();
-                e.preventDefault();
             }
+            e.stopDispatch();
+            e.preventDefault();
         });
         hy.event.addEventListener(canvas,"mouseup", this, function(e){
             this.setMouseDown(false);
-            if(this._runNode){
-                var canvas = this.getRenderContext().getCanvas();
-                var e = hy.event.createEvent(e, this, canvas);
-                var mouseDownNode = this.getMouseDownNode(e.identifier);
-                this.setMouseDownNode(e , null);
-                this.setMouseDragNode(e , null);
-                if(mouseDownNode){
-                    mouseDownNode.postNotification(mouseDownNode.notifyMouseUp,[e]);
-                    if(mouseDownNode.dragReady()){
-                        mouseDownNode.postNotification(mouseDownNode.notifyDragEnd,[e]);
-                    }
+            var canvas = this.getRenderContext().getCanvas();
+            var e = hy.event.createEvent(e, this, canvas);
+            var mouseDownNode = this.getMouseDownNode(e.identifier);
+            this.setMouseDownNode(e , null);
+            this.setMouseDragNode(e , null);
+            if(mouseDownNode){
+                mouseDownNode.postNotification(mouseDownNode.notifyMouseUp,[e]);
+                if(mouseDownNode.dragReady()){
+                    mouseDownNode.postNotification(mouseDownNode.notifyDragEnd,[e]);
                 }
-                e.stopDispatch();
-                e.preventDefault();
             }
+            e.stopDispatch();
+            e.preventDefault();
         });
     }
 }

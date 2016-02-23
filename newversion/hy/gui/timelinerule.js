@@ -40,20 +40,23 @@ hy.gui.TimelineRule.prototype._paintTimeLineRule = function(sender, dc, rect){
     dc.setFont("10px sans-serif");
     dc.beginPath();
     var frameNum = this._secondDivide * this._duration / 1000;
-    var longY = this.getHeight() - 15;
-    var longY2 = this.getHeight() - 2;
+    var longY = this.getHeight() - 16;
+    var halfLongY = this.getHeight() - 13;
     var shortY = this.getHeight() - 10;
-    var shortY2 = this.getHeight() - 2;
+    var bottomY = this.getHeight() - 2;
     var x = 0;
     var width = this.getWidth();
     for(var i = 0; i < frameNum && x < width; ++i){
         if(i % this._secondDivide == 0){
             dc.moveTo(x+0.5, longY);
-            dc.lineTo(x+0.5, longY2);
+            dc.lineTo(x+0.5, bottomY);
             dc.strokeText(i/this._secondDivide, x+2, this.getHeight() - 13);
+        }else if( i % this._secondDivide == this._secondDivide / 2 ){
+            dc.moveTo(x+0.5, halfLongY);
+            dc.lineTo(x+0.5, bottomY);
         }else{
             dc.moveTo(x+0.5, shortY);
-            dc.lineTo(x+0.5, shortY2);
+            dc.lineTo(x+0.5, bottomY);
         }
         x = x + 8;
     }

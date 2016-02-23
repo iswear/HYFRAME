@@ -21,12 +21,14 @@ hy.gui.SimpleListView.prototype.init = function(config){
 }
 hy.gui.SimpleListView.prototype.setItems = function(items){
     this._items = items;
+    this.needReloadList();
 }
 hy.gui.SimpleListView.prototype.getItems = function(){
     return this._items;
 }
 hy.gui.SimpleListView.prototype.setRowHeight = function(rowHeight){
     this._rowHeight = rowHeight;
+    this.needReloadList();
 }
 hy.gui.SimpleListView.prototype.getRowHeight = function(){
     return this._rowHeight;
