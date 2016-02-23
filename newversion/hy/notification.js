@@ -36,7 +36,7 @@ hy.Notification.prototype.postNotification = function(name, sender , params){
         for(var i = 0, len = observers.length ; i < len ; ++i){
             //try{
                 observer = observers[i];
-                if(observer.sender == sender){
+                if(observer.sender || observer.sender == sender){
                     observer.callBack.apply(observer.target, params);
                 }
             //}catch (err){ window.console.log(err); }

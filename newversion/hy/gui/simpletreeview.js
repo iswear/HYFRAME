@@ -103,6 +103,7 @@ hy.gui.SimpleTreeView.prototype.moveNodeFromTo = function(fromPath, toPath){
             }else if(fromIndex < toIndex){
                 toParNodeData.childNodes.splice(toIndex, 0, fromNodeData);
                 fromParNodeData.childNodes.splice(fromIndex, 1);
+                toPath[toPath.length - 1] = toPath[toPath.length - 1] - 1;
                 this.needReloadTree();
             }
         }else{
@@ -238,7 +239,7 @@ hy.gui.SimpleTreeView.prototype._moveOkTreeNode = function(sender, e){
                         break;
                     }
                     case 2:{
-                        toNodePath[toNodePath.length - 1] = [toNodePath.length - 1] + 1;
+                        toNodePath[toNodePath.length - 1] = toNodePath[toNodePath.length - 1] + 1;
                         this.setSelectedNodePath(this.moveNodeFromTo(this._selNodePath, toNodePath));
                         break;
                     }
