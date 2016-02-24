@@ -26,12 +26,12 @@ hy.gui.SimpleListView.prototype.setItems = function(items){
 hy.gui.SimpleListView.prototype.getItems = function(){
     return this._items;
 }
-hy.gui.SimpleListView.prototype.setRowHeight = function(rowHeight){
-    this._rowHeight = rowHeight;
+hy.gui.SimpleListView.prototype.setCellHeight = function(cellHeight){
+    this._cellHeight = cellHeight;
     this.needReloadList();
 }
-hy.gui.SimpleListView.prototype.getRowHeight = function(){
-    return this._rowHeight;
+hy.gui.SimpleListView.prototype.getCellHeight = function(){
+    return this._cellHeight;
 }
 hy.gui.SimpleListView.prototype.setCellMoveEnable = function(cellMoveEnable){
     this._cellMoveEnable = cellMoveEnable;

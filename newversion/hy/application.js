@@ -272,11 +272,13 @@ hy.Application.prototype.showContextMenu = function(e,node,menuItems,menuType){
     if(menuType == 0){
         this._contextMenu.setX(e.offsetX - this._runRootNode.getX());
         this._contextMenu.setY(e.offsetY - this._runRootNode.getY());
+        this._contextMenu.setHeight(this._contextMenu.getCellHeight() * menuItems.length);
         this._contextMenu.setItems(menuItems);
     }else{
         var pointNode = node.transPointToAncestorNode({x: 0,y: e.offsetY}, null);
         this._contextMenu.setX(pointNode.x - this._runRootNode.getX());
         this._contextMenu.setY(pointNode.y - this._runRootNode.getY());
+        this._contextMenu.setHeight(this._contextMenu.getRowHeight() * menuItems.length);
         this._contextMenu.setItems(menuItems);
     }
     this._contextMenu.setVisible(true);
