@@ -1,10 +1,31 @@
 <!DOCTYPE html>
 <html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
+<head>
+    <title>Foundation 实例</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<link rel="stylesheet" href="http://static.runoob.com/assets/foundation-5.5.3/foundation.min.css">-->
+    <!--<link rel="stylesheet" href="http://static.runoob.com/assets/foundation-icons/foundation-icons.css">-->
+    <!--<link rel="stylesheet" href="css/foundation-6/app.css">-->
+    <link rel="stylesheet" type="text/css" href="css/foundation-6/foundation.min.css">
+    <link rel="stylesheet" type="text/css" href="css/foundation-6/foundation-flex.css">
+    <link rel="stylesheet" type="text/css" href="css/foundation-6/foundation-icons.css">
+    <link rel="stylesheet" type="text/css" href="css/foundation-6/app.css">
+
 </head>
 <body>
-
+<div class="slider" data-slider data-initial-start="50" data-end="200">
+    <span class="slider-handle"  data-slider-handle role="slider" tabindex="1"></span>
+    <span class="slider-fill" data-slider-fill></span>
+    <input type="hidden">
+</div>
+<script src="js/foundation-6/vendor/jquery.min.js"></script>
+<script src="js/foundation-6/vendor/what-input.min.js"></script>
+<script src="js/foundation-6/foundation.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(document).foundation();
+    })
+</script>
 </body>
 </html>
