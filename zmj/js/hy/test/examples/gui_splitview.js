@@ -5,7 +5,7 @@ var testNode = new hy.gui.SplitView({
     height:200,
     normalColor:'#000',
     autoAdjustViewIndex:1,
-    splitInitLayout:[100,200,100],
+    splitInitLayout:[25,200,25],
     splitViews:[
         new hy.gui.View({normalColor:"#f00"}),
         new hy.gui.View({normalColor:"#0f0"}),

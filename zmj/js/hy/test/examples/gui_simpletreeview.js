@@ -6,7 +6,7 @@ var testNode = new hy.gui.SimpleTreeView({
     normalColor:'#f00',
     nodeSelectEnable:true,
     nodeEditEnable:true,
-    nodeMoveEnable:true,
+    nodeDragEnable:true,
     root:{
         name:'rootsssss',
         expanded:true,

@@ -160,7 +160,7 @@ hy.gui.SimpleListView.prototype.numberOfListCell = function(listView){
 hy.gui.SimpleListView.prototype.widthOfListCell = function(listView, cellIndex){
     var cellView = listView.getCellViewOfCellIndex(cellIndex);
     if(cellView){
-        return cellView.getCellTextMeasuredLength();
+        return cellView.getCellTextMeasuredLength() + this.getHeight - 5;
     }else{
         return 0;
     }
@@ -183,7 +183,7 @@ hy.gui.SimpleListView.prototype.viewOfListCell = function(listView, cellIndex){
         cellView.addObserver(cellView.notifyMouseOut, this, this._moveOutListCell);
         cellView.addObserver(cellView.notifyMouseUp, this, this._moveOkListCell);
     }
-    cellView.setCellText(this._items[cellIndex]);
+    cellView.setCellText(this._items[cellIndex].name);
     cellView.setCellEditEnable(this._cellEditEnable);
     if(cellIndex == this._selCellIndex){
         cellView.setSelected(true);

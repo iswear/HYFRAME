@@ -195,7 +195,7 @@ hy.action.Animation = hy.extend(hy.action.Base)
 hy.action.Animation.prototype.init = function(config){
     this.superCall("init",[config]);
     this._targetOffset = this.isUndefined(config.targetOffset) ? 0 : config.targetOffset;
-    this._offsetFun = this.isUndefined(config.offsetFun) ? "0" : config.offsetFun;
+    this._offsetFun = eval("(function(t){ return " + (this.isUndefined(config.offsetFun) ? "0" : config.offsetFun) + "; })");
 };
 hy.action.Animation.prototype.setTargetOffset = function(targetOffset){
     this._targetOffset = targetOffset;
@@ -338,7 +338,6 @@ hy.action.ScaleX.prototype.execute = function(actionBinder, deltaTime){
         offsetScaleX = 0;
         sumTime = 0;
         actionBinder.setRunParams("inited",true);
-        actionBinder.setRunParams("startscalex",startScaleX);
         actionBinder.setRunParams("offsetscalex",offsetScaleX);
         actionBinder.setRunParams("sumtime",sumTime);
     }

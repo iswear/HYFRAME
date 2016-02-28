@@ -57,6 +57,6 @@ hy.Object.prototype.setUserProperty = function(key, value){
 hy.Object.prototype.removeUserProperty = function(key){
     delete this._userProperty[key];
 }
-hy.Object.prototype.clean = function(){
+hy.Object.prototype.destory = function(){
     this._userProperty = {};
 }

@@ -540,6 +540,24 @@ hy.Node.prototype.removeFromParent = function(clean){
         parent.removeChildNode(this,clean);
     }
 }
+hy.Node.prototype.runAction = function(action,target,callBack,loop){
+    var app = this.getApplication();
+    if(app){
+        app.getActionManager().addActionBinder(this,action,target,callBack,loop);
+    }
+}
+hy.Node.prototype.stopAction = function(action){
+    var app = this.getApplication();
+    if(app){
+        app.getActionManager().removeActionOfSprite(this,action);
+    }
+}
+hy.Node.prototype.stopAllActions = function(){
+    var app = this.getApplication();
+    if(app){
+        app.getActionManager().removeAllActionsOfSprite(this);
+    }
+}
 
 hy.Node.prototype.focus = function(e){
     var app = this.getApplication();
@@ -816,7 +834,7 @@ hy.Node.prototype._dispatchMouseDown = function(e){
         if(this._clipBound){
             if(localPoint.x >= localLefTop.x && localPoint.x <= localRigBot.x
                 && localPoint.y >= localLefTop.y && localPoint.y <= localRigBot.y){
-                if(this._mouseEnable){
+                if(this._mouseEnable && e.button == 0){
                     if(this._dragEnable && this._dragZone
                         && localPoint.x >= this._dragZone.x0 && localPoint.x <= this._dragZone.x1
                         && localPoint.y >= this._dragZone.y0 && localPoint.y <= this._dragZone.y1){
@@ -845,7 +863,7 @@ hy.Node.prototype._dispatchMouseDown = function(e){
             }
         }else{
             var flag = false;
-            if(this._mouseEnable){
+            if(this._mouseEnable && e.button == 0){
                 if(localPoint.x > localLefTop.x && localPoint.x < localRigBot.x
                     && localPoint.y > localLefTop.y && localPoint.y < localRigBot.y) {
                     flag = true;
@@ -1101,6 +1119,6 @@ hy.Node.prototype._syncSinRotateZ = function(sender){
 hy.Node.prototype._syncCosRotateZ = function(sender){
     this._cosRotateZ = Math.cos(this._rotateZ);
 }
-hy.Node.prototype.clean = function(){
-    this.superCall("init");
+hy.Node.prototype.destory = function(){
+    this.superCall("destory");
 }

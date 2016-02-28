@@ -1,3 +1,10 @@
+/*
+ nodeData:{
+ id:,
+ icon:,
+ name:,
+ }
+ */
 var hy = hy || {};
 hy.gui = hy.gui || {};
 hy.gui.SimpleListCellView = hy.extend(hy.gui.ListCellView);
@@ -7,10 +14,12 @@ hy.gui.SimpleListCellView.prototype.defaultActiveColor = "#0f0";
 hy.gui.SimpleListCellView.prototype.clipBound = false;
 hy.gui.SimpleListCellView.prototype.init = function(config){
     this.superCall("init",[config]);
-    this._cellEditEnable = this.isUndefined(config.cellEditEnable) ? this.defaultCellEditEnable : config.cellEditEnable;
     this._cellEditBox = new hy.gui.TextBox({editEnable:false, mouseEnable:false, lineNum:1 });
+    this._cellIcon = new hy.gui.ImageView({mouseEnable:false});
+    this._cellEditEnable = this.isUndefined(config.cellEditEnable) ? this.defaultCellEditEnable : config.cellEditEnable;
     this._cellInsertMode = 0;
     this.__initEditValid = true;
+    this.addChildNodeAtLayer(this._cellIcon, 0);
     this.addChildNodeAtLayer(this._cellEditBox, 0);
     this.addObserver(this.notifyPaint, this, this._paintCellInsertMode);
     this.addObserver(this.notifyLayoutSubNodes, this, this._layoutSimpleListCellView);
@@ -44,7 +53,11 @@ hy.gui.SimpleListCellView.prototype.getCellTextMeasuredLength = function(){
     return this._cellEditBox.getTextMeasuredLength();
 }
 hy.gui.SimpleListCellView.prototype._layoutSimpleListCellView = function(sender){
-    this._cellEditBox.setX(0);
+    this._cellIcon.setX(0);
+    this._cellIcon.setY(0);
+    this._cellIcon.setWidth(this.getHeight());
+    this._cellIcon.setHeight(this.getHeight());
+    this._cellEditBox.setX(this.getHeight());
     this._cellEditBox.setY(0);
     this._cellEditBox.setWidth(this.getWidth());
     this._cellEditBox.setHeight(this.getHeight());

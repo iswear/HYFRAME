@@ -43,7 +43,7 @@ hy.Notification.prototype.postNotification = function(name, sender , params){
         }
     }
 }
-hy.Notification.prototype.clean = function(){
+hy.Notification.prototype.destory = function(){
     this._observers = {};
-    this.superCall("clean");
+    this.superCall("destory");
 }

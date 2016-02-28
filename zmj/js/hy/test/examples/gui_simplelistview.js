@@ -3,7 +3,6 @@ var testNode = new hy.gui.SimpleListView({
     y:100,
     width:200,
     height:200,
-    normalColor:'#f00',
     cellSelectEnable:true,
     cellEditEnable:true,
     cellMoveEnable:true,

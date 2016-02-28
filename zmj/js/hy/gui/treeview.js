@@ -9,10 +9,15 @@ hy.gui.TreeView.prototype.notifyTreeNodeMouseMove = "treenodemousemove";
 hy.gui.TreeView.prototype.notifyTreeNodeClick = "treenodeclick";
 hy.gui.TreeView.prototype.notifyTreeNodeDblclick = "treenodedblclick";
 hy.gui.TreeView.prototype.notifyTreeNodeContextMenu = "treenodecontextmenu";
+hy.gui.TreeView.prototype.notifyTreeNodeDrag = "treenodedrag";
+hy.gui.TreeView.prototype.notifyTreeNodeSelected = "treenodeselected";
+hy.gui.TreeView.prototype.notifyTreeNodeUnSelected = "treenodeunselected";
 hy.gui.TreeView.prototype.defaultWidthFit = true;
 hy.gui.TreeView.prototype.defaultHeightFit = false;
 hy.gui.TreeView.prototype.defaultHeaderViewFloat = false;
 hy.gui.TreeView.prototype.defaultFooterViewFloat = false;
+hy.gui.TreeView.prototype.defaultNodeDragEnable = false;
+hy.gui.TreeView.prototype.defaultNodeSelectEnable = false;
 hy.gui.TreeView.prototype.init = function(config){
     this.superCall("init",[config]);
     this._dataSource = this.isUndefined(config.dataSource) ? null : config.dataSource;
@@ -21,9 +26,14 @@ hy.gui.TreeView.prototype.init = function(config){
     this._footerView = this.isUndefined(config.footerView) ? null : config.footerView;
     this._footerViewFloat = this.isUndefined(config.footerViewFloat) ? this.defaultFooterViewFloat : config.footerViewFloat;
     this._root = this.isUndefined(config.root) ? null : config.root;
+    this._nodeDragEnable = this.isUndefined(config.nodeDragEnable) ? this.defaultNodeDragEnable : config.nodeDragEnable;
+    this._nodeSelectEnable = this.isUndefined(config.nodeSelectEnable) ? this.defaultNodeSelectEnable : config.nodeSelectEnable;
     this._reuseNodeViews = {};
     this._nodeViews = [];
     this._nodeInfos = {};/*{y:,height:,view:,childNodes:}*/
+    this._selNodePath = null;
+    this.__dragNodeInit = false;
+    this.__dragOverNodePath = null;
     this.__needReloadTree = false;
     this.__needMallocTreeView = false;
     var contentView = this.getContentView();
@@ -69,6 +79,41 @@ hy.gui.TreeView.prototype.getReuseNodeViewOfIdentity = function(reuseIdentity){
     }else{
         return null;
     }
+}
+hy.gui.TreeView.prototype.setNodeDragEnable = function(moveEnable){
+    this._nodeDragEnable = moveEnable;
+}
+hy.gui.TreeView.prototype.getNodeDragEnable = function(){
+    return this._nodeDragEnable;
+}
+hy.gui.TreeView.prototype.setNodeSelectEnable = function(selectEnable){
+    this._nodeSelectEnable = selectEnable;
+}
+hy.gui.TreeView.prototype.getNodeSelectEnable = function(){
+    return this._nodeSelectEnable;
+}
+hy.gui.TreeView.prototype.setSelectedNodePath = function(nodePath){
+    if(!this._compareNodePath(nodePath, nodePath ? nodePath.length : 0, this._selNodePath, this._selNodePath ? this._selNodePath.length : 0)){
+        var oldSelNodePath = this._selNodePath;
+        var oldSelNodeView = this.getNodeViewOfNodePath(oldSelNodePath, oldSelNodePath ? oldSelNodePath.length : 0);
+        this._selNodePath = nodePath;
+        var selNodeView = this.getNodeViewOfNodePath(nodePath, nodePath ? nodePath.length : 0);
+        if(oldSelNodeView){
+            oldSelNodeView.setSelected(false);
+        }
+        if(selNodeView){
+            selNodeView.setSelected(true);
+        }
+        if(oldSelNodePath){
+            this.postNotification(this.notifyTreeNodeUnSelected, [oldSelNodePath]);
+        }
+        if(nodePath){
+            this.postNotification(this.notifyTreeNodeSelected,[nodePath]);
+        }
+    }
+}
+hy.gui.TreeView.prototype.getSelectedNodePath = function(){
+    return this._selNodePath;
 }
 
 hy.gui.TreeView.prototype.needReloadTree = function(){
@@ -219,19 +264,137 @@ hy.gui.TreeView.prototype._layoutTreeNodeViews = function(){
         this._nodeViews[i].setWidth(contentWidth);
     }
 }
+
+hy.gui.TreeView.prototype._compareNodePath = function(srcNodePath,srcDeepth,targetNodePath,targetDeepth){
+    if(srcNodePath){
+        if(targetNodePath){
+            if(srcNodePath == targetNodePath) {
+                return true;
+            }else{
+                if(srcDeepth == targetDeepth){
+                    for(var i=srcDeepth-1;i>=0;--i){
+                        if(srcNodePath[i] != targetNodePath[i]){
+                            return false;
+                        }
+                    }
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        }else{
+            return false;
+        }
+    }else{
+        if(targetNodePath){
+            return false;
+        }else{
+            return true;
+        }
+    }
+}
+hy.gui.TreeView.prototype._checkIsChildNode = function(parentNodePath,parentDeepth,childNodePath,childDeepth){
+    if(parentNodePath && childNodePath){
+        if(parentNodePath.length == 0){
+            return true;
+        }else{
+            if(childDeepth <= parentDeepth){
+                return false;
+            }else{
+                for(var i=parentDeepth-1;i>=0;--i){
+                    if(childNodePath[i] != parentNodePath[i]){
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+    }else{
+        return false;
+    }
+}
 hy.gui.TreeView.prototype._mouseDownTreeNode = function(sender, e){
+    if(this._nodeSelectEnable){
+        this.setSelectedNodePath(sender.getNodePath());
+        if(this._nodeDragEnable){
+            this.__dragNodeInit = true;
+        }
+    }
     this.postNotification(this.notifyTreeNodeMouseDown, [sender, e]);
 }
 hy.gui.TreeView.prototype._mouseUpTreeNode = function(sender, e){
+    if(this.__dragNodeInit){
+        if(this._selNodePath && this.__dragOverNodePath){
+            var overNodeView = this.getNodeViewOfNodePath(this.__dragOverNodePath, this.__dragOverNodePath.length);
+            var toNodePath = hy.clone(this.__dragOverNodePath);
+            if(overNodeView){
+                switch (overNodeView.getNodeInsertMode()){
+                    case 1:{
+                        this.postNotification(this.notifyTreeNodeDrag, [this._selNodePath, toNodePath]);
+                        break;
+                    }
+                    case 2:{
+                        toNodePath[toNodePath.length - 1] = toNodePath[toNodePath.length - 1] + 1;
+                        this.postNotification(this.notifyTreeNodeDrag, [this._selNodePath, toNodePath]);
+                        break;
+                    }
+                    case 3:{
+                        toNodePath.push(0);
+                        this.postNotification(this.notifyTreeNodeDrag, [this._selNodePath, toNodePath]);
+                        break;
+                    }
+                    default :{
+                        break;
+                    }
+                }
+                overNodeView.setNodeInsertMode(0);
+            }
+        }
+        this.__dragNodeInit = false;
+    }
     this.postNotification(this.notifyTreeNodeMouseUp, [sender, e]);
 }
 hy.gui.TreeView.prototype._mouseOverTreeNode = function(sender, e){
+    if(this.__dragNodeInit){
+        this.__dragOverNodePath = sender.getNodePath();
+    }
     this.postNotification(this.notifyTreeNodeMouseOver, [sender ,e]);
 }
 hy.gui.TreeView.prototype._mouseOutTreeNode = function(sender, e){
+    this.__dragOverNodePath = null;
+    sender.setNodeInsertMode(0);
     this.postNotification(this.notifyTreeNodeMouseOut, [sender, e]);
 }
 hy.gui.TreeView.prototype._mouseMoveTreeNode = function(sender, e){
+    if(this.__dragNodeInit){
+        if(this.__dragOverNodePath
+            && this._selNodePath
+            && !this._compareNodePath(this.__dragOverNodePath, this.__dragOverNodePath.length, this._selNodePath, this._selNodePath.length)
+            && !this._checkIsChildNode(this._selNodePath, this._selNodePath.length, this.__dragOverNodePath, this.__dragOverNodePath.length)){
+            var overNodeView = this.getNodeViewOfNodePath(this.__dragOverNodePath, this.__dragOverNodePath.length);
+            if(overNodeView){
+                var overNodeData = overNodeView.getNodeData();
+                var pointOverNodeView = overNodeView.transPointFromAncestorNode({x: e.offsetX, y: e.offsetY}, null);
+                if(overNodeData.leaf){
+                    if(pointOverNodeView.y < overNodeView.getHeight()/4 && this.__dragOverNodePath.length > 0){
+                        overNodeView.setNodeInsertMode(1);
+                    }else if(pointOverNodeView.y > 3*overNodeView.getHeight()/4 && this.__dragOverNodePath.length > 0){
+                        overNodeView.setNodeInsertMode(2);
+                    }else{
+                        overNodeView.setNodeInsertMode(0);
+                    }
+                }else{
+                    if(pointOverNodeView.y < overNodeView.getHeight()/4 && this.__dragOverNodePath.length > 0){
+                        overNodeView.setNodeInsertMode(1);
+                    }else if(pointOverNodeView.y > 3*overNodeView.getHeight()/4 && this.__dragOverNodePath.length > 0){
+                        overNodeView.setNodeInsertMode(2);
+                    }else{
+                        overNodeView.setNodeInsertMode(3);
+                    }
+                }
+            }
+        }
+    }
     this.postNotification(this.notifyTreeNodeMouseMove, [sender, e]);
 }
 hy.gui.TreeView.prototype._clickTreeNode = function(sender, e){

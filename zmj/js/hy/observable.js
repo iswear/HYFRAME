@@ -13,8 +13,8 @@ hy.Observable.prototype.removeObserver = function(name, target, callBack){
 hy.Observable.prototype.postNotification = function(name , params){
     this._localNotification.postNotification(name, this, params);
 }
-hy.Observable.prototype.clean = function(){
-    this._localNotification.clean();
+hy.Observable.prototype.destory = function(){
+    this._localNotification.destory();
     this._localNotification = null;
-    this.superCall("clean");
+    this.superCall("destory");
 }
