@@ -9,7 +9,6 @@ hy.gui.SplitView.prototype.init = function(config){
     this._splitViews = this.isUndefined(config.splitViews) ? null : config.splitViews;
     this._splitSpace = this.isUndefined(config.splitSpace) ? this.defaultSplitSpace : config.splitSpace;
     this._splitDirection = this.isUndefined(config.splitDirection) ? this.defaultSplitDirection : config.splitDirection;
-    this._splitInitLayout = this.isUndefined(config.splitInitLayout) ? null : config.splitInitLayout;
     this._adjustEnable = this.isUndefined(config.adjustEnable) ? this.defaultAdjustEnable : config.adjustEnable;
     this._autoAdjustViewIndex = this.isUndefined(config.autoAdjustViewIndex) ? -1 : config.autoAdjustViewIndex;
     this._splitSpaceViews = [];
@@ -59,52 +58,28 @@ hy.gui.SplitView.prototype._syncSplitSpaceViews = function(){
         }
         /*初始化布局*/
         if(this._splitDirection == 0){
-            if(!this._splitInitLayout || this._splitInitLayout.length != viewCount){
-                this._splitInitLayout = [];
-                var averageWidth = this.getWidth() - this._splitSpace * (viewCount - 1);
-                var averageViewWidth = averageWidth / viewCount;
-                var x = 0;
-                for(var i = 0, splitViewCount = viewCount - 1; i < splitViewCount ; ++i){
-                    x += averageViewWidth;
-                    this._splitSpaceViews[i].setX(x);
-                    x += this._splitSpace;
-                }
-            }else{
-                var x = 0;
-                for(var i = 0, splitViewCount = (this._autoAdjustViewIndex < viewCount) ? this._autoAdjustViewIndex : (viewCount - 1) ; i < splitViewCount ; ++i){
-                    x += this._splitInitLayout[i];
-                    this._splitSpaceViews[i].setX(x);
-                    x += this._splitSpace;
-                }
-                var reverseX = this.getWidth();
-                for(var i = viewCount - 1 ; i > this._autoAdjustViewIndex ; --i){
-                    reverseX -= (this._splitInitLayout[i]+this._splitSpace);
-                    this._splitSpaceViews[i-1].setX(reverseX);
-                }
+            var averageWidth = this.getWidth() - this._splitSpace * (viewCount - 1);
+            var averageViewWidth = averageWidth / viewCount;
+            var x = 0;
+            for(var i = 0, splitViewCount = viewCount - 1; i < splitViewCount ; ++i) {
+                x += averageViewWidth;
+                this._splitSpaceViews[i].setX(x);
+                x += this._splitSpace;
+            }
+            for(var i = 0 ; i < viewCount ; ++i){
+                this._splitViews[i].setHeight(averageViewWidth);
             }
         }else{
-            if(!this._splitInitLayout || this._splitInitLayout.length != viewCount){
-                this._splitInitLayout = [];
-                var averageHeight = this.getHeight() - this._splitSpace * (viewCount - 1);
-                var averageViewHeight = averageHeight / viewCount;
-                var y = 0;
-                for(var i = 0, splitViewCount = viewCount - 1; i < splitViewCount ; ++i){
-                    y += averageViewHeight;
-                    this._splitSpaceViews[i].setY(y);
-                    y += this._splitSpace;
-                }
-            }else{
-                var y = 0;
-                for(var i = 0, splitViewCount = (this._autoAdjustViewIndex < viewCount) ? this._autoAdjustViewIndex : (viewCount - 1) ; i < splitViewCount ; ++i){
-                    y += this._splitInitLayout[i];
-                    this._splitSpaceViews[i].setY(y);
-                    y += this._splitSpace;
-                }
-                var reverseY = this.getHeight();
-                for(var i = viewCount - 1 ; i > this._autoAdjustViewIndex ; --i){
-                    reverseY -= (this._splitInitLayout[i]+this._splitSpace);
-                    this._splitSpaceViews[i-1].setX(reverseY);
-                }
+            var averageHeight = this.getHeight() - this._splitSpace * (viewCount - 1);
+            var averageViewHeight = averageHeight / viewCount;
+            var y = 0;
+            for(var i = 0, splitViewCount = viewCount - 1; i < splitViewCount ; ++i){
+                y += averageViewHeight;
+                this._splitSpaceViews[i].setY(y);
+                y += this._splitSpace;
+            }
+            for(var i = 0 ; i < viewCount ; ++i){
+                this._splitViews[i].setHeight(averageViewHeight);
             }
         }
     }else{
@@ -158,7 +133,7 @@ hy.gui.SplitView.prototype._resizeSplitViewHeight = function(){
             var reverseY = this.getHeight();
             for(var i = viewCount - 1 ; i > this._autoAdjustViewIndex ; --i){
                 reverseY -= (this._splitViews[i].getHeight()+this._splitSpace);
-                this._splitSpaceViews[i-1].setX(reverseY);
+                this._splitSpaceViews[i-1].setY(reverseY);
             }
         }
     }
@@ -211,7 +186,7 @@ hy.gui.SplitView.prototype._layoutSplitViews = function(){
                 splitView.setX(0);
                 splitView.setY(0);
                 splitView.setWidth(this.getWidth());
-                splitView.setHeight(spaceView.getX());
+                splitView.setHeight(spaceView.getY());
             }else if(i == viewCount -1){
                 var splitView = this._splitViews[i];
                 var preSpaceView = this._splitSpaceViews[i-1];
