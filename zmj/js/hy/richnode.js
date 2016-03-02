@@ -9,7 +9,7 @@ hy.RichNode.prototype.notifyAnchorMoveEnd = "anchormoveend";
 hy.RichNode.prototype.defaultAnchorMoveEnable = true;
 hy.RichNode.prototype.defaultResizeEnable = true;
 hy.RichNode.prototype.defaultRotateEnable = true;
-hy.RichNode.prototype.defaultAdjustLayoutStyle = 1;//0:gamenode布局模式;1:guinode布局模式
+hy.RichNode.prototype.defaultAdjustLayoutStyle = 0;//0:gamenode布局模式;1:guinode布局模式
 hy.RichNode.prototype.defaultAdjustEdge = 6;
 hy.RichNode.prototype.init = function(config){
     this.superCall("init",[config]);

@@ -65,7 +65,7 @@ modeleditor.class.StructTreeNode.prototype._paintNodeExpandIcon = function(sende
     var width = sender.getWidth();
     var height = sender.getHeight();
     dc.beginPath();
-    if(this._nodeData.expanded){
+    if(this._nodeUnit.getUserProperty("expanded")){
         dc.moveTo(width/2, height/3);
         dc.lineTo(5*width/6, height/3);
         dc.lineTo(2*width/3, 2*height/3);
@@ -100,6 +100,7 @@ modeleditor.class.StructTree = hy.extend(hy.gui.TreeView);
 modeleditor.class.StructTree.prototype.notifySyncNodeText = "syncnodetext";
 modeleditor.class.StructTree.prototype.defaultNodeHeight = 20;
 modeleditor.class.StructTree.prototype.defaultNodeEditEnable = false;
+modeleditor.class.StructTree.prototype.defaultNodeSelectEnable = true;
 modeleditor.class.StructTree.prototype.init = function(config){
     this.superCall("init",[config]);
     this._nodeHeight = this.isUndefined(config.nodeHeight) ? this.defaultNodeHeight : config.nodeHeight;
@@ -174,19 +175,32 @@ modeleditor.class.StructTree.prototype._changedTreeNodeText = function(sender){
         }
     }
 }
+modeleditor.class.StructTree.prototype._expandedTreeNode = function(sender){
+    var nodeView = sender.getParent();
+    if(nodeView){
+        var nodeUnit = nodeView.getNodeUnit();
+        if(nodeUnit.getUserProperty("expanded")){
+            nodeUnit.setUserProperty("expanded", false);
+        }else{
+            nodeUnit.setUserProperty("expanded", true);
+        }
+        this.needReloadTree();
+    }
+}
 
 modeleditor.class.StructTree.prototype.numberOfNodeInPath = function(treeView, nodePath){
     var node = this.getRoot();
-    if(node){
-        var nodeDeepth = nodePath.length;
-        for(var i=0;i<nodeDeepth;++i){
-            node = node.childNodes[nodePath[i]];
-        }
-        if(!node || node.leaf || !node.expanded || !node.childNodes){
-            return 0;
+    var nodeDeepth = nodePath.length;
+    for(var i=0;i<nodeDeepth;++i){
+        if(node){
+            node = node.getChildUnitAtIndex(nodePath[i]);
         }else{
-            return node.childNodes.length;
+            return 0;
         }
+    }
+    if(node){
+        var childUnits = node.getChildUnits();
+        return childUnits.length;
     }else{
         return 0;
     }
@@ -203,7 +217,7 @@ modeleditor.class.StructTree.prototype.widthOfNodeInPath = function(treeView, no
     }
 }
 modeleditor.class.StructTree.prototype.contextMenuOfNodeInPath = function(treeView, nodePath){
-    return null;
+    return [{name:"添加子节点"}];
 }
 modeleditor.class.StructTree.prototype.viewOfNodeInPath = function(treeView,nodePath) {
     var nodeRoot = this.getRoot();
@@ -214,9 +228,11 @@ modeleditor.class.StructTree.prototype.viewOfNodeInPath = function(treeView,node
         }
         var nodeView = treeView.getReuseNodeViewOfIdentity("treenode");
         if (nodeView == null) {
-            nodeView = new hy.gui.SimpleTreeNodeView({reuseIdentity: "treenode"});
+            nodeView = new modeleditor.class.StructTreeNode({reuseIdentity: "treenode"});
             var nodeEditBox = nodeView.getNodeEditBox();
             nodeEditBox.addObserver(nodeEditBox.notifySyncText, this, this._changedTreeNodeText);
+            var expandIcon = nodeView.getNodeExpandIcon();
+            expandIcon.addObserver(expandIcon.notifyMouseDown, this, this._expandedTreeNode);
         }
         if (this._selNodePath && this._compareNodePath(nodePath, nodePath.length, this._selNodePath, this._selNodePath.length)) {
             nodeView.setSelected(true);

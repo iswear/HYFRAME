@@ -461,12 +461,12 @@ hy.action.RotateZ.prototype.execute = function(actionBinder, deltaTime){
     var newOffsetAngle = this._offsetFun(sumTime);
     if((offsetAngle-this._targetOffset)*(newOffsetAngle-this._targetOffset) <= 0){
         actionBinder.setRunParams("inited",false);
-        sprite.rotateZ(this._targetOffset-offsetAngle);
+        sprite.setRotateZ(sprite.getRotateZ()+this._targetOffset-offsetAngle);
         return true;
     }else{
         actionBinder.setRunParams("offsetangle",newOffsetAngle);
         actionBinder.setRunParams("sumtime",sumTime);
-        sprite.rotateZ(newOffsetAngle-offsetAngle);
+        sprite.setRotateZ(sprite.getRotateZ()+newOffsetAngle-offsetAngle);
         return false;
     }
 }

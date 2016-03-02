@@ -84,6 +84,18 @@ hy.gui.SimpleTreeView.prototype._changedTreeNodeText = function(sender){
         }
     }
 }
+hy.gui.SimpleTreeView.prototype._expandedTreeNode = function(sender){
+    var nodeView = sender.getParent();
+    if(nodeView){
+        var nodeData = nodeView.getNodeData();
+        if(nodeData.expanded){
+            nodeData.expanded = false;
+        }else{
+            nodeData.expanded = true;
+        }
+        this.needReloadTree();
+    }
+}
 
 hy.gui.SimpleTreeView.prototype.numberOfNodeInPath = function(treeView, nodePath){
     var node = this.getRoot();
@@ -127,6 +139,8 @@ hy.gui.SimpleTreeView.prototype.viewOfNodeInPath = function(treeView,nodePath) {
             nodeView = new hy.gui.SimpleTreeNodeView({reuseIdentity: "simpletreenode"});
             var nodeEditBox = nodeView.getNodeEditBox();
             nodeEditBox.addObserver(nodeEditBox.notifySyncText, this, this._changedTreeNodeText);
+            var expandedIcon = nodeView.getNodeExpandIcon();
+            expandedIcon.addObserver(expandedIcon.notifyMouseDown, this, this._expandedTreeNode);
         }
         if (this._selNodePath && this._compareNodePath(nodePath, nodePath.length, this._selNodePath, this._selNodePath.length)) {
             nodeView.setSelected(true);

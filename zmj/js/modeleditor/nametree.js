@@ -11,6 +11,7 @@ modeleditor.class.NameTreeNode.prototype.init = function(config){
     this.addChildNodeAtLayer(this._nodeIcon, 0);
     this.addChildNodeAtLayer(this._nodeEditBox, 0);
     this.addObserver(this.notifyLayoutSubNodes, this, this._layoutTreeNodeView);
+    this.addObserver(this.notifyPaint, this, this._paintSeparateLine);
 }
 modeleditor.class.NameTreeNode.prototype.getNodeIcon = function(){
     return this._nodeIcon;
@@ -21,7 +22,6 @@ modeleditor.class.NameTreeNode.prototype.getNodeEditBox = function(){
 modeleditor.class.NameTreeNode.prototype.setNodeUnit = function(nodeUnit){
     if(nodeUnit){
         this._nodeEditBox.setText(nodeUnit.getName());
-        this._nodeExpandIcon.setVisible(true);
         this._nodeUnit = nodeUnit;
     }
 }
@@ -30,20 +30,29 @@ modeleditor.class.NameTreeNode.prototype.getNodeUnit = function(){
 }
 modeleditor.class.NameTreeNode.prototype._layoutTreeNodeView = function(sender){
     var nodeDeepth = this._nodePath.length;
-    this._nodeIcon.setX(nodeDeepth*this.getHeight()+this.getHeight());
+    this._nodeIcon.setX(0);
     this._nodeIcon.setY(0);
     this._nodeIcon.setWidth(this.getHeight());
     this._nodeIcon.setHeight(this.getHeight());
-    this._nodeEditBox.setX(nodeDeepth*this.getHeight()+this.getHeight()+this.getHeight());
+    this._nodeEditBox.setX(this.getHeight());
     this._nodeEditBox.setY(0);
-    this._nodeEditBox.setWidth(this.getWidth()-this._nodeIcon.getWidth()-this._nodeIcon.getX());
+    this._nodeEditBox.setWidth(this.getWidth()-this.getHeight());
     this._nodeEditBox.setHeight(this.getHeight());
+}
+modeleditor.class.NameTreeNode.prototype._paintSeparateLine = function(sender, dc , rect){
+    dc.setStrokeStyle("#666");
+    dc.setLineWidth(1);
+    dc.beginPath();
+    dc.moveTo(0, this.getHeight() - 0.5);
+    dc.lineTo(this.getWidth(), this.getHeight() - 0.5);
+    dc.stroke();
 }
 
 modeleditor.class.NameTree = hy.extend(hy.gui.TreeView);
 modeleditor.class.NameTree.prototype.notifySyncNodeText = "syncnodetext";
 modeleditor.class.NameTree.prototype.defaultNodeHeight = 20;
 modeleditor.class.NameTree.prototype.defaultNodeEditEnable = false;
+modeleditor.class.NameTree.prototype.defaultNodeSelectEnable = true;
 modeleditor.class.NameTree.prototype.init = function(config) {
     this.superCall("init", [config]);
     this._nodeHeight = this.isUndefined(config.nodeHeight) ? this.defaultNodeHeight : config.nodeHeight;

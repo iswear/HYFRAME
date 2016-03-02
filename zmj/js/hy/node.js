@@ -470,6 +470,7 @@ hy.Node.prototype.addChildNodeAtLayer = function(node, layerIndex){
         }
         node.setParent(this);
         this._childNodeLayers[layerIndex].push(node);
+        this.refresh();
         this.needLayoutSubNodes();
     }
 }
@@ -483,10 +484,12 @@ hy.Node.prototype.addChildNodeAtLocation = function(node,layerIndex,nodeIndex){
         if(i < nodeIndex){
             this._childNodeLayers[layerIndex].push(node);
             this.needLayoutSubNodes();
+            this.refresh();
             return i;
         }else {
             this._childNodeLayers[layerIndex].splice(nodeIndex,0,node);
             this.needLayoutSubNodes();
+            this.refresh();
             return nodeIndex;
         }
     }
@@ -501,6 +504,7 @@ hy.Node.prototype.removeChildNode = function(node, clean){
                     if(clean){
                         node.clean();
                     }
+                    this.refresh();
                 }
             }
         }
@@ -516,6 +520,7 @@ hy.Node.prototype.removeChildNodeAtLayer = function(layerIndex,node,clean){
                     if(clean){
                         node.clean();
                     }
+                    this.refresh();
                 }
             }
         }
@@ -530,6 +535,7 @@ hy.Node.prototype.removeChildNodeAtLocation = function (layerIndex,nodeIndex,cle
                 if(clean){
                     layer[nodeIndex].clean();
                 }
+                this.refresh();
             }
         }
     }

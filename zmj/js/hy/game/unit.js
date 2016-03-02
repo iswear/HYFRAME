@@ -12,7 +12,7 @@ hy.game.Unit.prototype.init = function(config){
     this._actionFrames = this.isUndefined(config.actionFrames) ? {} : config.actionFrames;
     this._childUnits = [];
     this.__compiledActions = {};
-
+    this.addObserver(this.notifyPaint, this, this._paintUnitImg);
 }
 hy.game.Unit.prototype.setName = function(name){
     this._name = name;
@@ -294,26 +294,29 @@ hy.game.Unit.prototype._runActionScheduler = function(frame){
     this.setAlpha(frame[hy.game.frame.param.ALPHA]);
 }
 hy.game.Unit.prototype._paintUnitImg = function(sender, dc, rect){
-    if(this._image != null){
+    if(this._image) {
         var app = this.getApplication();
-        if(app){
+        if (app) {
             var loader = app.getFileLoader();
-            if(typeof(this._image) == "string"){
+            if (typeof(this._image) == "string") {
                 var image = loader.getImage(this._image);
-                if(image){
+                if (image) {
                     this._paintUnitImgSubFun(dc, rect, image, 0, 0, image.width, image.height);
-                }else{
-                    loader.loadImageAsync(this._image,this,this._loadUnitImgCB);
+                } else {
+                    loader.loadImageAsync(this._image, this, this._loadUnitImgCB);
                 }
-            }else{
+            } else {
                 var image = loader.getImage(this._image.URL);
-                if(image){
+                if (image) {
                     this._paintUnitImgSubFun(dc, rect, image, this._image.srcX, this._image.srcY, this._image.srcWidth, this._image.srcHeight);
-                }else{
-                    loader.loadImageAsync(this._image,this,this._loadUnitImgCB);
+                } else {
+                    loader.loadImageAsync(this._image, this, this._loadUnitImgCB);
                 }
             }
         }
+    }else{
+        dc.setFillStyle("#f00");
+        dc.fillRect(rect.x, rect.y, rect.width, rect.height);
     }
 }
 hy.game.Unit.prototype._paintUnitImgSubFun = function(dc, rect, image, srcX, srcY, srcWidth, srcHeight){

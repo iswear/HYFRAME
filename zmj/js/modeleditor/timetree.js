@@ -8,12 +8,7 @@ modeleditor.class.TimeTreeNode.prototype.init = function(config){
     this._nodeTimeline = new hy.gui.Timeline({});
     this.addChildNodeAtLayer(this._nodeTimeline, 0);
     this.addObserver(this.notifyLayoutSubNodes, this, this._layoutTreeNodeView);
-}
-modeleditor.class.TimeTreeNode.prototype.getNodeIcon = function(){
-    return this._nodeIcon;
-}
-modeleditor.class.TimeTreeNode.prototype.getNodeEditBox = function(){
-    return this._nodeEditBox;
+    this.addObserver(this.notifyPaint, this, this._paintSeparateLine);
 }
 modeleditor.class.TimeTreeNode.prototype.setNodeUnit = function(nodeUnit){
     if(nodeUnit){
@@ -25,14 +20,21 @@ modeleditor.class.TimeTreeNode.prototype.getNodeUnit = function(){
 }
 modeleditor.class.TimeTreeNode.prototype._layoutTreeNodeView = function(sender){
     this._nodeTimeline.setX(0);
-    this._nodeIcon.setY(0);
-    this._nodeIcon.setHeight(this.getHeight());
+}
+modeleditor.class.TimeTreeNode.prototype._paintSeparateLine = function(sender, dc, rect){
+    dc.setStrokeStyle("#666");
+    dc.setLineWidth(1);
+    dc.beginPath();
+    dc.moveTo(0, this.getHeight() - 0.5);
+    dc.lineTo(this.getWidth(), this.getHeight() - 0.5);
+    dc.stroke();
 }
 
 modeleditor.class.TimeTree = hy.extend(hy.gui.TreeView);
 modeleditor.class.TimeTree.prototype.notifySyncNodeText = "syncnodetext";
 modeleditor.class.TimeTree.prototype.defaultNodeHeight = 20;
 modeleditor.class.TimeTree.prototype.defaultNodeEditEnable = false;
+modeleditor.class.TimeTree.prototype.defaultNodeSelectEnable = true;
 modeleditor.class.TimeTree.prototype.init = function(config) {
     this.superCall("init", [config]);
     this._nodeHeight = this.isUndefined(config.nodeHeight) ? this.defaultNodeHeight : config.nodeHeight;

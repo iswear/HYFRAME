@@ -60,6 +60,7 @@ hy.gui.Timeline.prototype._sortKeyFrames = function(keyFrames){
 }
 hy.gui.Timeline.prototype._paintTimeline = function(sender, dc, rect){
 	dc.setStrokeStyle("#666");
+	dc.setLineWidth(1);
 	dc.beginPath();
 	var frameNum = this._duration * this._secondDivide / 1000;
 	var width = this.getWidth();
@@ -70,9 +71,8 @@ hy.gui.Timeline.prototype._paintTimeline = function(sender, dc, rect){
 		x += 8;
 	}
 	dc.stroke();
-
-	dc.setFillStyle("#f00");
-	if(this._selectedFrame > 0){
+	dc.setFillStyle("#000");
+	if(this._selectedFrame >= 0){
 		var selRectX = this._selectedFrame * 8;
 		if(selRectX < width){
 			dc.fillRect(selRectX+1, 0, 7, height-1);

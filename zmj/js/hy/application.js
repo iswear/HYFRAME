@@ -362,11 +362,14 @@ hy.Application.prototype.mainLoop = function(){
         this._preLoopTime = (new Date()).getTime();
         deltaTime = 0;
     }
-    if(this._refresh || this._refreshMode == 1){
-        this._refresh = false;
-        this._renderContext.clearRect(0,0,this._winWidth,this._winHeight);
-        this._runRootNode._dispatchLoop(this._renderContext, deltaTime, true);
-    }
+    this._renderContext.clearRect(0,0,this._winWidth,this._winHeight);
+    this._runRootNode._dispatchLoop(this._renderContext, deltaTime, (this._refresh || this._refreshMode == 1) ? true :false);
+
+//    if(this._refresh || this._refreshMode == 1){
+//        this._refresh = false;
+//        this._renderContext.clearRect(0,0,this._winWidth,this._winHeight);
+//        this._runRootNode._dispatchLoop(this._renderContext, deltaTime, true);
+//    }
     //time += deltaTime;
     //count ++;
     //if(time > 3000){

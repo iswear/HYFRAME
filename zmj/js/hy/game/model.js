@@ -1,9 +1,9 @@
 var hy = hy || {};
 hy.game = hy.game || {};
-hy.game.Model = hy.extend(hy.gui.Unit);
+hy.game.Model = hy.extend(hy.game.Unit);
 hy.game.Model.prototype.init = function(config){
     this.superCall("init",[config]);
-    this._actionNames = this.isUndefined() ? [] : config.actionNames;
+    this._actionNames = this.isUndefined(config.actionNames) ? [] : config.actionNames;
 }
 hy.game.Model.prototype.getActionNames = function(){
     return this._actionNames;
