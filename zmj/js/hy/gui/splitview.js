@@ -35,7 +35,8 @@ hy.gui.SplitView.prototype._syncSplitSpaceViews = function(){
                 var spaceView = new hy.gui.View({
                     mouseEnable:true,
                     dragEnable:this._adjustEnable,
-                    normalColor:'#aaa'
+                    normalColor:'#aaa',
+                    activeColor:'#aaa'
                 });
                 if(this._adjustEnable){
                     if(this._splitDirection == 0){

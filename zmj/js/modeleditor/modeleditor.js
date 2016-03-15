@@ -1,36 +1,37 @@
 var modeleditor = modeleditor || {};
 modeleditor.class = modeleditor || {};
 modeleditor.class.ModelEditor = hy.extend(hy.gui.View);
-modeleditor.class.ModelEditor.prototype.defaultBorderWidth = 5;
-modeleditor.class.ModelEditor.prototype.defaultBorderColor = "#000";
+modeleditor.class.ModelEditor.prototype.defaultBorderWidth = 0;
+modeleditor.class.ModelEditor.prototype.defaultBorderColor = null;
 modeleditor.class.ModelEditor.prototype.init = function(config){
     this.superCall("init", [config]);
     this._menu = new hy.gui.Menu({
         menuItems:[
             {
-                name:'item1',
+                name:'项目',
                 dropItems:[
                     {
-                        name:'item1-1'
+                        name:'新建项目'
                     },
                     {
-                        name:'item1-1'
+                        name:'保存到服务器'
                     }
                 ]
             },
             {
-                name:'item2',
+                name:'帮助',
                 dropItems:[
                     {
-                        name:'item2-1'
+                        name:'说明'
                     },
                     {
-                        name:'item2-2'
+                        name:'关于'
                     }
                 ]
             }
         ]
     });
+    this._menuSplitView = new hy.gui.View({normalColor:'#aaa',activeColor:'#aaa',mouseEnable:false});
     this._modelView = new hy.gui.View({});
     this._model = new hy.game.Model({
         x:0,
@@ -118,16 +119,21 @@ modeleditor.class.ModelEditor.prototype.init = function(config){
     });
     this._modelView.addChildNodeAtLayer(this._model, 0);
     this.addChildNodeAtLayer(this._menu, 0);
+    this.addChildNodeAtLayer(this._menuSplitView, 0);
     this.addChildNodeAtLayer(this._mainView, 0);
     this.addObserver(this.notifyLayoutSubNodes, this, this._layoutModelEditor);
 }
 modeleditor.class.ModelEditor.prototype._layoutModelEditor = function(sender){
-    this._menu.setX(5);
-    this._menu.setY(5);
+    this._menu.setX(0);
+    this._menu.setY(0);
     this._menu.setWidth(this.getWidth());
     this._menu.setHeight(25);
-    this._mainView.setX(5);
+    this._menuSplitView.setX(0);
+    this._menuSplitView.setY(25);
+    this._menuSplitView.setWidth(this.getWidth());
+    this._menuSplitView.setHeight(5);
+    this._mainView.setX(0);
     this._mainView.setY(30);
-    this._mainView.setWidth(this.getWidth()-10);
-    this._mainView.setHeight(this.getHeight() - 35);
+    this._mainView.setWidth(this.getWidth());
+    this._mainView.setHeight(this.getHeight() - 30);
 }
