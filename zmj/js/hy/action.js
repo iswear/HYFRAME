@@ -168,6 +168,7 @@ hy.action.Scheduler.prototype.execute = function(actionBinder,deltaTime){
         }else{
             repeats = 0;
             sumTime = 0;
+            actionBinder.setRunParams("inited",true);
             actionBinder.setRunParams("repeats",0);
             actionBinder.setRunParams("sumtime",0);
         }

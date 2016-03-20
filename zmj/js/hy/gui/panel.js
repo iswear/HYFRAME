@@ -7,9 +7,9 @@ hy.gui.Panel.prototype.defaultTitle = "panel";
 hy.gui.Panel.prototype.init = function(config){
     this.superCall("init",[config]);
     this._mainView = this.isUndefined(config.mainView) ? new hy.gui.View({}) : config.mainView;
-    this._headView = new hy.gui.View({normalColor:"#000",mouseEnable:false});
-    this._titleIcon = new hy.gui.ImageView({});
-    this._titleLabel = new hy.gui.Label({textColor:"#fff", textFont:"12px 宋体"});
+    this._headView = new hy.gui.View({normalColor:hy.gui.colors.BLACK,mouseEnable:false});
+    this._titleIcon = new hy.gui.ImageView({image:hy.config.PATH+"res/images/icon_logo.png"});
+    this._titleLabel = new hy.gui.Label({textColor:hy.gui.colors.WHITE, textFont:"12px 宋体"});
     this._titleLabel.setText(config.title != undefined ? config.title : this.defaultTitle);
     this.addChildNodeAtLayer(this._mainView, 0);
     this.addChildNodeAtLayer(this._headView, 0);

@@ -13,7 +13,7 @@ hy.gui.ScrollBar.prototype.defaultPaddingTop = 0;
 hy.gui.ScrollBar.prototype.defaultPaddingBottom = 0;
 hy.gui.ScrollBar.prototype.defaultScrollDirection = 0;//0表示水平 1表示竖直方向
 hy.gui.ScrollBar.prototype.defaultMouseEnable = false;
-hy.gui.ScrollBar.prototype.defaultNormalColor = "#aaa";
+hy.gui.ScrollBar.prototype.defaultNormalColor = hy.gui.colors.SILVER;
 hy.gui.ScrollBar.prototype.init = function(config){
     this.superCall("init",[config]);
     this._paddingLeft = this.isUndefined(config.paddingLeft) ? this.defaultPaddingLeft : config.paddingLeft;
@@ -21,7 +21,7 @@ hy.gui.ScrollBar.prototype.init = function(config){
     this._paddingTop = this.isUndefined(config.paddingTop) ? this.defaultPaddingTop : config.paddingTop;
     this._paddingBottom = this.isUndefined(config.paddingBottom) ? this.defaultPaddingBottom : config.paddingBottom;
     this._scrollDirection = this.isUndefined(config.scrollDirection) ? this.defaultScrollDirection : config.scrollDirection;
-    this._scrollBar = new hy.gui.View({mouseEnable:true,dragEnable:true,normalColor:'#000',activeColor:'#000'});
+    this._scrollBar = new hy.gui.View({mouseEnable:true,dragEnable:true,normalColor:hy.gui.colors.GRAY,activeColor:hy.gui.colors.DGRAY});
     this.__scrolledRate = 0;
     this.__visibleRate = 0.5;
     this.addChildNodeAtLayer(this._scrollBar, 0);

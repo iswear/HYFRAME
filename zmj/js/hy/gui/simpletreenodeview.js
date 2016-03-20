@@ -12,7 +12,7 @@ hy.gui = hy.gui || {};
 hy.gui.SimpleTreeNodeView = hy.extend(hy.gui.TreeNodeView);
 hy.gui.SimpleTreeNodeView.prototype.defaultNodeEditEnable = false;
 hy.gui.SimpleTreeNodeView.prototype.defaultReuseIdentity = "simpletreenode";
-hy.gui.SimpleTreeNodeView.prototype.defaultActiveColor = "#0f0";
+hy.gui.SimpleTreeNodeView.prototype.defaultActiveColor = hy.gui.colors.BLUE;
 hy.gui.SimpleTreeNodeView.prototype.init = function(config){
     this.superCall("init",[config]);
     this._nodeIcon = new hy.gui.ImageView({mouseEnable:false});
@@ -90,7 +90,7 @@ hy.gui.SimpleTreeNodeView.prototype._paintNodeExpandIcon = function(sender,dc,re
         dc.lineTo(width/2, 2*height/3);
     }
     dc.closePath();
-    dc.setFillStyle("#000");
+    dc.setFillStyle(hy.gui.colors.BLACK);
     dc.fill();
 }
 

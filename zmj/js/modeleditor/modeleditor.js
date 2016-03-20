@@ -12,19 +12,16 @@ modeleditor.class.ModelEditor.prototype.init = function(config){
                 dropItems:[
                     {
                         name:'新建项目'
-                    },
-                    {
+                    }, {
                         name:'保存到服务器'
                     }
                 ]
-            },
-            {
+            }, {
                 name:'帮助',
                 dropItems:[
                     {
                         name:'说明'
-                    },
-                    {
+                    }, {
                         name:'关于'
                     }
                 ]
@@ -40,15 +37,35 @@ modeleditor.class.ModelEditor.prototype.init = function(config){
         height:200,
         normalColor:"#f00",
         name:"模型",
-        anchorMoveEnable:true,
-        resizeEnable:true,
-        rotateEnable:true
+        dragEnable:false,
+        anchorMoveEnable:false,
+        resizeEnable:false,
+        rotateEnable:false,
+        actionNames:[{name:'行走1'},{name:"行走2"}]
     });
+    this._testUnit = new hy.game.Unit({
+        x:0,
+        y:0,
+        width:100,
+        height:100,
+        normalColor:'#000',
+        dragEnable:false,
+        anchorMoveEnable:false,
+        resizeEnable:false,
+        rotateEnable:false
+    });
+    this._model.addChildUnit(this._testUnit);
     this._structTree = new modeleditor.class.StructTree({
-        root:this._model
+        root:this._model,
+        nodeEditEnable:true,
+        nodeEditEnable:true,
+        nodeSelectEnable:true
     });
     this._actionList = new hy.gui.SimpleListView({
-        items:this._model.getActionNames()
+        items:this._model.getActionNames(),
+        cellMoveEnable:true,
+        cellEditEnable:true,
+        cellSelectEnable:true
     });
     this._nameTree = new modeleditor.class.NameTree({
         root:this._model
@@ -121,6 +138,12 @@ modeleditor.class.ModelEditor.prototype.init = function(config){
     this.addChildNodeAtLayer(this._menu, 0);
     this.addChildNodeAtLayer(this._menuSplitView, 0);
     this.addChildNodeAtLayer(this._mainView, 0);
+    this._structTree.addObserver(this._structTree.notifyTreeNodeSelected, this , this._modelUnitSelected);
+    this._nameTree.addObserver(this._nameTree.notifyTreeNodeSelected, this, this._modelUnitSelected);
+    this._timeTree.addObserver(this._timeTree.notifyTreeNodeSelected, this, this._modelUnitSelected);
+    this._structTree.addObserver(this._structTree.notifyTreeNodeUnSelected, this, this._modelUnitUnSelected);
+    this._nameTree.addObserver(this._nameTree.notifyTreeNodeUnSelected, this, this._modelUnitUnSelected);
+    this._timeTree.addObserver(this._timeTree.notifyTreeNodeUnSelected, this, this._modelUnitUnSelected);
     this.addObserver(this.notifyLayoutSubNodes, this, this._layoutModelEditor);
 }
 modeleditor.class.ModelEditor.prototype._layoutModelEditor = function(sender){
@@ -136,4 +159,34 @@ modeleditor.class.ModelEditor.prototype._layoutModelEditor = function(sender){
     this._mainView.setY(30);
     this._mainView.setWidth(this.getWidth());
     this._mainView.setHeight(this.getHeight() - 30);
+}
+modeleditor.class.ModelEditor.prototype._modelUnitSelected = function(sender, nodePath){
+    if(sender != this._structTree){
+        this._structTree.setSelectedNodePath(nodePath);
+        this._structTree.needReloadTree();
+    }
+    if(sender != this._nameTree){
+        this._nameTree.setSelectedNodePath(nodePath);
+        this._nameTree.needReloadTree();
+    }
+    if(sender != this._timeTree){
+        this._timeTree.setSelectedNodePath(nodePath);
+        this._timeTree.needReloadTree();
+    }
+    var nodeUnit = this._structTree.getNodeUnitOfNodePath(nodePath, nodePath.length);
+    if(nodeUnit){
+        nodeUnit.setDragEnable(true);
+        nodeUnit.setResizeEnable(true);
+        nodeUnit.setRotateEnable(true);
+        nodeUnit.setAnchorMoveEnable(true);
+    }
+}
+modeleditor.class.ModelEditor.prototype._modelUnitUnSelected = function(sender, nodePath){
+    var nodeUnit = this._structTree.getNodeUnitOfNodePath(nodePath, nodePath.length);
+    if(nodeUnit){
+        nodeUnit.setDragEnable(false);
+        nodeUnit.setResizeEnable(false);
+        nodeUnit.setRotateEnable(false);
+        nodeUnit.setAnchorMoveEnable(false);
+    }
 }

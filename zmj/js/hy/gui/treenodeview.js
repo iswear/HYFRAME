@@ -36,7 +36,7 @@ hy.gui.TreeNodeView.prototype._paintNodeInsertMode = function(sender, dc, rect){
             if(this.getNodePath()){
                 var nodeDeepth = this.getNodePath().length;
                 var x = nodeDeepth * this.getHeight()+1;
-                dc.setStrokeStyle("#00f");
+                dc.setStrokeStyle(hy.gui.colors.DRED);
                 dc.strokeRect(x, -1, this.getWidth()-x, 2);
             }
             break;
@@ -45,7 +45,7 @@ hy.gui.TreeNodeView.prototype._paintNodeInsertMode = function(sender, dc, rect){
             if(this.getNodePath()){
                 var nodeDeepth = this.getNodePath().length;
                 var x = nodeDeepth * this.getHeight()+1;
-                dc.setStrokeStyle("#00f");
+                dc.setStrokeStyle(hy.gui.colors.DRED);
                 dc.strokeRect(x, this.getHeight()-1, this.getWidth()-x, 2);
             }
             break;
@@ -57,7 +57,7 @@ hy.gui.TreeNodeView.prototype._paintNodeInsertMode = function(sender, dc, rect){
                 var y = 1;
                 var width = this.getWidth()-x-1;
                 var height = this.getHeight()-2;
-                dc.setStrokeStyle("#00f");
+                dc.setStrokeStyle(hy.gui.colors.DRED);
                 dc.strokeRect(x,y,width,height);
             }
             break;

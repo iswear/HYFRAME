@@ -2,10 +2,12 @@ var modeleditor = modeleditor || {};
 modeleditor.class = modeleditor || {};
 modeleditor.class.TimeTreeNode = hy.extend(hy.gui.TreeNodeView);
 modeleditor.class.TimeTreeNode.prototype.defaultReuseIdentity = "structtreenode";
-modeleditor.class.TimeTreeNode.prototype.defaultActiveColor = "#0f0";
+modeleditor.class.TimeTreeNode.prototype.defaultActiveColor = hy.gui.colors.BLUE;
 modeleditor.class.TimeTreeNode.prototype.init = function(config){
     this.superCall("init", [config]);
-    this._nodeTimeline = new hy.gui.Timeline({});
+    this._nodeTimeline = new hy.gui.Timeline({
+        contextMenu:[{name:'gegegegege'},{name:'gegegegege'},{name:'gegegegege'},{name:'gegegegege'},{name:'gegegegege'},{name:'gegegegege'}]
+    });
     this.addChildNodeAtLayer(this._nodeTimeline, 0);
     this.addObserver(this.notifyLayoutSubNodes, this, this._layoutTreeNodeView);
     this.addObserver(this.notifyPaint, this, this._paintSeparateLine);
@@ -66,16 +68,17 @@ modeleditor.class.TimeTree.prototype.getNodeUnitOfNodePath = function(nodePath,n
 
 modeleditor.class.TimeTree.prototype.numberOfNodeInPath = function(treeView, nodePath){
     var node = this.getRoot();
-    if(node){
-        var nodeDeepth = nodePath.length;
-        for(var i=0;i<nodeDeepth;++i){
-            node = node.childNodes[nodePath[i]];
-        }
-        if(!node || node.leaf || !node.expanded || !node.childNodes){
-            return 0;
+    var nodeDeepth = nodePath.length;
+    for(var i=0;i<nodeDeepth;++i){
+        if(node){
+            node = node.getChildUnitAtIndex(nodePath[i]);
         }else{
-            return node.childNodes.length;
+            return 0;
         }
+    }
+    if(node){
+        var childUnits = node.getChildUnits();
+        return childUnits.length;
     }else{
         return 0;
     }
@@ -103,7 +106,7 @@ modeleditor.class.TimeTree.prototype.viewOfNodeInPath = function(treeView,nodePa
         }
         var nodeView = treeView.getReuseNodeViewOfIdentity("treenode");
         if (nodeView == null) {
-            nodeView = new modeleditor.class.TimeTreeNode ({reuseIdentity: "treenode"});
+            nodeView = new modeleditor.class.TimeTreeNode({reuseIdentity: "treenode"});
         }
         if (this._selNodePath && this._compareNodePath(nodePath, nodePath.length, this._selNodePath, this._selNodePath.length)) {
             nodeView.setSelected(true);

@@ -59,7 +59,7 @@ hy.gui.Timeline.prototype._sortKeyFrames = function(keyFrames){
 	return keyFrames;
 }
 hy.gui.Timeline.prototype._paintTimeline = function(sender, dc, rect){
-	dc.setStrokeStyle("#666");
+	dc.setStrokeStyle(hy.gui.colors.DGRAY);
 	dc.setLineWidth(1);
 	dc.beginPath();
 	var frameNum = this._duration * this._secondDivide / 1000;
@@ -71,7 +71,7 @@ hy.gui.Timeline.prototype._paintTimeline = function(sender, dc, rect){
 		x += 8;
 	}
 	dc.stroke();
-	dc.setFillStyle("#000");
+	dc.setFillStyle(hy.gui.colors.RED);
 	if(this._selectedFrame >= 0){
 		var selRectX = this._selectedFrame * 8;
 		if(selRectX < width){
@@ -79,7 +79,7 @@ hy.gui.Timeline.prototype._paintTimeline = function(sender, dc, rect){
 		}
 	}
 	if(this._keyFrames && this._keyFrames.length > 0){
-		dc.setStrokeStyle("#0f0");
+		dc.setStrokeStyle(hy.gui.colors.GREEN);
 		dc.beginPath();
 		for(var i=this._keyFrames.length - 1; i >= 1;--i){
 			if(this._keyFrames[i].tween == 1){
@@ -96,7 +96,7 @@ hy.gui.Timeline.prototype._paintTimeline = function(sender, dc, rect){
 			}
 		}
 		dc.stroke();
-		dc.setFillStyle("#0f0");
+		dc.setFillStyle(hy.gui.colors.GREEN);
 		dc.beginPath();
 		var rectY = height-7;
 		var rectOffset = 2;

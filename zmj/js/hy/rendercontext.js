@@ -273,11 +273,10 @@ hy.RenderContext.prototype.createPattern = function(image,repeatMode){
 hy.RenderContext.prototype.clip = function(){
     this.__context.clip();
 }
-
 hy.RenderContext.prototype.clearRect = function(x,y,width,height){
     this.__context.clearRect(x,y,width,height);
 }
-hy.RenderContext.prototype.pushTransform = function(x, y, scaleX, scaleY, rotate, clip){
+hy.RenderContext.prototype.pushTransform = function(x, y, scaleX, scaleY, rotate, clip, alpha){
     this.__statusStack.push(this._cloneCurStatus(this.__statusCur));
     this.__context.save();
     if(x != 0 || y != 0){
@@ -288,6 +287,13 @@ hy.RenderContext.prototype.pushTransform = function(x, y, scaleX, scaleY, rotate
     }
     if(scaleX != 1 || scaleY != 1){
         this.__context.scale(scaleX,scaleY);
+    }
+    if( alpha <= 0){
+        this.__statusCur._globalAlpha = 0;
+        this.__context.globalAlpha = 0;
+    }else if(alpha < 1){
+        this.__statusCur._globalAlpha *= alpha;
+        this.__context.globalAlpha = this.__statusCur._globalAlpha;
     }
 }
 hy.RenderContext.prototype.popTransform = function(){
@@ -304,7 +310,6 @@ hy.RenderContext.prototype.toDataURL = function(){
     return this._canvas.toDataURL();
 }
 
-
 hy.RenderContext.prototype._syncCanvasSize = function(){
     this._canvas.setAttribute("width", this._width);
     this._canvas.setAttribute("height", this._height);
@@ -319,22 +324,42 @@ hy.RenderContext.prototype._syncContext = function(){
     this._readCurStatusFromContext();
 }
 hy.RenderContext.prototype._readCurStatusFromContext = function(){
-    this.__statusCur.fillStyle = this.__context.fillStyle;
-    this.__statusCur.strokeStyle = this.__context.strokeStyle;
-    this.__statusCur.shadowColor = this.__context.shadowColor;
-    this.__statusCur.shadowBlur = this.__context.shadowBlur;
-    this.__statusCur.shadowOffsetX = this.__context.shadowOffsetX;
-    this.__statusCur.shadowOffsetY = this.__context.shadowOffsetY;
-    this.__statusCur.lineCap = this.__context.lineCap;
-    this.__statusCur.lineJoin = this.__context.lineJoin;
-    this.__statusCur.lineWidth = this.__context.lineWidth;
-    this.__statusCur.miterLimit = this.__context.miterLimit;
-    this.__statusCur.font = this.__context.font;
-    this.__statusCur.textAlign = this.__context.textAlign;
-    this.__statusCur.textBaseline = this.__context.textBaseline;
-    this.__statusCur.globalAlpha = this.__context.globalAlpha;
-    this.__statusCur.globalCompositeOperation = this.__context.globalCompositeOperation;
+    this.__statusCur._fillStyle = this.__context.fillStyle;
+    this.__statusCur._strokeStyle = this.__context.strokeStyle;
+    this.__statusCur._shadowColor = this.__context.shadowColor;
+    this.__statusCur._shadowBlur = this.__context.shadowBlur;
+    this.__statusCur._shadowOffsetX = this.__context.shadowOffsetX;
+    this.__statusCur._shadowOffsetY = this.__context.shadowOffsetY;
+    this.__statusCur._lineCap = this.__context.lineCap;
+    this.__statusCur._lineJoin = this.__context.lineJoin;
+    this.__statusCur._lineWidth = this.__context.lineWidth;
+    this.__statusCur._miterLimit = this.__context.miterLimit;
+    this.__statusCur._font = this.__context.font;
+    this.__statusCur._textAlign = this.__context.textAlign;
+    this.__statusCur._textBaseline = this.__context.textBaseline;
+    this.__statusCur._globalAlpha = this.__context.globalAlpha;
+    this.__statusCur._globalCompositeOperation = this.__context.globalCompositeOperation;
 }
+hy.RenderContext.prototype._cloneCurStatus = function(){
+    var statusobj = {};
+    statusobj._fillStyle = this.__statusCur._fillStyle;
+    statusobj._strokeStyle = this.__statusCur._strokeStyle;
+    statusobj._shadowColor = this.__statusCur._shadowColor;
+    statusobj._shadowBlur = this.__statusCur._shadowBlur;
+    statusobj._shadowOffsetX = this.__statusCur._shadowOffsetX;
+    statusobj._shadowOffsetY = this.__statusCur._shadowOffsetY;
+    statusobj._lineCap = this.__statusCur._lineCap;
+    statusobj._lineJoin = this.__statusCur._lineJoin;
+    statusobj._lineWidth = this.__statusCur._lineWidth;
+    statusobj._miterLimit = this.__statusCur._miterLimit;
+    statusobj._font = this.__statusCur._font;
+    statusobj._textAlign = this.__statusCur._textAlign;
+    statusobj._textBaseline = this.__statusCur._textBaseline;
+    statusobj._globalAlpha = this.__statusCur._globalAlpha;
+    statusobj._globalCompositeOperation = this.__statusCur._globalCompositeOperation;
+    return statusobj;
+}
+
 //hy.RenderContext.prototype._syncCurStatusToContext = function(){
 //    this.__context.fillStyle = this.__statusCur.fillStyle;
 //    this.__context.strokeStyle = this.__statusCur.strokeStyle;
@@ -352,22 +377,3 @@ hy.RenderContext.prototype._readCurStatusFromContext = function(){
 //    this.__context.globalAlpha = this.__statusCur.globalAlpha;
 //    this.__context.globalCompositeOperation = this.__statusCur.globalCompositeOperation;
 //}
-hy.RenderContext.prototype._cloneCurStatus = function(){
-    var statusobj = {};
-    statusobj.fillStyle = this.__statusCur.fillStyle;
-    statusobj.strokeStyle = this.__statusCur.strokeStyle;
-    statusobj.shadowColor = this.__statusCur.shadowColor;
-    statusobj.shadowBlur = this.__statusCur.shadowBlur;
-    statusobj.shadowOffsetX = this.__statusCur.shadowOffsetX;
-    statusobj.shadowOffsetY = this.__statusCur.shadowOffsetY;
-    statusobj.lineCap = this.__statusCur.lineCap;
-    statusobj.lineJoin = this.__statusCur.lineJoin;
-    statusobj.lineWidth = this.__statusCur.lineWidth;
-    statusobj.miterLimit = this.__statusCur.miterLimit;
-    statusobj.font = this.__statusCur.font;
-    statusobj.textAlign = this.__statusCur.textAlign;
-    statusobj.textBaseline = this.__statusCur.textBaseline;
-    statusobj.globalAlpha = this.__statusCur.globalAlpha;
-    statusobj.globalCompositeOperation = this.__statusCur.globalCompositeOperation;
-    return statusobj;
-}

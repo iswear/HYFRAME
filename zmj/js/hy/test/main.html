@@ -67,15 +67,93 @@
 <script type="text/javascript" src="examples/game_model.js"></script>
 <script type="text/javascript">
     var app = new hy.Application({
-        refreshMode:0
+        refreshMode:1
     });
     var appWin = new hy.gui.View({});
+    testNode.setX(300);
+    testNode.setY(200);
+    testNode.setWidth(100);
+    testNode.setHeight(100);
     appWin.addChildNodeAtLayer(testNode, 0);
     app.run(appWin);
-//    testNode.runAction(new hy.action.RotateZ({
-//        targetOffset: Math.PI/4,
-//        offsetFun: "0.005*t"
-//    }), null, null, true);
+    /*schduler*/
+//    var scheduler = new hy.action.Scheduler({
+//        target: null,
+//        callBack: function () {
+//            window.console.log("hello gagade");
+//        },
+//        interval:5000,
+//        repeats:2,
+//        param:null
+//    });
+//    testNode.runAction(scheduler);
+    /*moveX*/
+//    var movex = new hy.action.MoveX({
+//        targetOffset:100,
+//        offsetFun:"100/4/1000*t"
+//    });
+//    testNode.runAction(movex);
+    /*moveY*/
+//    var movey = new hy.action.MoveY({
+//        targetOffset:100,
+//        offsetFun:"100/4/1000*t"
+//    });
+//    testNode.runAction(movey);
+    /*resizeWidth*/
+//    var resizewidth = new hy.action.ResizeWidth({
+//        targetOffset:100,
+//        offsetFun:"100/4/1000*t"
+//    });
+//    testNode.runAction(resizewidth);
+    /*resizeHeight*/
+//    var resizeHeight = new hy.action.ResizeHeight({
+//        targetOffset:100,
+//        offsetFun:"100/1000*t"
+//    });
+//    testNode.runAction(resizeHeight);
+    /*resizeHeight*/
+//    var resizeHeight = new hy.action.ResizeHeight({
+//        targetOffset:100,
+//        offsetFun:"100/1000*t"
+//    });
+//    testNode.runAction(resizeHeight);
+    /*hy.action.ScaleX*/
+//    var scalex = new hy.action.ScaleX({
+//        targetOffset:3,
+//        offsetFun:"2/1000*t"
+//    });
+//    testNode.runAction(scalex);
+    /*hy.action.ScaleX*/
+//    var scaley = new hy.action.ScaleY({
+//        targetOffset:3,
+//        offsetFun:"2/1000*t"
+//    });
+//    testNode.runAction(scaley);
+    /*hy.action.ScaleX*/
+//    var moveanchorx = new hy.action.MoveAnchorX({
+//        targetOffset:1,
+//        offsetFun:"1/1000*t"
+//    });
+//    testNode.runAction(moveanchorx);
+    /*hy.action.ScaleX*/
+//    var moveanchory = new hy.action.MoveAnchorY({
+//        targetOffset:1,
+//        offsetFun:"5/1000*t"
+//    });
+//    testNode.runAction(moveanchory);
+    /*hy.action.ScaleX*/
+//    var rotatez = new hy.action.RotateZ({
+//        targetOffset:-1,
+//        offsetFun:"5/1000*t"
+//    });
+//    testNode.runAction(rotatez);
+    /*hy.action.ScaleX*/
+//    var fade = new hy.action.Fade({
+//        targetOffset:-1,
+//        offsetFun:"-1/2000*t"
+//    });
+//    testNode.runAction(fade);
+
 </script>
 </body>
 </html>

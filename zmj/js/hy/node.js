@@ -502,7 +502,7 @@ hy.Node.prototype.removeChildNode = function(node, clean){
                 if(node == layer[j]){
                     layer.splice(j,1);
                     if(clean){
-                        node.clean();
+                        node.destory();
                     }
                     this.refresh();
                 }
@@ -518,7 +518,7 @@ hy.Node.prototype.removeChildNodeAtLayer = function(layerIndex,node,clean){
                 if(node == layer[i]){
                     layer.splice(i,1);
                     if(clean){
-                        node.clean();
+                        node.destory();
                     }
                     this.refresh();
                 }
@@ -533,7 +533,7 @@ hy.Node.prototype.removeChildNodeAtLocation = function (layerIndex,nodeIndex,cle
             if(nodeIndex < layer.length){
                 layer.splice(nodeIndex,1);
                 if(clean){
-                    layer[nodeIndex].clean();
+                    layer[nodeIndex].destory();
                 }
                 this.refresh();
             }
@@ -1047,7 +1047,7 @@ hy.Node.prototype._dispatchLoop = function(dc,deltaTime,paint){
     }
     /*绘制操作*/
     if(this._visible && paint){
-        dc.pushTransform(this._x,this._y,this._scaleX,this._scaleY,this._rotateZ,this._clipBound);
+        dc.pushTransform(this._x,this._y,this._scaleX,this._scaleY,this._rotateZ,this._clipBound,this._alpha);
         var rect = {x:this._anchorPixelX,y:this._anchorPixelY,width:this._width,height:this._height};
         this.postNotification(this.notifyPaint,[dc,rect]);
         for(var i = 0, layerCount = this._childNodeLayers.length ; i < layerCount ; ++i){

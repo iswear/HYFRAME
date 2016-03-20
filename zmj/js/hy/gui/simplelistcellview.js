@@ -10,7 +10,7 @@ hy.gui = hy.gui || {};
 hy.gui.SimpleListCellView = hy.extend(hy.gui.ListCellView);
 hy.gui.SimpleListCellView.prototype.defaultReuseIdentity = "simplelistcell";
 hy.gui.SimpleListCellView.prototype.defaultCellEditEnable = false;
-hy.gui.SimpleListCellView.prototype.defaultActiveColor = "#0f0";
+hy.gui.SimpleListCellView.prototype.defaultActiveColor = hy.gui.colors.BLUE;
 hy.gui.SimpleListCellView.prototype.clipBound = false;
 hy.gui.SimpleListCellView.prototype.init = function(config){
     this.superCall("init",[config]);
@@ -59,18 +59,18 @@ hy.gui.SimpleListCellView.prototype._layoutSimpleListCellView = function(sender)
     this._cellIcon.setHeight(this.getHeight());
     this._cellEditBox.setX(this.getHeight());
     this._cellEditBox.setY(0);
-    this._cellEditBox.setWidth(this.getWidth());
+    this._cellEditBox.setWidth(this.getWidth()-this.getHeight());
     this._cellEditBox.setHeight(this.getHeight());
 }
 hy.gui.SimpleListCellView.prototype._paintCellInsertMode = function(sender, dc, rect){
     switch(this._cellInsertMode){
         case 1:{//插入上方
-            dc.setStrokeStyle("#00f");
+            dc.setStrokeStyle(hy.gui.colors.DRED);
             dc.strokeRect(0,-1,this.getWidth(),2);
             break;
         }
         case 2:{//插入下方
-            dc.setStrokeStyle("#00f");
+            dc.setStrokeStyle(hy.gui.colors.DRED);
             dc.strokeRect(0,this.getHeight()-1,this.getWidth(),2);
             break;
         }

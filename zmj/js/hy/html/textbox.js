@@ -240,8 +240,18 @@ hy.html.TextBox.prototype.showForNode = function(node){
             }
             /*字体*/
             this._htmlTextBox.style.font = node.getTextFont();
-            this._htmlTextBox.style.lineHeight = node.getTextLineHeight() + "px";
             this._htmlTextBox.style.color = node.getTextColor();
+            var reg = /[1-9][0-9]*px/i;
+            var fontSizeStr = node.getTextFont().match(reg);
+            var fontSize = 12;
+            if(fontSizeStr != null){
+                fontSize = parseInt(fontSizeStr[0].substr(0,fontSizeStr[0].length-2));
+            }
+            if(fontSize < node.getTextLineHeight()){
+                this._htmlTextBox.style.lineHeight = node.getTextLineHeight() + "px";
+            }else{
+                this._htmlTextBox.style.lineHeight = fontSize + "px";
+            }
             /*文字对齐选项*/
             switch (node.getTextHorAlign()){
                 case hy.gui.TEXT_HORALIGN_LEFT:{

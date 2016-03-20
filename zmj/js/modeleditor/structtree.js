@@ -4,7 +4,7 @@ modeleditor.class = modeleditor || {};
 modeleditor.class.StructTreeNode = hy.extend(hy.gui.TreeNodeView);
 modeleditor.class.StructTreeNode.prototype.defaultNodeEditEnable = false;
 modeleditor.class.StructTreeNode.prototype.defaultReuseIdentity = "structtreenode";
-modeleditor.class.StructTreeNode.prototype.defaultActiveColor = "#0f0";
+modeleditor.class.StructTreeNode.prototype.defaultActiveColor = hy.gui.colors.BLUE;
 modeleditor.class.StructTreeNode.prototype.init = function(config){
     this.superCall("init", [config]);
     this._nodeIcon = new hy.gui.ImageView({mouseEnable:false});
@@ -100,7 +100,6 @@ modeleditor.class.StructTree = hy.extend(hy.gui.TreeView);
 modeleditor.class.StructTree.prototype.notifySyncNodeText = "syncnodetext";
 modeleditor.class.StructTree.prototype.defaultNodeHeight = 20;
 modeleditor.class.StructTree.prototype.defaultNodeEditEnable = false;
-modeleditor.class.StructTree.prototype.defaultNodeSelectEnable = true;
 modeleditor.class.StructTree.prototype.init = function(config){
     this.superCall("init",[config]);
     this._nodeHeight = this.isUndefined(config.nodeHeight) ? this.defaultNodeHeight : config.nodeHeight;
@@ -198,7 +197,7 @@ modeleditor.class.StructTree.prototype.numberOfNodeInPath = function(treeView, n
             return 0;
         }
     }
-    if(node){
+    if(node && node.getUserProperty("expanded")){
         var childUnits = node.getChildUnits();
         return childUnits.length;
     }else{
@@ -217,7 +216,11 @@ modeleditor.class.StructTree.prototype.widthOfNodeInPath = function(treeView, no
     }
 }
 modeleditor.class.StructTree.prototype.contextMenuOfNodeInPath = function(treeView, nodePath){
-    return [{name:"添加子节点"}];
+    if(nodePath.length == 0){
+        return [{name:"添加子节点"}];
+    }else{
+        return [{name:"添加子节点"},{name:"隐藏/可见"},{name:'删除'}];
+    }
 }
 modeleditor.class.StructTree.prototype.viewOfNodeInPath = function(treeView,nodePath) {
     var nodeRoot = this.getRoot();
@@ -233,6 +236,12 @@ modeleditor.class.StructTree.prototype.viewOfNodeInPath = function(treeView,node
             nodeEditBox.addObserver(nodeEditBox.notifySyncText, this, this._changedTreeNodeText);
             var expandIcon = nodeView.getNodeExpandIcon();
             expandIcon.addObserver(expandIcon.notifyMouseDown, this, this._expandedTreeNode);
+            var nodeIcon = nodeView.getNodeIcon();
+            if(nodePath.length == 0){
+                nodeIcon.setImage(hy.config.PATH + "res/images/icon_model.png");
+            }else{
+                nodeIcon.setImage(hy.config.PATH + "res/images/icon_unit.png");
+            }
         }
         if (this._selNodePath && this._compareNodePath(nodePath, nodePath.length, this._selNodePath, this._selNodePath.length)) {
             nodeView.setSelected(true);

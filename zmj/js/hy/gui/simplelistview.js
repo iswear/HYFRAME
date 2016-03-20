@@ -5,7 +5,7 @@ hy.gui.SimpleListView.prototype.notifySyncListCellText = "synclistcelltext";
 hy.gui.SimpleListView.prototype.notifyListCellSelected = "listcellselected";
 hy.gui.SimpleListView.prototype.notifyListCellUnSelected = "listcellunselected";
 hy.gui.SimpleListView.prototype.defaultCellHeight = 20;
-hy.gui.SimpleListView.prototype.defaultCellMoveEnable = true;
+hy.gui.SimpleListView.prototype.defaultCellMoveEnable = false;
 hy.gui.SimpleListView.prototype.defaultCellEditEnable = false;
 hy.gui.SimpleListView.prototype.defaultCellSelectEnable = false;
 hy.gui.SimpleListView.prototype.init = function(config){
@@ -95,7 +95,7 @@ hy.gui.SimpleListView.prototype._changedListCellText = function(sender){
     if(cellView){
         var cellIndex = cellView.getCellIndex();
         if(cellIndex >= 0){
-            this._items[cellIndex] = sender.getText();
+            this._items[cellIndex].name = sender.getText();
             this.postNotification(this.notifySyncListCellText, [cellIndex]);
         }
     }

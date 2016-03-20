@@ -36,7 +36,7 @@ hy.gui.TimelineRule.prototype.getSelectedFrame = function(){
 }
 hy.gui.TimelineRule.prototype._paintTimeLineRule = function(sender, dc, rect){
     /*宽度为8*/
-    dc.setStrokeStyle("#000");
+    dc.setStrokeStyle(hy.gui.colors.DBLACK);
     dc.setFont("10px sans-serif");
     dc.beginPath();
     var frameNum = this._secondDivide * this._duration / 1000;

@@ -91,20 +91,28 @@ hy.RichNode.prototype._syncResizeEnv = function(){
         this.addChildNodeAtLayer(this._reiszeWnode,1);
         this._resizeNWnode.addObserver(this._resizeNWnode.notifyDraging,this,this._resizeNodesDraging);
         this._resizeNWnode.addObserver(this._resizeNWnode.notifyDragEnd,this,this._resizeNodesDragEnd);
+        this._resizeNWnode.addObserver(this._resizeNWnode.notifyPaint,this,this._paintResizeNode);
         this._resizeNnode.addObserver(this._resizeNWnode.notifyDraging,this,this._resizeNodesDraging);
         this._resizeNnode.addObserver(this._resizeNWnode.notifyDragEnd,this,this._resizeNodesDragEnd);
+        this._resizeNnode.addObserver(this._resizeNWnode.notifyPaint,this,this._paintResizeNode);
         this._resizeNEnode.addObserver(this._resizeNWnode.notifyDraging,this,this._resizeNodesDraging);
         this._resizeNEnode.addObserver(this._resizeNWnode.notifyDragEnd,this,this._resizeNodesDragEnd);
+        this._resizeNEnode.addObserver(this._resizeNWnode.notifyPaint,this,this._paintResizeNode);
         this._resizeEnode.addObserver(this._resizeNWnode.notifyDraging,this,this._resizeNodesDraging);
         this._resizeEnode.addObserver(this._resizeNWnode.notifyDragEnd,this,this._resizeNodesDragEnd);
+        this._resizeEnode.addObserver(this._resizeNWnode.notifyPaint,this,this._paintResizeNode);
         this._resizeSEnode.addObserver(this._resizeNWnode.notifyDraging,this,this._resizeNodesDraging);
         this._resizeSEnode.addObserver(this._resizeNWnode.notifyDragEnd,this,this._resizeNodesDragEnd);
+        this._resizeSEnode.addObserver(this._resizeNWnode.notifyPaint,this,this._paintResizeNode);
         this._resizeSnode.addObserver(this._resizeNWnode.notifyDraging,this,this._resizeNodesDraging);
         this._resizeSnode.addObserver(this._resizeNWnode.notifyDragEnd,this,this._resizeNodesDragEnd);
+        this._resizeSnode.addObserver(this._resizeNWnode.notifyPaint,this,this._paintResizeNode);
         this._resizeSWnode.addObserver(this._resizeNWnode.notifyDraging,this,this._resizeNodesDraging);
         this._resizeSWnode.addObserver(this._resizeNWnode.notifyDragEnd,this,this._resizeNodesDragEnd);
+        this._resizeSWnode.addObserver(this._resizeNWnode.notifyPaint,this,this._paintResizeNode);
         this._reiszeWnode.addObserver(this._resizeNWnode.notifyDraging,this,this._resizeNodesDraging);
         this._reiszeWnode.addObserver(this._resizeNWnode.notifyDragEnd,this,this._resizeNodesDragEnd);
+        this._reiszeWnode.addObserver(this._resizeNWnode.notifyPaint,this,this._paintResizeNode);
         this.addObserver(this.notifyLayoutSubNodes,this,this._layoutResizeNodes);
         this.__resizeReady = false;
         this.__resizeStartVector = null;
@@ -187,10 +195,11 @@ hy.RichNode.prototype._syncRotateEnv = function(){
 }
 hy.RichNode.prototype._syncAnchorEnv = function(){
     if(this._anchorMoveEnable){
-        this._anchorNode = new hy.Node({anchorX:0.5,anchorY:0.5, width:6, height: 6});
+        this._anchorNode = new hy.Node({anchorX:0.5,anchorY:0.5, width:8, height: 8});
         this.addChildNodeAtLayer(this._anchorNode, 2);
-        this._anchorNode.addObserver(this._anchorNode.notifyDraging,this,this._anchorNodeDraging);
-        this._anchorNode.addObserver(this._anchorNode.notifyDragEnd,this,this._anchorNodeDragEnd);
+        this._anchorNode.addObserver(this._anchorNode.notifyDraging, this, this._anchorNodeDraging);
+        this._anchorNode.addObserver(this._anchorNode.notifyDragEnd, this, this._anchorNodeDragEnd);
+        this._anchorNode.addObserver(this._anchorNode.notifyPaint, this, this._paintAnchorNode);
         this.addObserver(this.notifyLayoutSubNodes,this,this._layoutAnchorNode);
         this.__anchorMoveReady = false;
         this.__anchorStartEventPoint = null;
@@ -405,6 +414,33 @@ hy.RichNode.prototype._anchorNodeDraging = function(sender, e){
     }
 }
 hy.RichNode.prototype._anchorNodeDragEnd = function(sender, e){
-    this._anchorMoveReady = false;
+    this.__anchorMoveReady = false;
     this.postNotification(this.notifyAnchorMoveEnd,[this.getAnchorX(),this.getAnchorY()]);
+}
+hy.RichNode.prototype._paintResizeNode = function(sender, dc, rect){
+    dc.setFillStyle("#000");
+    dc.fillRect(rect.x, rect.y, rect.width, rect.height);
+}
+hy.RichNode.prototype._paintAnchorNode = function(sender, dc, rect){
+    dc.setFillStyle("#f00");
+    dc.beginPath();
+    dc.arc(0,0,4,0,Math.PI*2,false);
+    dc.fill();
+    dc.setStrokeStyle("#00f");
+    dc.beginPath();
+    dc.moveTo(4, 0);
+    dc.lineTo(30, 0);
+    dc.lineTo(25, 1.5);
+    dc.lineTo(25, -1.5);
+    dc.lineTo(30, 0);
+    dc.stroke();
+    dc.setStrokeStyle("#0f0");
+    dc.beginPath();
+    dc.moveTo(0, 4);
+    dc.lineTo(0, 30);
+    dc.lineTo(1.5, 25);
+    dc.lineTo(-1.5, 25);
+    dc.lineTo(0, 30);
+    dc.stroke();
+
 }

@@ -46,14 +46,14 @@ hy.Application.prototype.init = function(config){
         width:125,
         height:0,
         visible:false,
-        normalColor:'#f00',
+        normalColor:hy.gui.colors.WHITE,
+        borderColor:hy.gui.colors.DBLACK,
+        borderWidth:1,
+        scrollBarVisible:false,
         cellHeight:23,
         cellSelectEnable:false,
         cellEditEnable:false,
-        cellMoveEnable:false,
-        scrollBarVisible:false,
-        borderColor:'#000',
-        borderWidth:1
+        cellMoveEnable:false
     });
     this._contextMenu.addObserver(this._contextMenu.notifyListCellMouseDown, this, function(sender, e, cellIndex){
         this._contextMenu.setUserProperty("menushown", true);
@@ -272,16 +272,26 @@ hy.Application.prototype.showContextMenu = function(e,node,menuItems,menuType){
     }
     this._contextMenu.setUserProperty("menunode", node);
     this._contextMenu.setUserProperty("menutype", menuType);
+    var x = e.offsetX;
+    var y = e.offsetY;
+    var width = this._contextMenu.getWidth();
+    var height = this._contextMenu.getCellHeight() * menuItems.length;
+    if(x + width > this._winWidth){
+        x -= width;
+    }
+    if(y + height > this._winHeight){
+        y -= height;
+    }
     if(menuType == 0){
-        this._contextMenu.setX(e.offsetX);
-        this._contextMenu.setY(e.offsetY);
-        this._contextMenu.setHeight(this._contextMenu.getCellHeight() * menuItems.length);
+        this._contextMenu.setX(x);
+        this._contextMenu.setY(y);
+        this._contextMenu.setHeight(height);
         this._contextMenu.setItems(menuItems);
     }else{
         var pointNode = node.transPointToAncestorNode({x: 0,y: node.getHeight()}, null);
-        this._contextMenu.setX(pointNode.x);
-        this._contextMenu.setY(pointNode.y);
-        this._contextMenu.setHeight(this._contextMenu.getCellHeight() * menuItems.length);
+        this._contextMenu.setX(x);
+        this._contextMenu.setY(y);
+        this._contextMenu.setHeight(height);
         this._contextMenu.setItems(menuItems);
         node.setSelected(true);
     }
@@ -311,7 +321,6 @@ hy.Application.prototype.pause = function(){
 hy.Application.prototype.resume = function(){
     this._actionManager.resume();
 }
-
 
 //var time = 0;
 //var count = 0;

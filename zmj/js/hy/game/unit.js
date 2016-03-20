@@ -67,9 +67,10 @@ hy.game.Unit.prototype.getChildUnits = function(){
 }
 hy.game.Unit.prototype.getChildUnitAtIndex = function(index){
     if(index < this._childUnits.length){
+        return this._childUnits[index];
+    }else{
         return null;
     }
-    return this._childUnits[index];
 }
 
 hy.game.Unit.prototype.removeChildUnit = function(unit,clean){

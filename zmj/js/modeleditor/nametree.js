@@ -2,7 +2,7 @@ var modeleditor = modeleditor || {};
 modeleditor.class = modeleditor || {};
 modeleditor.class.NameTreeNode = hy.extend(hy.gui.TreeNodeView);
 modeleditor.class.NameTreeNode.prototype.defaultReuseIdentity = "structtreenode";
-modeleditor.class.NameTreeNode.prototype.defaultActiveColor = "#0f0";
+modeleditor.class.NameTreeNode.prototype.defaultActiveColor = hy.gui.colors.BLUE;
 modeleditor.class.NameTreeNode.prototype.init = function(config){
     this.superCall("init", [config]);
     this._nodeIcon = new hy.gui.ImageView({mouseEnable:false});
@@ -84,16 +84,17 @@ modeleditor.class.NameTree.prototype.getNodeUnitOfNodePath = function(nodePath,n
 
 modeleditor.class.NameTree.prototype.numberOfNodeInPath = function(treeView, nodePath){
     var node = this.getRoot();
-    if(node){
-        var nodeDeepth = nodePath.length;
-        for(var i=0;i<nodeDeepth;++i){
-            node = node.childNodes[nodePath[i]];
-        }
-        if(!node || node.leaf || !node.expanded || !node.childNodes){
-            return 0;
+    var nodeDeepth = nodePath.length;
+    for(var i=0;i<nodeDeepth;++i){
+        if(node){
+            node = node.getChildUnitAtIndex(nodePath[i]);
         }else{
-            return node.childNodes.length;
+            return 0;
         }
+    }
+    if(node){
+        var childUnits = node.getChildUnits();
+        return childUnits.length;
     }else{
         return 0;
     }
@@ -122,6 +123,12 @@ modeleditor.class.NameTree.prototype.viewOfNodeInPath = function(treeView,nodePa
         var nodeView = treeView.getReuseNodeViewOfIdentity("treenode");
         if (nodeView == null) {
             nodeView = new modeleditor.class.NameTreeNode ({reuseIdentity: "treenode"});
+            var nodeIcon = nodeView.getNodeIcon();
+            if(nodePath.length == 0){
+                nodeIcon.setImage(hy.config.PATH + "res/images/icon_model.png");
+            }else{
+                nodeIcon.setImage(hy.config.PATH + "res/images/icon_unit.png");
+            }
         }
         if (this._selNodePath && this._compareNodePath(nodePath, nodePath.length, this._selNodePath, this._selNodePath.length)) {
             nodeView.setSelected(true);

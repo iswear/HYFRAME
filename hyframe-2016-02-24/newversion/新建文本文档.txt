@@ -1,5 +1,0 @@
-this._mouseDownNodes = [];
-    this._mouseOverNodes = [];
-    this._mouseDragNodes = [];
-    this._mouseWheelNodes = [];
-    this._mousePoints = [];

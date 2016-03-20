@@ -51,7 +51,7 @@ hy.gui.Menu.prototype._mallocMenuItems = function(){
             if(i < dropDownCount){
                 dropDownMenu = this._dropDownItems[i];
             }else{
-                dropDownMenu = new hy.gui.DropDownMenu({activeColor:'#0f0'});
+                dropDownMenu = new hy.gui.DropDownMenu({activeColor:hy.gui.colors.BLUE});
                 dropDownMenu.addObserver(dropDownMenu.notifyDropDownMenu, this, this._dropDownMenuMenu);
                 this.addChildNodeAtLayer(dropDownMenu, 0);
             }
