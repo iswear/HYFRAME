@@ -272,25 +272,25 @@ hy.Application.prototype.showContextMenu = function(e,node,menuItems,menuType){
     }
     this._contextMenu.setUserProperty("menunode", node);
     this._contextMenu.setUserProperty("menutype", menuType);
-    var x = e.offsetX;
-    var y = e.offsetY;
-    var width = this._contextMenu.getWidth();
     var height = this._contextMenu.getCellHeight() * menuItems.length;
-    if(x + width > this._winWidth){
-        x -= width;
-    }
-    if(y + height > this._winHeight){
-        y -= height;
-    }
     if(menuType == 0){
+        var x = e.offsetX;
+        var y = e.offsetY;
+        var width = this._contextMenu.getWidth();
+        if(x + width > this._winWidth){
+            x -= width;
+        }
+        if(y + height > this._winHeight){
+            y -= height;
+        }
         this._contextMenu.setX(x);
         this._contextMenu.setY(y);
         this._contextMenu.setHeight(height);
         this._contextMenu.setItems(menuItems);
     }else{
         var pointNode = node.transPointToAncestorNode({x: 0,y: node.getHeight()}, null);
-        this._contextMenu.setX(x);
-        this._contextMenu.setY(y);
+        this._contextMenu.setX(pointNode.x);
+        this._contextMenu.setY(pointNode.y);
         this._contextMenu.setHeight(height);
         this._contextMenu.setItems(menuItems);
         node.setSelected(true);

@@ -12,7 +12,7 @@ hy.game.Unit.prototype.init = function(config){
     this._actionFrames = this.isUndefined(config.actionFrames) ? {} : config.actionFrames;
     this._childUnits = [];
     this.__compiledActions = {};
-    this.addObserver(this.notifyPaint, this, this._paintUnitImg);
+    //this.addObserver(this.notifyPaint, this, this._paintUnitImg);
 }
 hy.game.Unit.prototype.setName = function(name){
     this._name = name;
@@ -315,9 +315,6 @@ hy.game.Unit.prototype._paintUnitImg = function(sender, dc, rect){
                 }
             }
         }
-    }else{
-        dc.setFillStyle("#f00");
-        dc.fillRect(rect.x, rect.y, rect.width, rect.height);
     }
 }
 hy.game.Unit.prototype._paintUnitImgSubFun = function(dc, rect, image, srcX, srcY, srcWidth, srcHeight){
