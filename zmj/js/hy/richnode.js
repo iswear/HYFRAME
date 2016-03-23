@@ -398,13 +398,15 @@ hy.RichNode.prototype._anchorNodeDraging = function(sender, e){
         this.__anchorStartPoint = {x: this.getX() ,y:this.getY()};
     }else{
         var offsetVector = {x: e.offsetX-this.__anchorStartEventPoint.x,y: e.offsetY-this.__anchorStartEventPoint.y};
-        var localOffsetVector = this.transVectorFromAncestorNode(offsetVector, null);
+        var localOffsetVector = null;
         var parentOffsetVector = null;
         var parentNode = this.getParent();
         if(parentNode){
             parentOffsetVector = parentNode.transVectorFromAncestorNode(offsetVector, null);
+            localOffsetVector = this.transVectorFromAncestorNode(parentOffsetVector, parentNode);
         }else{
             parentOffsetVector = offsetVector;
+            localOffsetVector = this.transVectorFromAncestorNode(offsetVector, null);
         }
         this.setX(this.__anchorStartPoint.x+parentOffsetVector.x);
         this.setY(this.__anchorStartPoint.y+parentOffsetVector.y);
@@ -418,10 +420,6 @@ hy.RichNode.prototype._anchorNodeDragEnd = function(sender, e){
     this.__anchorMoveReady = false;
     this.postNotification(this.notifyAnchorMoveEnd,[this.getAnchorX(),this.getAnchorY()]);
 }
-//hy.RichNode.prototype._paintResizeNode = function(sender, dc, rect){
-//    dc.setFillStyle("#000");
-//    dc.fillRect(rect.x, rect.y, rect.width, rect.height);
-//}
 hy.RichNode.prototype._paintResizeCornor = function(sender, dc, rect){
     if(this._resizeEnable || this._rotateEnable){
         dc.setStrokeStyle("#00f");
