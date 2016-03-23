@@ -40,25 +40,14 @@ hy.Application.prototype.init = function(config){
     this._actionManager = new hy.action.Manager({});
     this._fileLoader = new hy.net.FileLoader({});
     this._inputTextBox = new hy.html.TextBox({});
-    this._contextMenu = new hy.gui.SimpleListView({
-        x:0,
-        y:0,
+    this._contextMenu = new hy.gui.ContextMenu({
         width:125,
-        height:0,
-        visible:false,
-        normalColor:hy.gui.colors.WHITE,
-        borderColor:hy.gui.colors.DBLACK,
-        borderWidth:1,
-        scrollBarVisible:false,
-        cellHeight:23,
-        cellSelectEnable:false,
-        cellEditEnable:false,
-        cellMoveEnable:false
+        visible:false
     });
-    this._contextMenu.addObserver(this._contextMenu.notifyListCellMouseDown, this, function(sender, e, cellIndex){
+    this._contextMenu.addObserver(this._contextMenu.notifyContextMenuItemDown, this, function(sender, e, cellIndex){
         this._contextMenu.setUserProperty("menushown", true);
     });
-    this._contextMenu.addObserver(this._contextMenu.notifyListCellMouseUp, this, function(sender, e, cellIndex){
+    this._contextMenu.addObserver(this._contextMenu.notifyContextMenuItemUp, this, function(sender, e, cellIndex){
         var menutype = this._contextMenu.getUserProperty("menutype");
         var menunode = this._contextMenu.getUserProperty("menunode");
         if(menutype == 0){
@@ -272,26 +261,24 @@ hy.Application.prototype.showContextMenu = function(e,node,menuItems,menuType){
     }
     this._contextMenu.setUserProperty("menunode", node);
     this._contextMenu.setUserProperty("menutype", menuType);
-    var height = this._contextMenu.getCellHeight() * menuItems.length;
     if(menuType == 0){
         var x = e.offsetX;
         var y = e.offsetY;
+        this._contextMenu.setItems(menuItems);
         var width = this._contextMenu.getWidth();
+        var height = this._contextMenu.getHeight();
         if(x + width > this._winWidth){
             x -= width;
         }
         if(y + height > this._winHeight){
-            y -= height;
+            y -= (y + height - this._winHeight);
         }
         this._contextMenu.setX(x);
         this._contextMenu.setY(y);
-        this._contextMenu.setHeight(height);
-        this._contextMenu.setItems(menuItems);
     }else{
         var pointNode = node.transPointToAncestorNode({x: 0,y: node.getHeight()}, null);
         this._contextMenu.setX(pointNode.x);
         this._contextMenu.setY(pointNode.y);
-        this._contextMenu.setHeight(height);
         this._contextMenu.setItems(menuItems);
         node.setSelected(true);
     }
@@ -304,7 +291,6 @@ hy.Application.prototype.hideContextMenu = function(){
             var menuTarget = this._contextMenu.getUserProperty("menunode");
             menuTarget.setSelected(false);
         }
-        this._contextMenu.setItems(null);
         this._contextMenu.setVisible(false);
     }
 }
@@ -378,18 +364,6 @@ hy.Application.prototype.mainLoop = function(){
     }else{
         this._runRootNode._dispatchLoop(this._renderContext, deltaTime, false);
     }
-    //if(this._refresh || this._refreshMode == 1){
-    //    this._refresh = false;
-    //    this._renderContext.clearRect(0,0,this._winWidth,this._winHeight);
-    //    this._runRootNode._dispatchLoop(this._renderContext, deltaTime, true);
-    //}
-    //time += deltaTime;
-    //count ++;
-    //if(time > 3000){
-    //    console.log(count/3);
-    //    time = 0;
-    //    count = 0;
-    //}
     if(this._mainLoopHandler == 0){
         if (window.requestAnimationFrame)
             window.requestAnimationFrame(this._mainLoop);
