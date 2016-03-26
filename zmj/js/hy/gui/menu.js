@@ -58,7 +58,7 @@ hy.gui.Menu.prototype._mallocMenuItems = function(){
             dropDownMenu.setText(this._menuItems[i].name);
             dropDownMenu.setX(startX);
             dropDownMenu.setY(0);
-            dropDownMenu.setWidth(dropDownMenu.getTextMeasuredLength() + 20);
+            dropDownMenu.setWidth(dropDownMenu.getTextMeasuredLength() + 30);
             dropDownMenu.setHeight(this.getHeight());
             dropDownMenu.setUserProperty("menuindex",i);
             dropDownMenu.setDropItems(this._menuItems[i].dropItems);

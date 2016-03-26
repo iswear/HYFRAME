@@ -37,6 +37,12 @@ hy.gui.TreeView.prototype.init = function(config){
     this.__needReloadTree = false;
     this.__needMallocTreeView = false;
     var contentView = this.getContentView();
+    if(this._headerView){
+        contentView.addChildNodeAtLayer(this._headerView, 0);
+    }
+    if(this._footerView){
+        contentView.addChildNodeAtLayer(this._footerView, 0);
+    }
     contentView.addObserver(this.notifySyncY, this, this.needMallocTreeView);
     contentView.addObserver(this.notifySyncHeight, this, this.needMallocTreeView);
     this.addObserver(this.notifyEnterFrame, this, this._reloadTree);
@@ -131,8 +137,12 @@ hy.gui.TreeView.prototype._reloadTree = function(){
                 dataSource = this;
             }
             this._recycleAllNodeView();
+            var starty = 0;
+            if(this._headerView){
+                starty = this._headerView.getHeight();
+            }
             this._nodeInfos = {y:0,height:0,nodePath:[],view:null,childNodes:[]};
-            var layoutY = this._reloadTreeNode(dataSource, this._nodeInfos, "", 0);
+            var layoutY = this._reloadTreeNode(dataSource, this._nodeInfos, "", starty);
             this.setContentHeight(layoutY);
             this._mallocTreeView();
         }

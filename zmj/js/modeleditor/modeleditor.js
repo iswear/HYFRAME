@@ -44,11 +44,12 @@ modeleditor.class.ModelEditor.prototype.init = function(config){
         rotateEnable:false,
         actionNames:[{name:'行走1'},{name:"行走2"}]
     });
-    this._testUnit = new hy.game.Unit({
+    this._testUnit1 = new hy.game.Unit({
         x:0,
         y:0,
         width:100,
         height:100,
+        name:"unit1",
         normalColor:'#0f0',
         activeColor:'#0f0',
         dragEnable:false,
@@ -56,7 +57,21 @@ modeleditor.class.ModelEditor.prototype.init = function(config){
         resizeEnable:false,
         rotateEnable:false
     });
-    this._model.addChildUnit(this._testUnit);
+    this._testUnit2 = new hy.game.Unit({
+        x:0,
+        y:0,
+        width:100,
+        height:100,
+        name:"unit2",
+        normalColor:'#0f0',
+        activeColor:'#0f0',
+        dragEnable:false,
+        anchorMoveEnable:false,
+        resizeEnable:false,
+        rotateEnable:false
+    });
+    this._model.addChildUnit(this._testUnit1);
+    this._model.addChildUnit(this._testUnit2);
     this._structTree = new modeleditor.class.StructTree({
         root:this._model,
         nodeEditEnable:true,
@@ -73,6 +88,8 @@ modeleditor.class.ModelEditor.prototype.init = function(config){
         root:this._model
     });
     this._timeTree = new modeleditor.class.TimeTree({
+        headerView:new hy.gui.TimelineRule({height:23, normalColor:hy.gui.colors.DGRAY}),
+        headerViewFloat:true,
         root:this._model
     });
     this._mainView = new hy.gui.SplitView({
@@ -152,15 +169,15 @@ modeleditor.class.ModelEditor.prototype._layoutModelEditor = function(sender){
     this._menu.setX(0);
     this._menu.setY(0);
     this._menu.setWidth(this.getWidth());
-    this._menu.setHeight(25);
+    this._menu.setHeight(27);
     this._menuSplitView.setX(0);
-    this._menuSplitView.setY(25);
+    this._menuSplitView.setY(27);
     this._menuSplitView.setWidth(this.getWidth());
     this._menuSplitView.setHeight(5);
     this._mainView.setX(0);
-    this._mainView.setY(30);
+    this._mainView.setY(32);
     this._mainView.setWidth(this.getWidth());
-    this._mainView.setHeight(this.getHeight() - 30);
+    this._mainView.setHeight(this.getHeight() - 32);
 }
 modeleditor.class.ModelEditor.prototype._modelUnitSelected = function(sender, nodePath){
     if(sender != this._structTree){

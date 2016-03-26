@@ -22,8 +22,15 @@ hy.gui.TextBox.prototype.getEditEnable = function(){
 hy.gui.TextBox.prototype._focusHtmlTextBox = function(sender, e){
     var app = this.getApplication();
     if(app){
-        app.getInputTextBox().focusForNode(this);
-        this.setVisible(false);
+        if(e){
+            if(e.button == 0) {
+                app.getInputTextBox().focusForNode(this);
+                this.setVisible(false);
+            }
+        } else {
+            app.getInputTextBox().focusForNode(this);
+            this.setVisible(false);
+        }
     }
 }
 hy.gui.TextBox.prototype._blurHtmlTextBox = function(sender, e){
